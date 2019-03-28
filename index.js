@@ -11,8 +11,8 @@ app.get('/', function (req, res) {
 app.use(express.static('public'));
 
 io.on('connection', function (socket) {
-  socket.on('update', function (socket) {
-    console.log('update')
+  socket.on('update', function (data) {
+    io.emit('refresh', data)
   })
 
   socket.on('message', function (data) {
