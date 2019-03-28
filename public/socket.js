@@ -13,11 +13,11 @@ socket.on('refresh', function (data) {
 
   if (data.used) {
     document.querySelector('#list .' + className) && document.querySelector('#list .' + className).remove()
-    document.querySelector('#used').insertAdjacentHTML('beforeEnd', '<div id="' + className + '">' + data.account + '</div>')
+    document.querySelector('#used').insertAdjacentHTML('beforeEnd', '<div id="' + className + '">' + data.time + ' ' + data.account + '</div>')
   }
 
   if (data.play) {
     document.querySelector('#used .' + className) && document.querySelector('#used .' + className).remove()
-    document.querySelector('#list').insertAdjacentHTML('beforeEnd', '<div id="' + className + '">' + data.account + '</div>')
+    document.querySelector('#list').insertAdjacentHTML('beforeEnd', '<div id="' + className + '">' + data.time + ' ' + data.account + '</div>')
   }
 });
