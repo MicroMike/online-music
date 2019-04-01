@@ -60,7 +60,7 @@ io.on('connection', client => {
 
   client.on('loop', account => {
     accounts.push(account)
-    console.log('current', nbAccounts - accounts.length)
+    console.log('loop', nbAccounts - accounts.length)
   });
 
   client.on('delete', account => {
