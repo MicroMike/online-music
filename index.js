@@ -10,11 +10,18 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
-function shuffle(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    arr.sort(() => { return rand(2) })
+const getAccount = env => {
+  if (env.RAND) {
+    for (let i = 0; i < accounts.length; i++) {
+      accounts.sort(() => { return rand(2) })
+    }
   }
-  return arr
+
+  if (env.TYPE) {
+    accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+  }
+
+  return accounts.length ? accounts[0] : false
 }
 
 fs.readFile(file, 'utf8', async (err, data) => {
@@ -27,10 +34,6 @@ fs.readFile(file, 'utf8', async (err, data) => {
 
     dataDel = dataDel.split(',').filter(e => e)
     accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
-
-    if (process.env.TYPE) {
-      accounts = accounts.filter(m => m.split(':')[0] === process.env.TYPE)
-    }
 
     nbAccounts = accounts.length
     console.log(nbAccounts)
@@ -46,11 +49,13 @@ io.on('connection', client => {
     client.emit('done')
   })
 
-  client.on('getOne', (isRand) => {
-    const account = isRand ? shuffle(accounts)[0] : accounts[0]
-    accounts = accounts.filter(a => a !== account)
-    client.emit('run', account)
-    console.log('current', nbAccounts - accounts.length)
+  client.on('getOne', env => {
+    const account = getAccount(env)
+    if (account) {
+      accounts = accounts.filter(a => a !== account)
+      client.emit('run', account)
+      console.log('current', nbAccounts - accounts.length)
+    }
   })
 
   client.on('loop', account => {
