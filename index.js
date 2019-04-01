@@ -5,23 +5,31 @@ const io = require('socket.io')(server);
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
 
-fs.readFile(file, 'utf8', async (err, data) => {
-  if (err) return console.log(err);
+const getFromFile = () => {
+  fs.readFile(file, 'utf8', async (err, data) => {
+    if (err) return console.log(err);
 
-  fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
-    if (err2) return console.log(err2);
+    fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
+      if (err2) return console.log(err2);
 
-    accounts = data.split(',')
+      accounts = data.split(',')
 
-    dataDel = dataDel.split(',').filter(e => e)
-    accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+      dataDel = dataDel.split(',').filter(e => e)
+      accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
 
-    if (process.env.TYPE) {
-      accounts = accounts.filter(m => m.split(':')[0] === process.env.TYPE)
-    }
+      if (process.env.TYPE) {
+        accounts = accounts.filter(m => m.split(':')[0] === process.env.TYPE)
+      }
 
-    console.log(accounts.length)
-  })
+      console.log(accounts.length)
+    })
+  });
+}
+
+getFromFile()
+
+socket.on('disconnect', () => {
+  getFromFile()
 });
 
 io.on('connection', client => {
