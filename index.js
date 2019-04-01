@@ -2,17 +2,6 @@ const fs = require('fs');
 const server = require('http').createServer();
 const io = require('socket.io')(server);
 
-const rand = (max, min) => {
-  return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
-}
-
-function shuffle(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    arr.sort(() => { return rand(2) })
-  }
-  return arr
-}
-
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
 
@@ -31,7 +20,6 @@ fs.readFile(file, 'utf8', async (err, data) => {
       accounts = accounts.filter(m => m.split(':')[0] === process.env.TYPE)
     }
 
-    accounts = process.env.RAND ? shuffle(accounts) : accounts
     console.log(accounts.length)
   })
 });
