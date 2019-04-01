@@ -28,7 +28,7 @@ const getFromFile = () => {
 
 getFromFile()
 
-socket.on('disconnect', () => {
+io.on('disconnect', () => {
   getFromFile()
 });
 
