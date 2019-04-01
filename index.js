@@ -44,17 +44,20 @@ io.on('connection', client => {
   client.on('getAccounts', () => {
     client.emit('accounts', accounts);
 
-    io.on('usedAccount', account => {
+    client.on('usedAccount', account => {
       accounts = accounts.filter(a => a !== account)
       io.emit('updateAccounts', accounts)
     });
 
-    io.on('unusedAccount', account => {
+    client.on('unusedAccount', account => {
       accounts.push(account)
       io.emit('updateAccounts', accounts)
     });
 
-    io.on('delete', account => {
+    client.on('delete', account => {
+      accounts.push(account)
+      io.emit('updateAccounts', accounts)
+
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
         if (err) return console.log(err);
         data = data.split(',').filter(e => e)
