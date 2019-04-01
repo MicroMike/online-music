@@ -65,6 +65,7 @@ io.on('connection', client => {
 
   client.on('delete', account => {
     nbAccounts--
+    console.log('del', account, nbAccounts - accounts.length)
 
     fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
       if (err) return console.log(err);
