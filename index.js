@@ -37,7 +37,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
 });
 
 io.on('connection', client => {
-  console.log('connected')
+  console.log('connected', accounts.length)
   client.emit('done')
 
   client.on('getAccounts', () => {
