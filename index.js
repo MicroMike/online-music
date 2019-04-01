@@ -39,7 +39,12 @@ fs.readFile(file, 'utf8', async (err, data) => {
 
 io.on('connection', client => {
   console.log('connected', accounts.length)
-  client.emit('done')
+  client.emit('activate')
+
+  client.on('ok', accountsValid => {
+    accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
+    client.emit('done')
+  })
 
   client.on('getOne', (isRand) => {
     const account = isRand ? shuffle(accounts)[0] : accounts[0]
