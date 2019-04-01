@@ -14,6 +14,7 @@ function shuffle(arr) {
 }
 
 let accounts
+let file = process.env.FILE || 'napsterAccount.txt'
 
 fs.readFile(file, 'utf8', async (err, data) => {
   if (err) return console.log(err);
@@ -34,8 +35,6 @@ fs.readFile(file, 'utf8', async (err, data) => {
     console.log(accounts.length)
   })
 });
-
-let file = process.env.FILE || 'napsterAccount.txt'
 
 io.on('connection', client => {
   console.log('connected')
