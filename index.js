@@ -33,6 +33,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
     }
 
     nbAccounts = accounts.length
+    console.log(nbAccounts)
   })
 });
 
