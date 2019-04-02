@@ -79,7 +79,9 @@ io.on('connection', client => {
   })
 
   client.on('exitScript', data => {
-    accounts = accounts.concat(data)
+    data.forEach(a => {
+      if (accounts.indexOf(a) < 0) { accounts.push(a) }
+    });
     console.log('retreive', data.length, nbAccounts - accounts.length)
   });
 
