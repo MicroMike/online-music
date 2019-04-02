@@ -41,28 +41,31 @@ fs.readFile(file, 'utf8', async (err, data) => {
 });
 
 io.on('connection', client => {
+  let inter
+  let playing = []
+
   console.log('connected', accounts.length)
+
   client.emit('activate', client.id)
 
-  client.on('ok', accountsValid => {
+  client.on('ok', ({ accountsValid, max, env }) => {
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
-    client.emit('done')
-  })
 
-  client.on('getOne', env => {
-    const account = getAccount(env)
-    if (account) {
-      client.emit('run', account)
-    }
-  })
+    inter = setInterval(() => {
+      if (playing.length >= max) { return }
 
-  client.on('runOk', account => {
-    accounts = accounts.filter(a => a !== account)
-    console.log('current', nbAccounts - accounts.length)
+      const account = getAccount(env)
+      if (account) {
+        accounts = accounts.filter(a => a !== account)
+        playing.push(account)
+        client.emit('run', account)
+      }
+    }, 1000 * 30);
   })
 
   client.on('loop', account => {
     if (accounts.indexOf(account) < 0) { accounts.push(account) }
+    playing = playing.filter(a => a !== account)
     console.log('loop', nbAccounts - accounts.length)
   });
 
@@ -81,15 +84,17 @@ io.on('connection', client => {
     });
   })
 
-  client.on('exitScript', data => {
-    data.forEach(a => {
+  client.on('disconnect', () => {
+    console.log('retreive', playing.length, nbAccounts - accounts.length)
+
+    playing.forEach(a => {
       if (accounts.indexOf(a) < 0) { accounts.push(a) }
     });
-    console.log('retreive', data.length, nbAccounts - accounts.length)
-  });
 
-  client.on('disconnect', () => {
+    playing = []
+    clearInterval(inter)
     client.removeAllListeners()
+
     console.log('disconnect')
   })
 
