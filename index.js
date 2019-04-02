@@ -52,8 +52,10 @@ io.on('connection', client => {
   client.on('getOne', env => {
     const account = getAccount(env)
     if (account) {
-      accounts = accounts.filter(a => a !== account)
       client.emit('run', account)
+      client.on('runOk', account => {
+        accounts = accounts.filter(a => a !== account)
+      })
       console.log('current', nbAccounts - accounts.length)
     }
   })
