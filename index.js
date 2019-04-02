@@ -83,8 +83,12 @@ io.on('connection', client => {
       if (accounts.indexOf(a) < 0) { accounts.push(a) }
     });
     console.log('retreive', data.length, nbAccounts - accounts.length)
-    client.removeAllListeners()
   });
+
+  client.on('disconnect', () => {
+    client.removeAllListeners()
+    console.log('disconnect')
+  })
 
 });
 
