@@ -53,11 +53,12 @@ io.on('connection', client => {
     const account = getAccount(env)
     if (account) {
       client.emit('run', account)
-      client.on('runOk', account => {
-        accounts = accounts.filter(a => a !== account)
-        console.log('current', nbAccounts - accounts.length)
-      })
     }
+  })
+
+  client.on('runOk', account => {
+    accounts = accounts.filter(a => a !== account)
+    console.log('current', nbAccounts - accounts.length)
   })
 
   client.on('loop', account => {
