@@ -59,6 +59,7 @@ io.on('connection', client => {
   client.on('runOk', account => {
     accounts = accounts.filter(a => a !== account)
     console.log('current', nbAccounts - accounts.length)
+    client.emit('next')
   })
 
   client.on('loop', account => {
