@@ -42,7 +42,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
 
 io.on('connection', client => {
   console.log('connected', accounts.length)
-  client.emit('activate')
+  client.emit('activate', client.id)
 
   client.on('ok', accountsValid => {
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
