@@ -59,6 +59,7 @@ io.on('connection', client => {
         accounts = accounts.filter(a => a !== account)
         playing.push(account)
         client.emit('run', account)
+        console.log('current', nbAccounts - accounts.length)
       }
     }, 1000 * 30);
   })
