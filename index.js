@@ -59,7 +59,7 @@ io.on('connection', client => {
   })
 
   client.on('loop', account => {
-    accounts.push(account)
+    if (accounts.indexOf(account) < 0) { accounts.push(account) }
     console.log('loop', nbAccounts - accounts.length)
   });
 
