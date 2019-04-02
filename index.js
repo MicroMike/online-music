@@ -83,6 +83,10 @@ io.on('connection', client => {
     console.log('retreive', data.length, nbAccounts - accounts.length)
   });
 
+  client.on('disconnect', () => {
+    client.removeAllListeners()
+  })
+
 });
 
 
