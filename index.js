@@ -84,6 +84,7 @@ io.on('connection', client => {
   });
 
   client.on('disconnect', () => {
+    console.log('disconnect')
     client.removeAllListeners()
   })
 
