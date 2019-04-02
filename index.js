@@ -55,8 +55,8 @@ io.on('connection', client => {
       client.emit('run', account)
       client.on('runOk', account => {
         accounts = accounts.filter(a => a !== account)
+        console.log('current', nbAccounts - accounts.length)
       })
-      console.log('current', nbAccounts - accounts.length)
     }
   })
 
