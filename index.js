@@ -50,6 +50,7 @@ io.on('connection', client => {
 
   client.on('ok', ({ accountsValid, max, env }) => {
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
+    playing = accountsValid
 
     inter = setInterval(() => {
       if (playing.length >= max) { return }
