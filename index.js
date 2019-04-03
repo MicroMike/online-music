@@ -42,10 +42,14 @@ fs.readFile(file, 'utf8', async (err, data) => {
 
 let lengthArr = {}
 let displayLength = (id, length) => {
-  const total = Object.values(lengthArr).reduce((pv, cv) => {
+  const values = Object.values(lengthArr)
+  const total = values && values.reduce((pv, cv) => {
     return pv + cv
   })
-  console.log('Playing ' + total + ' accounts')
+
+  if (values) {
+    console.log('Playing ' + total + ' accounts')
+  }
 }
 
 io.on('connection', client => {
