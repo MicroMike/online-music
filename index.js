@@ -41,22 +41,20 @@ fs.readFile(file, 'utf8', async (err, data) => {
 });
 
 let lengthArr = {}
-let displayLength = (id, length) => {
+let displayLength = (log) => {
   const values = Object.values(lengthArr)
   const total = values.length && values.reduce((pv, cv) => {
     return pv + cv
   })
 
   if (values.length) {
-    console.log('Playing ' + total + ' accounts')
+    console.log(log, total)
   }
 }
 
 io.on('connection', client => {
   let inter
   let playing = []
-
-  console.log('Connected')
 
   client.emit('activate', client.id)
 
@@ -66,7 +64,7 @@ io.on('connection', client => {
     playing = accountsValid
 
     lengthArr[client.id] = playing.length
-    displayLength()
+    displayLength('Connected')
 
     inter = setInterval(() => {
       if (playing.length >= max) { return }
@@ -77,7 +75,7 @@ io.on('connection', client => {
         accounts = accounts.filter(a => a !== account)
         playing.push(account)
         lengthArr[client.id] = playing.length
-        displayLength()
+        displayLength('Add')
       }
     }, 1000 * 30);
   })
@@ -85,14 +83,14 @@ io.on('connection', client => {
   client.on('loop', account => {
     if (accounts.indexOf(account) < 0) { accounts.push(account) }
     playing = playing.filter(a => a !== account)
-    displayLength()
+    displayLength('Loop')
   });
 
   client.on('delete', account => {
     nbAccounts--
     playing = playing.filter(a => a !== account)
     console.log('Del', account)
-    displayLength()
+    displayLength('Del')
   })
 
   client.on('disconnect', () => {
