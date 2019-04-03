@@ -45,7 +45,7 @@ let displayLength = (id, length) => {
   const total = Object.values(lengthArr).reduce((pv, cv) => {
     return pv + cv
   })
-  console.log('Playing ' + total + 'accounts')
+  console.log('Playing ' + total + ' accounts')
 }
 
 io.on('connection', client => {
