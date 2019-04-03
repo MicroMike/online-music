@@ -65,6 +65,7 @@ io.on('connection', client => {
     accounts = accounts.filter(a => del.indexOf(a) < 0)
     playing = accountsValid
 
+    lengthArr[client.id] = playing.length
     displayLength()
 
     inter = setInterval(() => {
