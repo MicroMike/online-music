@@ -83,14 +83,15 @@ io.on('connection', client => {
   client.on('loop', account => {
     if (accounts.indexOf(account) < 0) { accounts.push(account) }
     playing = playing.filter(a => a !== account)
+    lengthArr[client.id] = playing.length
     displayLength('Loop')
   });
 
   client.on('delete', account => {
     nbAccounts--
     playing = playing.filter(a => a !== account)
-    console.log('Del', account)
-    displayLength('Del')
+    lengthArr[client.id] = playing.length
+    displayLength('Del ' + account)
   })
 
   client.on('disconnect', () => {
