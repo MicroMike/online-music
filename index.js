@@ -52,7 +52,7 @@ io.on('connection', client => {
   let inter
   let playing = []
 
-  console.log('connected', accounts.length)
+  console.log('Connected')
 
   client.emit('activate', client.id)
 
@@ -60,6 +60,8 @@ io.on('connection', client => {
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
     accounts = accounts.filter(a => del.indexOf(a) < 0)
     playing = accountsValid
+
+    displayLength()
 
     inter = setInterval(() => {
       if (playing.length >= max) { return }
@@ -84,7 +86,7 @@ io.on('connection', client => {
   client.on('delete', account => {
     nbAccounts--
     playing = playing.filter(a => a !== account)
-    console.log('del', account)
+    console.log('Del', account)
     displayLength()
   })
 
@@ -101,7 +103,7 @@ io.on('connection', client => {
     clearInterval(inter)
     client.removeAllListeners()
 
-    console.log('disconnect')
+    console.log('Disconnect')
   })
 });
 
