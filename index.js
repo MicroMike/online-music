@@ -3,7 +3,6 @@ const server = require('http').createServer();
 const io = require('socket.io')(server);
 
 let accounts
-let nbAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 
 const rand = (max, min) => {
@@ -35,8 +34,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
     dataDel = dataDel.split(',').filter(e => e)
     accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
 
-    nbAccounts = accounts.length
-    console.log(nbAccounts)
+    console.log(accounts.length)
   })
 });
 
@@ -90,13 +88,12 @@ io.on('connection', client => {
   });
 
   client.on('delete', account => {
-    nbAccounts--
     playing = playing.filter(a => a !== account)
     setLength('Del ' + account)
   })
 
   client.on('disconnect', () => {
-    console.log('retreive', playing.length, nbAccounts - accounts.length)
+    console.log('retreive', playing.length)
 
     playing.forEach(a => {
       if (accounts.indexOf(a) < 0) { accounts.push(a) }
@@ -104,11 +101,9 @@ io.on('connection', client => {
 
     playing = []
     delete lengthArr[client.id]
-    displayLength()
+    displayLength('Disconnect')
     clearInterval(inter)
     client.removeAllListeners()
-
-    console.log('Disconnect')
   })
 });
 
