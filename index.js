@@ -40,6 +40,14 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
+let lengthArr = {}
+let displayLength = (id, length) => {
+  const length = Object.values(lengthArr).reduce((pv, cv) => {
+    return pv + cv
+  })
+  console.log('Playing ' + length + 'accounts')
+}
+
 io.on('connection', client => {
   let inter
   let playing = []
@@ -61,7 +69,8 @@ io.on('connection', client => {
         client.emit('run', account)
         accounts = accounts.filter(a => a !== account)
         playing.push(account)
-        console.log('current', nbAccounts - accounts.length)
+        lengthArr[client.id] = playing.length
+        displayLength()
       }
     }, 1000 * 30);
   })
@@ -86,6 +95,8 @@ io.on('connection', client => {
     });
 
     playing = []
+    delete lengthArr[client.id]
+    displayLength()
     clearInterval(inter)
     client.removeAllListeners()
 
