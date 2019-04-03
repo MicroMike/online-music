@@ -56,6 +56,11 @@ io.on('connection', client => {
   let inter
   let playing = []
 
+  const setLength = (log) => {
+    lengthArr[client.id] = playing.length
+    displayLength(log)
+  }
+
   client.emit('activate', client.id)
 
   client.on('ok', ({ accountsValid, max, env, del }) => {
@@ -63,8 +68,7 @@ io.on('connection', client => {
     accounts = accounts.filter(a => del.indexOf(a) < 0)
     playing = accountsValid
 
-    lengthArr[client.id] = playing.length
-    displayLength('Connected')
+    setLength('Connected')
 
     inter = setInterval(() => {
       if (playing.length >= max) { return }
@@ -74,8 +78,7 @@ io.on('connection', client => {
         client.emit('run', account)
         accounts = accounts.filter(a => a !== account)
         playing.push(account)
-        lengthArr[client.id] = playing.length
-        displayLength('Add')
+        setLength('Add')
       }
     }, 1000 * 30);
   })
@@ -83,15 +86,13 @@ io.on('connection', client => {
   client.on('loop', account => {
     if (accounts.indexOf(account) < 0) { accounts.push(account) }
     playing = playing.filter(a => a !== account)
-    lengthArr[client.id] = playing.length
-    displayLength('Loop')
+    setLength('Loop')
   });
 
   client.on('delete', account => {
     nbAccounts--
     playing = playing.filter(a => a !== account)
-    lengthArr[client.id] = playing.length
-    displayLength('Del ' + account)
+    setLength('Del ' + account)
   })
 
   client.on('disconnect', () => {
