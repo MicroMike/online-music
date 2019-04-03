@@ -43,7 +43,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
 let lengthArr = {}
 let displayLength = (id, length) => {
   const values = Object.values(lengthArr)
-  const total = values && values.reduce((pv, cv) => {
+  const total = values.length && values.reduce((pv, cv) => {
     return pv + cv
   })
 
