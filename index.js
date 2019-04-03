@@ -47,7 +47,7 @@ let displayLength = (id, length) => {
     return pv + cv
   })
 
-  if (values) {
+  if (values.length) {
     console.log('Playing ' + total + ' accounts')
   }
 }
