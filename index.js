@@ -48,8 +48,9 @@ io.on('connection', client => {
 
   client.emit('activate', client.id)
 
-  client.on('ok', ({ accountsValid, max, env }) => {
+  client.on('ok', ({ accountsValid, max, env, del }) => {
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
+    accounts = accounts.filter(a => del.indexOf(a) < 0)
     playing = accountsValid
 
     inter = setInterval(() => {
@@ -73,17 +74,8 @@ io.on('connection', client => {
 
   client.on('delete', account => {
     nbAccounts--
+    playing = playing.filter(a => a !== account)
     console.log('del', account, nbAccounts - accounts.length)
-
-    fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
-      if (err) return console.log(err);
-      data = data.split(',').filter(e => e)
-      data = data.filter(a => a !== account)
-      data.push(account)
-      fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
-        if (err) return console.log(err);
-      });
-    });
   })
 
   client.on('disconnect', () => {
@@ -99,8 +91,6 @@ io.on('connection', client => {
 
     console.log('disconnect')
   })
-
 });
-
 
 server.listen(process.env.PORT || 3000);
