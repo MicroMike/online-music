@@ -3,6 +3,7 @@ var io = require('socket.io')(app);
 var fs = require('fs');
 
 function handler(req, res) {
+  console.log(req)
   fs.readFile(__dirname + '/index.html',
     function (err, data) {
       if (err) {
