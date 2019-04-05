@@ -123,7 +123,7 @@ io.on('connection', client => {
   })
 
   io.on('b', () => {
-    client.emit('reset')
+    client.emit('reStart')
   })
 });
 
