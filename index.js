@@ -114,10 +114,12 @@ io.on('connection', client => {
 
     playing = []
     delete lengthArr[client.id]
-    delete clients[client.id]
+
     displayLength('Disconnect')
     clearInterval(inter)
     client.removeAllListeners()
+
+    delete clients[client.id]
   })
 
   client.on('a', () => {
