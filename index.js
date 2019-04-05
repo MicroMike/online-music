@@ -1,7 +1,6 @@
 const fs = require('fs');
-const express = require('express');
-const app = express();
-const io = require('socket.io')(app);
+const server = require('http').createServer();
+const io = require('socket.io')(server);
 
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
@@ -122,9 +121,8 @@ io.on('started', client => {
   })
 });
 
-app.use('/static', express.static('public'));
-app.get('/', function (req, res) {
+server.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/index.html'));
 });
 
-app.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000);
