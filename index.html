@@ -4,7 +4,13 @@
 <head>
   <title>Socket.IO chat</title>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="public/socket.js"></script>
+  <script type="text/javascript">
+    var socket = io();
+
+    const reboot = () => {
+      socket.emit('reset')
+    }
+  </script>
 </head>
 
 <body>
