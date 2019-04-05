@@ -1,6 +1,19 @@
-const fs = require('fs');
-const server = require('http').createServer();
-const io = require('socket.io')(server);
+var app = require('http').createServer(handler)
+var io = require('socket.io')(app);
+var fs = require('fs');
+
+function handler(req, res) {
+  fs.readFile(__dirname + '/index.html',
+    function (err, data) {
+      if (err) {
+        res.writeHead(500);
+        return res.end('Error loading index.html');
+      }
+
+      res.writeHead(200);
+      res.end(data);
+    });
+}
 
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
@@ -121,8 +134,4 @@ io.on('started', client => {
   })
 });
 
-server.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname + '/index.html'));
-});
-
-server.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000);
