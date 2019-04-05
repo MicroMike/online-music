@@ -121,7 +121,7 @@ io.on('connection', client => {
   })
 
   client.on('a', () => {
-    clients.forEach(c => {
+    Object.values(clients).forEach(c => {
       c.emit('reStart')
     })
   })
