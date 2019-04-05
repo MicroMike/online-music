@@ -45,9 +45,7 @@ let displayLength = (log) => {
     return pv + cv
   })
 
-  if (values.length) {
-    console.log(log, total)
-  }
+  console.log(log, values.length ? total : 0)
 }
 
 io.on('connection', client => {
