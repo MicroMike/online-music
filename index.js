@@ -117,14 +117,11 @@ io.on('connection', client => {
     client.removeAllListeners()
   })
 
-  client.on('a', () => {
+  io.on('a', () => {
     console.log('reset')
-    io.emit('b')
-  })
-
-  io.on('b', () => {
     client.emit('reStart')
   })
+
 });
 
 app.listen(process.env.PORT || 3000);
