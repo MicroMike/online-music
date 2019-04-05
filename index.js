@@ -117,4 +117,9 @@ io.on('started', client => {
   })
 });
 
+server.use('/static', express.static('public'));
+server.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/index.html'));
+});
+
 server.listen(process.env.PORT || 3000);
