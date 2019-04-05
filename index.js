@@ -62,14 +62,6 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
-  client.emit('start')
-
-  client.on('started', () => {
-    io.emit('started', client)
-  })
-})
-
-io.on('started', client => {
   let inter
   let playing = []
 
