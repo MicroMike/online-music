@@ -49,6 +49,10 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
+  //temp
+  client.emit('reset')
+  //temp
+
   client.emit('start')
 
   client.on('started', () => {
@@ -118,7 +122,7 @@ io.on('started', client => {
 });
 
 server.use('/static', express.static('public'));
-server.get('/', function(req, res) {
+server.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/index.html'));
 });
 
