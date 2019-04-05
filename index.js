@@ -49,6 +49,14 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
+  client.emit('start')
+
+  client.on('started', () => {
+    io.emit('started', client)
+  })
+})
+
+io.on('started', client => {
   let inter
   let playing = []
 
@@ -102,6 +110,10 @@ io.on('connection', client => {
     displayLength('Disconnect')
     clearInterval(inter)
     client.removeAllListeners()
+  })
+
+  io.on('reset', () => {
+    client.emit('reset')
   })
 });
 
