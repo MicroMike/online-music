@@ -51,6 +51,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
+let clients = {}
 let lengthArr = {}
 let displayLength = (log) => {
   const values = Object.values(lengthArr)
@@ -62,6 +63,7 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
+  clients[client.id] = client
   let inter
   let playing = []
 
@@ -112,19 +114,18 @@ io.on('connection', client => {
 
     playing = []
     delete lengthArr[client.id]
+    delete clients[client.id]
     displayLength('Disconnect')
     clearInterval(inter)
     client.removeAllListeners()
   })
 
   client.on('a', () => {
-    io.emit('b')
+    clients.forEach(c => {
+      c.emit('reStart')
+    })
   })
 
-  io.on('b', () => {
-    console.log('reset')
-    client.emit('reStart')
-  })
 });
 
 app.listen(process.env.PORT || 3000);
