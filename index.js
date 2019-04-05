@@ -62,10 +62,6 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
-  //temp
-  client.emit('reset')
-  //temp
-
   client.emit('start')
 
   client.on('started', () => {
