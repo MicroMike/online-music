@@ -8,6 +8,7 @@
     var socket = io();
 
     const reboot = () => {
+      console.log('reset')
       socket.emit('reset')
     }
   </script>
