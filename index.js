@@ -118,6 +118,7 @@ io.on('connection', client => {
   })
 
   io.on('reset', () => {
+    console.log('reset')
     client.emit('reset')
   })
 });
