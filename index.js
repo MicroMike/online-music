@@ -117,13 +117,13 @@ io.on('connection', client => {
     client.removeAllListeners()
   })
 
-  io.on('reseted', () => {
-    client.emit('reset')
+  client.on('a', () => {
+    console.log('reset')
+    io.emit('b')
   })
 
-  client.on('reset', () => {
-    console.log('reset')
-    io.emit('reseted')
+  io.on('b', () => {
+    client.emit('reset')
   })
 });
 
