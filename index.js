@@ -23,7 +23,7 @@ const rand = (max, min) => {
 }
 
 const getAccount = env => {
-  const tempAccount = accounts
+  let tempAccount = accounts
 
   if (env.RAND) {
     for (let i = 0; i < tempAccount.length; i++) {
