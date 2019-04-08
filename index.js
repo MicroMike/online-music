@@ -23,17 +23,19 @@ const rand = (max, min) => {
 }
 
 const getAccount = env => {
+  const tempAccount = accounts
+
   if (env.RAND) {
-    for (let i = 0; i < accounts.length; i++) {
-      accounts.sort(() => { return rand(2) })
+    for (let i = 0; i < tempAccount.length; i++) {
+      tempAccount.sort(() => { return rand(2) })
     }
   }
 
   if (env.TYPE) {
-    accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+    tempAccount = tempAccount.filter(m => m.split(':')[0] === env.TYPE)
   }
 
-  return accounts.length ? accounts[0] : false
+  return tempAccount.length ? tempAccount[0] : false
 }
 
 fs.readFile(file, 'utf8', async (err, data) => {
