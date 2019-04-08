@@ -91,7 +91,7 @@ io.on('connection', client => {
         playing.push(account)
         setLength('Add')
       }
-    }, 1000 * 60);
+    }, env.TYPE ? 1000 * 20 : 1000 * 60);
   })
 
   client.on('loop', account => {
