@@ -91,7 +91,7 @@ io.on('connection', client => {
         playing.push(account)
         setLength('Add')
       }
-    }, 1000 * 30);
+    }, 1000 * 60);
   })
 
   client.on('loop', account => {
