@@ -128,6 +128,13 @@ io.on('connection', client => {
     })
   })
 
+  fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
+    if (err) return console.log(err);
+
+    delList = data.split(',')
+    client.emit('delList', delList)
+  })
+
 });
 
 app.listen(process.env.PORT || 3000);

@@ -11,11 +11,16 @@
       console.log('reset')
       socket.emit('a')
     }
+
+    socket.on('delList', (delList) => {
+      document.querySelector('#del').innerHTML = delList
+    })
   </script>
 </head>
 
 <body>
   <button onClick="reboot()">RESET</button>
+  <div id="del"></div>
 </body>
 
 </html>
