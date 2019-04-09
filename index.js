@@ -76,7 +76,7 @@ io.on('connection', client => {
 
   client.emit('activate', client.id)
 
-  client.on('ok', ({ accountsValid, max, env, del }) => {
+  client.on('ok', ({ accountsValid, max, env, del, pause }) => {
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
     accounts = accounts.filter(a => del.indexOf(a) < 0)
     playing = accountsValid
@@ -93,7 +93,7 @@ io.on('connection', client => {
         playing.push(account)
         setLength('Add')
       }
-    }, env.TYPE ? 1000 * 20 : 1000 * 60);
+    }, pause || 1000 * 20);
   })
 
   client.on('loop', account => {
@@ -105,6 +105,15 @@ io.on('connection', client => {
   client.on('delete', account => {
     playing = playing.filter(a => a !== account)
     setLength('Del ' + account)
+
+    fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
+      if (err) return console.log(err);
+      data = data.split(',').filter(e => e)
+      if (data.indexOf(account) < 0) { data.push(account) }
+      fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
+        if (err) return console.log(err);
+      });
+    });
   })
 
   client.on('disconnect', () => {
