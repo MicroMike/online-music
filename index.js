@@ -117,7 +117,10 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    console.log('retreive', playing.length)
+    if (playing.length) {
+      console.log('retreive', playing.length)
+    }
+    console.log('Disconnect')
 
     playing.forEach(a => {
       if (accounts.indexOf(a) < 0) { accounts.push(a) }
@@ -126,7 +129,6 @@ io.on('connection', client => {
     playing = []
     delete lengthArr[client.id]
 
-    displayLength('Disconnect')
     clearInterval(inter)
     client.removeAllListeners()
 
