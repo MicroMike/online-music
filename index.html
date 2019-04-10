@@ -18,7 +18,7 @@
 
     socket.on('displayScreen', ({ login, player, img }) => {
       console.log(login, player, img)
-      document.querySelector('body').insertAdjacentHTML('beforeEnd', '<div><span>' + login + ' ' + player + ' :</span><img src="src="data:image/png;base64,' + img + '"/></div>')
+      document.querySelector('body').insertAdjacentHTML('beforeEnd', '<div><span>' + login + ' ' + player + ' :</span><img src="data:image/png;base64,' + img + '"/></div>')
     })
   </script>
 </head>
