@@ -17,6 +17,7 @@ function handler(req, res) {
 
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
+let imgs = []
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -145,6 +146,20 @@ io.on('connection', client => {
     if (err) return console.log(err);
     client.emit('delList', delList)
   })
+
+  client.on('screen', data => {
+    imgs.push(data)
+    Object.values(clients).forEach(c => {
+      c.emit('displayScreen', data)
+    })
+  })
+
+  imgs.forEach(d => {
+    Object.values(clients).forEach(c => {
+      c.emit('displayScreen', d)
+    })
+  })
+
 
 });
 

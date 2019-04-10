@@ -15,6 +15,10 @@
     socket.on('delList', (delList) => {
       document.querySelector('#del').innerHTML = delList
     })
+
+    socket.on('displayScreen', (data) => {
+      document.querySelector('body').insertAdjacentHTML('beforeEnd', '<div><span>' + data.login + ' ' + data.player + ' :</span><img src="src="data:image/png;base64,' + data.img + '"/></div>')
+    })
   </script>
 </head>
 
