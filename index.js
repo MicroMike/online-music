@@ -137,6 +137,7 @@ io.on('connection', client => {
   })
 
   client.on('a', () => {
+    imgs = []
     Object.values(clients).forEach(c => {
       c.emit('reStart')
     })
