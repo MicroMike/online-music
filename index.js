@@ -18,25 +18,28 @@ function handler(req, res) {
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let imgs = []
+let total = {
+  napster,
+  spotify,
+  tidal
+}
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
 const getAccount = env => {
-  let tempAccount = accounts
-
   if (env.RAND) {
-    for (let i = 0; i < tempAccount.length; i++) {
-      tempAccount.sort(() => { return rand(2) })
+    for (let i = 0; i < accounts.length; i++) {
+      accounts.sort(() => { return rand(2) })
     }
   }
 
   if (env.TYPE) {
-    tempAccount = tempAccount.filter(m => m.split(':')[0] === env.TYPE)
+    accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
   }
 
-  return tempAccount.length ? tempAccount[0] : false
+  return accounts.length ? accounts.shift() : false
 }
 
 fs.readFile(file, 'utf8', async (err, data) => {
@@ -91,7 +94,6 @@ io.on('connection', client => {
       const account = getAccount(env)
       if (account) {
         client.emit('run', account)
-        accounts = accounts.filter(a => a !== account)
         playing.push(account)
         setLength('Add')
       }
