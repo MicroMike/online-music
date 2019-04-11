@@ -150,17 +150,20 @@ io.on('connection', client => {
 
   client.on('screen', data => {
     imgs.push(data)
-    Object.values(clients).forEach(c => {
-      c.emit('displayScreen', data)
+    imgs.forEach(d => {
+      Object.values(clients).forEach(c => {
+        c.emit('displayScreen', d)
+      })
     })
   })
 
-  imgs.forEach(d => {
-    Object.values(clients).forEach(c => {
-      c.emit('displayScreen', d)
+  client.on('web', () => {
+    imgs.forEach(d => {
+      Object.values(clients).forEach(c => {
+        c.emit('displayScreen', d)
+      })
     })
   })
-
 
 });
 

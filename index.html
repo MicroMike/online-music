@@ -12,6 +12,10 @@
       socket.emit('a')
     }
 
+    socket.on('activate', () => {
+      socket.emit('web')
+    })
+
     socket.on('delList', (delList) => {
       document.querySelector('#del').innerHTML = delList
     })
