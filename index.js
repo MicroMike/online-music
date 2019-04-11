@@ -69,6 +69,7 @@ io.on('connection', client => {
   clients[client.id] = client
   let inter
   let playing = []
+  let web
 
   const setLength = (log) => {
     lengthArr[client.id] = playing.length
@@ -118,16 +119,19 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    if (playing.length) {
-      console.log('retreive', playing.length)
+    if (!web) {
+      if (playing.length) {
+        console.log('retreive', playing.length)
+      }
+      console.log('Disconnect')
     }
-    console.log('Disconnect')
 
     playing.forEach(a => {
       if (accounts.indexOf(a) < 0) { accounts.push(a) }
     });
 
     playing = []
+
     delete lengthArr[client.id]
 
     clearInterval(inter)
@@ -158,6 +162,7 @@ io.on('connection', client => {
   })
 
   client.on('web', () => {
+    web = true
     imgs.forEach(d => {
       Object.values(clients).forEach(c => {
         c.emit('displayScreen', d)
