@@ -18,11 +18,6 @@ function handler(req, res) {
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let imgs = []
-let total = {
-  napster,
-  spotify,
-  tidal
-}
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
