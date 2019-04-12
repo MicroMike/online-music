@@ -106,11 +106,13 @@ io.on('connection', client => {
       if (accounts.indexOf(account) < 0) { accounts.push(account) }
       playing = playing.filter(a => a !== account)
       setLength('Loop')
+      client.emit('goPlay')
     });
 
     client.on('delete', account => {
       playing = playing.filter(a => a !== account)
       setLength('Del ' + account)
+      client.emit('goPlay')
 
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
         if (err) return console.log(err);
