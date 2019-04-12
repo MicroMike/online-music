@@ -79,7 +79,6 @@ io.on('connection', client => {
 
   client.on('player', clientId => {
     isPlayer = true
-    console.log('play', clientId, clients[clientId])
     clients[clientId].emit('goPlay')
   })
 
