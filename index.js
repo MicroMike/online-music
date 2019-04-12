@@ -76,7 +76,11 @@ io.on('connection', client => {
 
   client.on('player', clientId => {
     isPlayer = true
-    clients[clientId].emit('goPlay')
+    try {
+      clients[clientId].emit('goPlay')
+    }
+    catch (e) { }
+
   })
 
   client.on('ok', params => {
