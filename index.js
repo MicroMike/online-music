@@ -178,10 +178,9 @@ io.on('connection', client => {
   })
 
   client.on('html', ({ clientId, html }) => {
-    try {
-      webs[clientId].emit('writeHtml', { clientId, html })
-    }
-    catch (e) { }
+    Object.values(webs).forEach(c => {
+      c.emit('writeHtml', { clientId, html })
+    })
   })
 
   client.on('web', () => {
