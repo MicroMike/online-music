@@ -75,12 +75,15 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('player', clientId => {
+
+  })
+
+  client.on('player', clientId => {
     isPlayer = true
     try {
       clients[clientId].emit('goPlay')
     }
     catch (e) { }
-
   })
 
   client.on('ok', params => {
@@ -163,13 +166,19 @@ io.on('connection', client => {
     client.removeAllListeners()
   })
 
+  fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
+    if (err) return console.log(err);
+    client.emit('delList', delList)
+  })
+
+  imgs.forEach(d => {
+    Object.values(webs).forEach(c => {
+      c.emit('displayScreen', d)
+    })
+  })
+
   client.on('web', () => {
     webs[client.id] = client
-
-    fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
-      if (err) return console.log(err);
-      client.emit('delList', delList)
-    })
 
     client.on('a', () => {
       imgs = []
@@ -177,14 +186,7 @@ io.on('connection', client => {
         c.emit('reStart')
       })
     })
-
-    imgs.forEach(d => {
-      Object.values(webs).forEach(c => {
-        c.emit('displayScreen', d)
-      })
-    })
   })
-
 });
 
 app.listen(process.env.PORT || 3000);
