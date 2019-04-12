@@ -177,6 +177,10 @@ io.on('connection', client => {
     })
   })
 
+  client.on('html', ({ clientId, html }) => {
+    webs[clientId].emit('writeHtml', { clientId, html })
+  })
+
   client.on('web', () => {
     webs[client.id] = client
 

@@ -12,6 +12,16 @@
       socket.emit('a')
     }
 
+    socket.on('writeHtml', ({ clientId, html }) => {
+      const isDom = document.querySelector('#' + clientId)
+      if (!isDom) {
+        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div id="' + clientId + '" style="width:720px;height:450px;">' + html + '</div>')
+      }
+      else {
+        isDom.innerHTML = html
+      }
+    })
+
     socket.on('activate', () => {
       socket.emit('web')
     })
@@ -30,6 +40,7 @@
 <body>
   <button onClick="reboot()">RESET</button>
   <div id="del"></div>
+  <div class="screenshot"></div>
 </body>
 
 </html>
