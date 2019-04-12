@@ -67,7 +67,8 @@ io.on('connection', client => {
   clients[client.id] = client
   let inter
   let playing = []
-  let web
+  let isWeb
+  let isPlayer
 
   const setLength = (log) => {
     lengthArr[client.id] = playing.length
@@ -76,47 +77,66 @@ io.on('connection', client => {
 
   client.emit('activate', client.id)
 
-  client.on('ok', ({ accountsValid, max, env, del, pause }) => {
+  client.on('player', clientId => {
+    isPlayer = true
+    clients[clientId].emit('play')
+  })
+
+  client.on('ok', params => {
+    const { accountsValid, del, max, env } = params
+
+    playing = accountsValid
     accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
     accounts = accounts.filter(a => del.indexOf(a) < 0)
-    playing = accountsValid
 
     setLength('Connected')
 
-    inter = setInterval(() => {
+    client.on('play', () => {
       if (playing.length >= max) { return }
 
       const account = getAccount(env)
+
       if (account) {
         client.emit('run', account)
+        accounts = accounts.filter(a => a !== account)
         playing.push(account)
-        setLength('Add')
       }
-    }, pause || 1000 * 20);
-  })
+    })
 
-  client.on('loop', account => {
-    if (accounts.indexOf(account) < 0) { accounts.push(account) }
-    playing = playing.filter(a => a !== account)
-    setLength('Loop')
-  });
-
-  client.on('delete', account => {
-    playing = playing.filter(a => a !== account)
-    setLength('Del ' + account)
-
-    fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
-      if (err) return console.log(err);
-      data = data.split(',').filter(e => e)
-      if (data.indexOf(account) < 0) { data.push(account) }
-      fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
-        if (err) return console.log(err);
-      });
+    client.on('loop', account => {
+      if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      playing = playing.filter(a => a !== account)
+      setLength('Loop')
     });
+
+    client.on('delete', account => {
+      playing = playing.filter(a => a !== account)
+      setLength('Del ' + account)
+
+      fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
+        if (err) return console.log(err);
+        data = data.split(',').filter(e => e)
+        if (data.indexOf(account) < 0) { data.push(account) }
+        fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
+          if (err) return console.log(err);
+        });
+      });
+    })
+
+    client.on('screen', data => {
+      imgs.push(data)
+      imgs.forEach(d => {
+        Object.values(clients).forEach(c => {
+          c.emit('displayScreen', d)
+        })
+      })
+    })
+
+    client.emit('play')
   })
 
   client.on('disconnect', () => {
-    if (!web) {
+    if (!isWeb && !isPlayer) {
       if (playing.length) {
         console.log('retreive', playing.length)
       }
@@ -137,29 +157,21 @@ io.on('connection', client => {
     delete clients[client.id]
   })
 
-  client.on('a', () => {
-    imgs = []
-    Object.values(clients).forEach(c => {
-      c.emit('reStart')
-    })
-  })
-
-  fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
-    if (err) return console.log(err);
-    client.emit('delList', delList)
-  })
-
-  client.on('screen', data => {
-    imgs.push(data)
-    imgs.forEach(d => {
-      Object.values(clients).forEach(c => {
-        c.emit('displayScreen', d)
-      })
-    })
-  })
-
   client.on('web', () => {
     web = true
+
+    fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
+      if (err) return console.log(err);
+      client.emit('delList', delList)
+    })
+
+    client.on('a', () => {
+      imgs = []
+      Object.values(clients).forEach(c => {
+        c.emit('reStart')
+      })
+    })
+
     imgs.forEach(d => {
       Object.values(clients).forEach(c => {
         c.emit('displayScreen', d)
