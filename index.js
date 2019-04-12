@@ -53,6 +53,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
 });
 
 let clients = {}
+let webs = {}
 let lengthArr = {}
 let displayLength = (log) => {
   const values = Object.values(lengthArr)
@@ -64,11 +65,7 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
-  clients[client.id] = client
-  let inter
   let playing = []
-  let isWeb
-  let isPlayer
 
   const setLength = (log) => {
     lengthArr[client.id] = playing.length
@@ -83,6 +80,7 @@ io.on('connection', client => {
   })
 
   client.on('ok', params => {
+    clients[client.id] = client
     const { accountsValid, del, max, env } = params
 
     playing = accountsValid
@@ -100,6 +98,7 @@ io.on('connection', client => {
         client.emit('run', account)
         accounts = accounts.filter(a => a !== account)
         playing.push(account)
+        setLength('Add')
       }
     })
 
@@ -136,29 +135,30 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    if (!isWeb && !isPlayer) {
+    if (clients[client.id]) {
       if (playing.length) {
         console.log('retreive', playing.length)
       }
       console.log('Disconnect')
+
+      playing.forEach(a => {
+        if (accounts.indexOf(a) < 0) { accounts.push(a) }
+      });
+
+      playing = []
+
+      delete lengthArr[client.id]
+      delete clients[client.id]
+    }
+    else if (webs[client.id]) {
+      delete webs[client.id]
     }
 
-    playing.forEach(a => {
-      if (accounts.indexOf(a) < 0) { accounts.push(a) }
-    });
-
-    playing = []
-
-    delete lengthArr[client.id]
-
-    clearInterval(inter)
     client.removeAllListeners()
-
-    delete clients[client.id]
   })
 
   client.on('web', () => {
-    web = true
+    webs[client.id] = client
 
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
       if (err) return console.log(err);
@@ -173,7 +173,7 @@ io.on('connection', client => {
     })
 
     imgs.forEach(d => {
-      Object.values(clients).forEach(c => {
+      Object.values(webs).forEach(c => {
         c.emit('displayScreen', d)
       })
     })
