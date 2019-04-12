@@ -92,8 +92,6 @@ io.on('connection', client => {
     setLength('Connected')
 
     client.on('play', () => {
-      console.log('play')
-
       if (playing.length >= max) { return }
 
       const account = getAccount(env)
@@ -135,8 +133,9 @@ io.on('connection', client => {
     })
 
     setTimeout(() => {
+      console.log('play')
       client.emit('play')
-    }, 1000);
+    }, 1000 * 30);
   })
 
   client.on('disconnect', () => {
