@@ -131,11 +131,6 @@ io.on('connection', client => {
         })
       })
     })
-
-    setTimeout(() => {
-      console.log('play')
-      client.emit('play')
-    }, 1000 * 30);
   })
 
   client.on('disconnect', () => {
