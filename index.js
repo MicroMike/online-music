@@ -188,23 +188,24 @@ io.on('connection', client => {
 
     client.on('check', () => {
       let checkAccounts
+      let checkClient = Object.values(clients)[0]
 
       fs.readFile('check.txt', 'utf8', async (err, data) => {
         if (err) return console.log(err);
 
         checkAccounts = data.split(',').filter(e => e)
 
-        clients[0].emit('check')
+        checkClient.emit('check')
       })
 
-      clients[0].on('playCheck', () => {
+      checkClient.on('playCheck', () => {
         checkAccount = checkAccounts.length ? checkAccounts.shift() : false
 
         if (!checkAccount) {
-          clients[0].emit('endCheck')
+          checkClient.emit('endCheck')
         }
         else {
-          clients[0].emit('runCheck', checkAccount)
+          checkClient.emit('runCheck', checkAccount)
         }
       })
     })
