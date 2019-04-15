@@ -190,6 +190,8 @@ io.on('connection', client => {
       let checkAccounts
       let checkClient = Object.values(clients)[0]
 
+      if (!checkClient) { return }
+
       fs.readFile('check.txt', 'utf8', async (err, data) => {
         if (err) return console.log(err);
 
