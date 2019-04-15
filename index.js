@@ -82,10 +82,6 @@ io.on('connection', client => {
     catch (e) { }
   })
 
-  client.on('log', log => {
-    console.log(log)
-  })
-
   client.on('ok', params => {
     clients[client.id] = client
     const { accountsValid, del, max, env } = params
@@ -171,12 +167,6 @@ io.on('connection', client => {
     client.emit('delList', delList)
   })
 
-  imgs.forEach(d => {
-    Object.values(webs).forEach(c => {
-      c.emit('displayScreen', d)
-    })
-  })
-
   client.on('html', ({ clientId, html }) => {
     Object.values(webs).forEach(c => {
       c.emit('writeHtml', { clientId, html })
@@ -185,6 +175,12 @@ io.on('connection', client => {
 
   client.on('web', () => {
     webs[client.id] = client
+
+    imgs.forEach(d => {
+      Object.values(webs).forEach(c => {
+        c.emit('displayScreen', d)
+      })
+    })
 
     client.on('a', () => {
       imgs = []
