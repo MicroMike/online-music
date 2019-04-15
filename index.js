@@ -130,7 +130,7 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('screen', data => {
+  client.on('screen', (data) => {
     imgs.push(data)
     imgs.forEach(d => {
       Object.values(webs).forEach(c => {
