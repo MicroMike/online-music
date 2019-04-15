@@ -186,7 +186,30 @@ io.on('connection', client => {
       })
     })
 
-    client.on('clear', () => {
+    client.on('check', () => {
+      let checkAccounts
+
+      fs.readFile('check.txt', 'utf8', async (err, data) => {
+        if (err) return console.log(err);
+
+        checkAccounts = data.split(',').filter(e => e)
+
+        clients[0].emit('check')
+      })
+
+      clients[0].on('playCheck', () => {
+        checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+
+        if (!checkAccount) {
+          clients[0].emit('endCheck')
+        }
+        else {
+          clients[0].emit('runCheck', checkAccount)
+        }
+      })
+    })
+
+    client.on('clearScreen', () => {
       imgs = []
     })
   })

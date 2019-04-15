@@ -12,9 +12,13 @@
       socket.emit('a')
     }
 
-    const clear = () => {
+    const clearScreen = () => {
       document.querySelector('.screenshot').innerHTML = ''
-      socket.emit('clear')
+      socket.emit('clearScreen')
+    }
+
+    const check = () => {
+      socket.emit('check')
     }
 
     socket.on('writeHtml', ({ clientId, html }) => {
@@ -47,7 +51,8 @@
 
 <body>
   <button onClick="reboot()">RESET</button>
-  <button onClick="clear()">CLEAR SCREENSHOT</button>
+  <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
+  <button onClick="check()">CHECK</button>
   <div id="del"></div>
   <div class="screenshot"></div>
 </body>
