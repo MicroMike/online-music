@@ -75,7 +75,6 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('player', clientId => {
-    isPlayer = true
     try {
       clients[clientId].emit('goPlay')
     }
@@ -105,10 +104,11 @@ io.on('connection', client => {
       }
     })
 
-    client.on('loop', ({ errorMsg, account }) => {
+    client.on('loop', params => {
+      const { errorMsg, account } = params
       if (accounts.indexOf(account) < 0) { accounts.push(account) }
       playing = playing.filter(a => a !== account)
-      setLength(errorMsg)
+      setLength(errorMsg + ' ' + account)
       client.emit('goPlay')
     });
 
@@ -130,7 +130,7 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('screen', (data) => {
+  client.on('screen', data => {
     console.log(data.log)
     imgs.push(data)
     imgs.forEach(d => {
