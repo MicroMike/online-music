@@ -127,17 +127,18 @@ io.on('connection', client => {
       });
     })
 
-    client.on('screen', data => {
-      console.log(data.log)
-      imgs.push(data)
-      imgs.forEach(d => {
-        Object.values(webs).forEach(c => {
-          c.emit('displayScreen', d)
-        })
+    client.emit('goPlay')
+  })
+  
+
+  client.on('screen', data => {
+    console.log(data.log)
+    imgs.push(data)
+    imgs.forEach(d => {
+      Object.values(webs).forEach(c => {
+        c.emit('displayScreen', d)
       })
     })
-
-    client.emit('goPlay')
   })
 
   client.on('disconnect', () => {
