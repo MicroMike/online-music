@@ -131,7 +131,6 @@ io.on('connection', client => {
   })
 
   client.on('screen', data => {
-    console.log(data.log)
     imgs.push(data)
     Object.values(webs).forEach(c => {
       c.emit('displayScreen', data)
