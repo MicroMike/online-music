@@ -12,6 +12,11 @@
       socket.emit('a')
     }
 
+    const clear = () => {
+      document.querySelector('.screenshot').innerHTML = ''
+      socket.emit('clear')
+    }
+
     socket.on('writeHtml', ({ clientId, html }) => {
       const isDom = document.querySelector('#' + clientId)
       if (!isDom) {
@@ -35,13 +40,14 @@
     })
 
     socket.on('displayScreen', ({ log, img }) => {
-      document.querySelector('body').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><img src="data:image/png;base64,' + img + '"/></div>')
+      document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><img src="data:image/png;base64,' + img + '"/></div>')
     })
   </script>
 </head>
 
 <body>
   <button onClick="reboot()">RESET</button>
+  <button onClick="clear()">CLEAR SCREENSHOT</button>
   <div id="del"></div>
   <div class="screenshot"></div>
 </body>
