@@ -21,6 +21,10 @@
       socket.emit('check')
     }
 
+    const endCheck = () => {
+      socket.emit('endCheck')
+    }
+
     socket.on('writeHtml', ({ clientId, html }) => {
       const isDom = document.querySelector('#' + clientId)
       if (!isDom) {
@@ -53,6 +57,7 @@
   <button onClick="reboot()">RESET</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="check()">CHECK</button>
+  <button onClick="endCheck()">END CHECK</button>
   <div id="del"></div>
   <div class="screenshot"></div>
 </body>

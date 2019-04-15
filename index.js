@@ -192,6 +192,10 @@ io.on('connection', client => {
 
       if (!checkClient) { return console.log('error check') }
 
+      client.on('endCheck', () => {
+        checkClient.emit('endCheck')
+      })
+
       fs.readFile('check.txt', 'utf8', async (err, data) => {
         if (err) return console.log(err);
 
@@ -203,10 +207,7 @@ io.on('connection', client => {
       checkClient.on('playCheck', () => {
         checkAccount = checkAccounts.length ? checkAccounts.shift() : false
 
-        if (!checkAccount) {
-          checkClient.emit('endCheck')
-        }
-        else {
+        if (checkAccount) {
           checkClient.emit('runCheck', checkAccount)
         }
       })
