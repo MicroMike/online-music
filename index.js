@@ -105,10 +105,10 @@ io.on('connection', client => {
       }
     })
 
-    client.on('loop', account => {
+    client.on('loop', ({ errorMsg, account }) => {
       if (accounts.indexOf(account) < 0) { accounts.push(account) }
       playing = playing.filter(a => a !== account)
-      setLength('Loop')
+      setLength(errorMsg)
       client.emit('goPlay')
     });
 
