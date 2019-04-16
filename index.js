@@ -180,7 +180,7 @@ io.on('connection', client => {
 
     Object.values(imgs).forEach(d => {
       Object.values(webs).forEach(c => {
-        c.emit('displayScreen', d)
+        c.emit('stream', d)
       })
     })
 
