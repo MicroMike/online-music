@@ -34,7 +34,7 @@
     })
 
     const toggleBtn = btn => {
-      socket.emit(btn.innerText, btn.class)
+      socket.emit(btn.innerText, btn.className)
       btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'
     }
 
