@@ -17,7 +17,6 @@ function handler(req, res) {
 
 let accounts
 let file = process.env.FILE || 'napsterAccount.txt'
-let imgs = []
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -37,6 +36,13 @@ const getAccount = env => {
   return accounts.length ? accounts.shift() : false
 }
 
+const b64toBlob = async (b64Data, contentType = 'image/jpg') => {
+  const url = `data:${contentType};base64,${b64Data}`;
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return URL.createObjectURL(blob)
+}
+
 fs.readFile(file, 'utf8', async (err, data) => {
   if (err) return console.log(err);
 
@@ -52,7 +58,9 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
+let imgs = {}
 let clients = {}
+let streams = {}
 let webs = {}
 let lengthArr = {}
 let displayLength = (log) => {
@@ -74,12 +82,30 @@ io.on('connection', client => {
 
   client.emit('activate', client.id)
 
-  client.on('player', clientId => {
-    try {
-      clients[clientId].emit('goPlay')
-    }
-    catch (e) { }
+  client.on('runner', () => {
+    streams[client.id] = client
+
+    client.on('player', clientId => {
+      try {
+        clients[clientId].emit('goPlay')
+      }
+      catch (e) { }
+    })
+
+    client.on('screen', data => {
+      imgs[client.id] = data
+      Object.values(webs).forEach(c => {
+        c.emit('displayScreen', data)
+      })
+    })
+
+    client.on('stream', data => {
+      Object.values(webs).forEach(c => {
+        c.emit('stream', data)
+      })
+    })
   })
+
 
   client.on('ok', params => {
     clients[client.id] = client
@@ -130,13 +156,6 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('screen', data => {
-    imgs.push(data)
-    Object.values(webs).forEach(c => {
-      c.emit('displayScreen', data)
-    })
-  })
-
   client.on('disconnect', () => {
     if (clients[client.id]) {
       if (playing.length) {
@@ -156,6 +175,10 @@ io.on('connection', client => {
     else if (webs[client.id]) {
       delete webs[client.id]
     }
+    else if (streams[client.id]) {
+      delete imgs[client.id]
+      delete streams[client.id]
+    }
 
     client.removeAllListeners()
   })
@@ -174,7 +197,7 @@ io.on('connection', client => {
   client.on('web', () => {
     webs[client.id] = client
 
-    imgs.forEach(d => {
+    Object.values(imgs).forEach(d => {
       Object.values(webs).forEach(c => {
         c.emit('displayScreen', d)
       })
@@ -184,6 +207,20 @@ io.on('connection', client => {
       Object.values(clients).forEach(c => {
         c.emit('reStart')
       })
+    })
+
+    client.on('streamOn', clientId => {
+      try {
+        streams[clientId].emit('streamOn')
+      }
+      catch (e) { }
+    })
+
+    client.on('streamOff', clientId => {
+      try {
+        streams[clientId].emit('streamOff')
+      }
+      catch (e) { }
     })
 
     client.on('check', () => {
@@ -214,7 +251,7 @@ io.on('connection', client => {
     })
 
     client.on('clearScreen', () => {
-      imgs = []
+      imgs = {}
     })
   })
 });
