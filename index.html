@@ -29,10 +29,6 @@
       socket.emit('web')
     })
 
-    socket.on('logError', log => {
-      socket.emit('web')
-    })
-
     const toggleBtn = btn => {
       socket.emit(btn.innerText, btn.class)
       btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'

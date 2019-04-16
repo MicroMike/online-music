@@ -93,6 +93,7 @@ io.on('connection', client => {
     })
 
     client.on('stream', data => {
+      data.log = imgs[client.id] && imgs[client.id].log
       Object.values(webs).forEach(c => {
         c.emit('stream', data)
       })
@@ -196,17 +197,11 @@ io.on('connection', client => {
     })
 
     client.on('streamOn', clientId => {
-      try {
-        streams[clientId].emit('streamOn')
-      }
-      catch (e) { }
+      streams[clientId].emit('streamOn')
     })
 
     client.on('streamOff', clientId => {
-      try {
-        streams[clientId].emit('streamOff')
-      }
-      catch (e) { }
+      streams[clientId].emit('streamOff')
     })
 
     client.on('check', () => {
