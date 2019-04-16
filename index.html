@@ -33,18 +33,9 @@
       socket.emit('web')
     })
 
-    const streamOn = streamId => {
-      socket.emit('streamOn', streamId)
-      const btn = document.querySelector('#btn' + streamId)
-      btn.innerText = 'streamOff'
-      btn.onclick = 'streamOff(\'' + streamId + '\')'
-    }
-
-    const streamOff = streamId => {
-      socket.emit('streamOff', streamId)
-      const btn = document.querySelector('#btn' + streamId)
-      btn.innerText = 'streamOn'
-      btn.onclick = 'streamOn(\'' + streamId + '\')'
+    const toggleBtn = btn => {
+      socket.emit(btn.innerText, btn.class)
+      btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'
     }
 
     socket.on('delList', (delList) => {
@@ -55,7 +46,8 @@
       const isDom = document.querySelector('#class' + streamId)
       const streamBtn = streamOff ? 'streamOn' : 'streamOff'
       if (!isDom) {
-        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button id="btn' + streamId + '" onClick="' + streamBtn + '(\'' + streamId + '\')">' + streamBtn + '</button><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
+        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button id="btn' + streamId + '" class="' + streamId + '" onclick="toggleBtn(this)">' + streamBtn + '</button><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
+        document.querySelector('#class' + streamId).addEventListener('click')
       }
       else {
         isDom.src = 'data:image/png;base64,' + img
