@@ -52,10 +52,10 @@
     })
 
     socket.on('stream', ({ streamOff, streamId, log, img }) => {
-      const streamBtn = streamOff ? 'streamOn' : 'streamOff'
       const isDom = document.querySelector('#class' + streamId)
+      const streamBtn = streamOff ? 'streamOn' : 'streamOff'
       if (!isDom) {
-        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button id="btn' + streamId + '" value="' + streamBtn + '" onClick="' + streamBtn + '(\'' + streamId + '\')"/><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
+        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button id="btn' + streamId + '" onClick="' + streamBtn + '(\'' + streamId + '\')">' + streamBtn + '</button><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
       }
       else {
         isDom.src = 'data:image/png;base64,' + img
