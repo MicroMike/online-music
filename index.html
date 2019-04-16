@@ -36,14 +36,14 @@
     const streamOn = streamId => {
       socket.emit('streamOn', streamId)
       const btn = document.querySelector('#btn' + streamId)
-      btn.innerHTML = 'streamOff'
+      btn.innerText = 'streamOff'
       btn.onClick = 'streamOff(\'' + streamId + '\')'
     }
 
     const streamOff = streamId => {
       socket.emit('streamOff', streamId)
       const btn = document.querySelector('#btn' + streamId)
-      btn.innerHTML = 'streamOn'
+      btn.innerText = 'streamOn'
       btn.onClick = 'streamOn(\'' + streamId + '\')'
     }
 
