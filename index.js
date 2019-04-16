@@ -88,7 +88,7 @@ io.on('connection', client => {
     client.on('screen', data => {
       imgs[client.id] = data
       Object.values(webs).forEach(c => {
-        c.emit('displayScreen', data)
+        c.emit('stream', data)
       })
     })
 

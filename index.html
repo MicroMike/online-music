@@ -47,7 +47,7 @@
       document.querySelector('#del').innerHTML = delList
     })
 
-    socket.on('displayScreen', ({ streamOff, streamId, log, img }) => {
+    socket.on('stream', ({ streamOff, streamId, log, img }) => {
       const streamBtn = streamOff ? 'streamOn' : 'streamOff'
       const isDom = document.querySelector('#class' + streamId)
       if (!isDom) {
@@ -56,11 +56,6 @@
       else {
         isDom.src = 'data:image/png;base64,' + img
       }
-    })
-
-    socket.on('stream', ({ streamId, img }) => {
-      const isDom = document.querySelector('#class' + streamId)
-      isDom.src = 'data:image/png;base64,' + img
     })
   </script>
 </head>
