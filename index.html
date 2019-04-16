@@ -12,6 +12,10 @@
       socket.emit('a')
     }
 
+    const spotifyPause = () => {
+      socket.emit('spotifyPause')
+    }
+
     const clearScreen = () => {
       document.querySelector('.screenshot').innerHTML = ''
       socket.emit('clearScreen')
@@ -57,6 +61,7 @@
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="check()">CHECK</button>
   <button onClick="endCheck()">END CHECK</button>
+  <button onClick="spotifyPause()">SPOTIFY PAUSE</button>
   <div id="del"></div>
   <div class="screenshot"></div>
   <div class="stream"></div>

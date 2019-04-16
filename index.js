@@ -234,6 +234,10 @@ io.on('connection', client => {
     client.on('clearScreen', () => {
       imgs = {}
     })
+
+    client.on('spotifyPause', () => {
+      accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
+    })
   })
 });
 
