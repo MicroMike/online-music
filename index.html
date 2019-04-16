@@ -35,7 +35,7 @@
 
     const streamOn = streamId => {
       socket.emit('streamOn', streamId)
-      document.querySelector('#' + streamId).insertAdjacentHTML('afterEnd', '<button onClick="streamOff(' + streamId + ')>STREAM OFF</button>')
+      document.querySelector('#' + streamId).insertAdjacentHTML('afterEnd', '<button onClick="streamOff("' + streamId + '")>STREAM OFF</button>')
     }
 
     const streamOff = streamId => {
@@ -48,7 +48,7 @@
     })
 
     socket.on('displayScreen', ({ streamId, log, img }) => {
-      document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button onClick="streamOn(' + streamId + ')">STREAM ON</button><img id="' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
+      document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button onClick="streamOn("' + streamId + '")">STREAM ON</button><img id="' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
     })
 
     socket.on('stream', ({ streamId, img }) => {
