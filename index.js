@@ -169,7 +169,6 @@ io.on('connection', client => {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
-      delete imgs[client.id]
       delete streams[client.id]
     }
 
