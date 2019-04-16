@@ -169,6 +169,7 @@ io.on('connection', client => {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
+      delete imgs[client.id]
       delete streams[client.id]
     }
 
@@ -196,11 +197,17 @@ io.on('connection', client => {
     })
 
     client.on('streamOn', clientId => {
-      streams[clientId].emit('streamOn')
+      try {
+        streams[clientId].emit('streamOn')
+      }
+      catch (e) { }
     })
 
     client.on('streamOff', clientId => {
-      streams[clientId].emit('streamOff')
+      try {
+        streams[clientId].emit('streamOff')
+      }
+      catch (e) { }
     })
 
     client.on('check', () => {
