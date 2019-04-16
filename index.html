@@ -49,9 +49,9 @@
 
     socket.on('displayScreen', ({ streamOff, streamId, log, img }) => {
       const streamBtn = streamOff ? 'streamOn' : 'streamOff'
-      const isDom = document.querySelector('#class' + classId)
+      const isDom = document.querySelector('#class' + streamId)
       if (!isDom) {
-        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button onClick="' + streamBtn + '(\'' + streamId + '\')">STREAM ON</button><img id="class' + classId + '" src="data:image/png;base64,' + img + '"/></div>')
+        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button onClick="' + streamBtn + '(\'' + streamId + '\')">STREAM ON</button><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
       }
       else {
         isDom.src = 'data:image/png;base64,' + img
