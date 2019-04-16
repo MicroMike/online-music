@@ -36,13 +36,6 @@ const getAccount = env => {
   return accounts.length ? accounts.shift() : false
 }
 
-const b64toBlob = async (b64Data, contentType = 'image/jpg') => {
-  const url = `data:${contentType};base64,${b64Data}`;
-  const response = await fetch(url);
-  const blob = await response.blob();
-  return URL.createObjectURL(blob)
-}
-
 fs.readFile(file, 'utf8', async (err, data) => {
   if (err) return console.log(err);
 
@@ -105,7 +98,6 @@ io.on('connection', client => {
       })
     })
   })
-
 
   client.on('ok', params => {
     clients[client.id] = client
@@ -183,17 +175,6 @@ io.on('connection', client => {
     client.removeAllListeners()
   })
 
-  fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
-    if (err) return console.log(err);
-    client.emit('delList', delList)
-  })
-
-  client.on('html', ({ clientId, html }) => {
-    Object.values(webs).forEach(c => {
-      c.emit('writeHtml', { clientId, html })
-    })
-  })
-
   client.on('web', () => {
     webs[client.id] = client
 
@@ -201,6 +182,11 @@ io.on('connection', client => {
       Object.values(webs).forEach(c => {
         c.emit('displayScreen', d)
       })
+    })
+
+    fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
+      if (err) return console.log(err);
+      client.emit('delList', delList)
     })
 
     client.on('a', () => {
