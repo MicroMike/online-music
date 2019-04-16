@@ -59,7 +59,7 @@
     })
 
     socket.on('stream', ({ streamId, img }) => {
-      const isDom = document.querySelector('#' + streamId)
+      const isDom = document.querySelector('#class' + streamId)
       isDom.src = 'data:image/png;base64,' + img
     })
   </script>
