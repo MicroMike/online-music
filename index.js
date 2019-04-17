@@ -67,9 +67,8 @@ io.on('connection', client => {
 
   client.on('runner', account => {
     streams[client.id] = client
-
+    console.log(account)
     displayLength('Add')
-
     accounts = accounts.filter(a => a !== account)
 
     client.on('player', clientId => {
@@ -105,6 +104,9 @@ io.on('connection', client => {
     clients[client.id] = client
     const { accountsValid, del, max, env } = params
 
+    if (accountsValid) {
+      accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
+    }
     accounts = accounts.filter(a => del.indexOf(a) < 0)
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
