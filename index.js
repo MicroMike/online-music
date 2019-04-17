@@ -155,7 +155,6 @@ io.on('connection', client => {
         console.log('retreive', playerLength)
       }
       console.log('Disconnect')
-      delete clients[client.id]
 
       Object.values(streams).forEach(c => {
         c.emit('reStart')
@@ -175,6 +174,7 @@ io.on('connection', client => {
       if (Object.values(streams).length === 0) {
         setTimeout(() => {
           clients[data].emit('exitRun')
+          delete clients[client.id]
         }, 1000 * 5);
       }
     }
