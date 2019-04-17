@@ -147,10 +147,17 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('disconnect', () => {
+  client.on('customDisconnect', playerLength => {
     if (clients[client.id]) {
+      if (playerLength) {
+        console.log('retreive', playerLength)
+      }
       console.log('Disconnect')
       delete clients[client.id]
+
+      Object.values(streams).forEach(c => {
+        c.emit('reStart')
+      })
     }
     else if (webs[client.id]) {
       delete webs[client.id]
@@ -162,6 +169,12 @@ io.on('connection', client => {
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
+
+      if (Object.values(streams).length === 0) {
+        setTimeout(() => {
+          clients[playerLength].emit('exitRun')
+        }, 1000 * 5);
+      }
     }
 
     client.removeAllListeners()
