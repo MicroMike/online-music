@@ -98,6 +98,13 @@ io.on('connection', client => {
         c.emit('stream', data)
       })
     })
+
+    client.on('retryOk', () => {
+      delete imgs[client.id]
+      Object.values(webs).forEach(c => {
+        c.emit('endStream', client.id)
+      })
+    })
   })
 
   client.on('ok', params => {
@@ -171,6 +178,9 @@ io.on('connection', client => {
     else if (streams[client.id]) {
       delete imgs[client.id]
       delete streams[client.id]
+      Object.values(webs).forEach(c => {
+        c.emit('endStream', client.id)
+      })
     }
 
     client.removeAllListeners()

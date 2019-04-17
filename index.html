@@ -33,10 +33,18 @@
       socket.emit('web')
     })
 
+    socket.on('endStream', streamId => {
+      document.querySelector('#class' + streamId).parentElement.remove()
+    })
+
     const toggleBtn = btn => {
       socket.emit(btn.innerText, btn.className)
       btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'
     }
+
+    socket.on('clearStream', (delList) => {
+      document.querySelector('#del').innerHTML = delList
+    })
 
     socket.on('delList', (delList) => {
       document.querySelector('#del').innerHTML = delList
@@ -49,7 +57,6 @@
         document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button id="btn' + streamId + '" class="' + streamId + '" onclick="toggleBtn(this)">' + streamBtn + '</button><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
       }
       else {
-        console.log('refresh', streamOn)
         isDom.src = 'data:image/png;base64,' + img
       }
     })
