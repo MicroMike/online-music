@@ -51,14 +51,13 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
-let runnerAccounts = {}
 let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
 
 let displayLength = (log) => {
-  const values = Object.values(runnerAccounts)
+  const values = Object.values(streams)
   console.log(log, values.length)
 }
 
@@ -66,10 +65,9 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('runner', account => {
-    runnerAccounts[client.id] = account
     streams[client.id] = client
 
-    accounts = accounts.filter(a => Object.values(runnerAccounts).indexOf(a) < 0)
+    accounts = accounts.filter(a => a !== account)
 
     client.on('player', clientId => {
       try {
@@ -127,6 +125,7 @@ io.on('connection', client => {
 
     client.on('delete', account => {
       displayLength('Del ' + account)
+      accounts = accounts.filter(a => a !== account)
 
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
         if (err) return console.log(err);
@@ -156,7 +155,6 @@ io.on('connection', client => {
     else if (streams[client.id]) {
       delete imgs[client.id]
       delete streams[client.id]
-      delete runnerAccounts[client.id]
 
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
