@@ -46,6 +46,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
 
     dataDel = dataDel.split(',').filter(e => e)
     accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+    accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
 
     console.log(accounts.length)
   })
@@ -232,7 +233,20 @@ io.on('connection', client => {
     })
 
     client.on('spotifyPause', () => {
-      accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
+      fs.readFile(file, 'utf8', async (err, data) => {
+        if (err) return console.log(err);
+
+        fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
+          if (err2) return console.log(err2);
+
+          accounts = data.split(',')
+
+          dataDel = dataDel.split(',').filter(e => e)
+          accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+
+          console.log(accounts.length)
+        })
+      });
     })
   })
 });
