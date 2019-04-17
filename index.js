@@ -59,7 +59,7 @@ let webs = {}
 
 let displayLength = (log) => {
   const values = Object.values(runnerAccounts)
-  console.log(log, values.length ? total : 0)
+  console.log(log, values.length)
 }
 
 io.on('connection', client => {
