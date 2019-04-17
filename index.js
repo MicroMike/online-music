@@ -51,32 +51,25 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
+let runnerAccounts = {}
 let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
-let lengthArr = {}
-let displayLength = (log) => {
-  const values = Object.values(lengthArr)
-  const total = values.length && values.reduce((pv, cv) => {
-    return pv + cv
-  })
 
+let displayLength = (log) => {
+  const values = Object.values(runnerAccounts)
   console.log(log, values.length ? total : 0)
 }
 
 io.on('connection', client => {
-  let playing = []
-
-  const setLength = (log) => {
-    lengthArr[client.id] = playing.length
-    displayLength(log)
-  }
-
   client.emit('activate', client.id)
 
-  client.on('runner', () => {
+  client.on('runner', account => {
+    runnerAccounts[client.id] = account
     streams[client.id] = client
+
+    accounts = accounts.filter(a => Object.values(runnerAccounts).indexOf(a) < 0)
 
     client.on('player', clientId => {
       try {
@@ -109,39 +102,31 @@ io.on('connection', client => {
 
   client.on('ok', params => {
     clients[client.id] = client
-    const { accountsValid, del, max, env } = params
+    const { del, max, env } = params
 
-    playing = accountsValid
-    accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
     accounts = accounts.filter(a => del.indexOf(a) < 0)
 
-    setLength('Connected')
+    displayLength('Connected')
 
-    client.on('play', () => {
-      if (playing.length >= max) { return }
+    client.on('play', playerLength => {
+      if (playerLength >= max) { return }
 
       const account = getAccount(env)
 
       if (account) {
         client.emit('run', account)
-        accounts = accounts.filter(a => a !== account)
-        playing.push(account)
-        setLength('Add')
+        displayLength('Add')
       }
     })
 
     client.on('loop', params => {
       const { errorMsg, account } = params
-      if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      playing = playing.filter(a => a !== account)
-      setLength(errorMsg + ' ' + account)
-      client.emit('goPlay')
+      displayLength(errorMsg + ' ' + account)
     });
 
     client.on('delete', account => {
       playing = playing.filter(a => a !== account)
-      setLength('Del ' + account)
-      client.emit('goPlay')
+      displayLength('Del ' + account)
 
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
         if (err) return console.log(err);
@@ -169,15 +154,19 @@ io.on('connection', client => {
 
       playing = []
 
-      delete lengthArr[client.id]
       delete clients[client.id]
     }
     else if (webs[client.id]) {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
+      const runnerAccount = runnerAccounts[client.id]
+      if (runnerAccount && accounts.indexOf(runnerAccount) < 0) { accounts.push(runnerAccount) }
+
       delete imgs[client.id]
       delete streams[client.id]
+      delete runnerAccounts[client.id]
+
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
