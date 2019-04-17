@@ -34,7 +34,8 @@
     })
 
     socket.on('endStream', streamId => {
-      document.querySelector('#class' + streamId).parentElement.remove()
+      const isDom = document.querySelector('#class' + streamId)
+      isDom && isDom.parentElement.remove()
     })
 
     const toggleBtn = btn => {
