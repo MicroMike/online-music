@@ -172,9 +172,10 @@ io.on('connection', client => {
       })
 
       if (Object.values(streams).length === 0) {
-        console.log(data)
-        clients[data].emit('exitRun')
-        delete clients[client.id]
+        Object.values(clients).forEach(c => {
+          c.emit('exitRun')
+          delete clients[c.id]
+        })
       }
     }
 
