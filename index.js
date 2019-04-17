@@ -67,11 +67,10 @@ io.on('connection', client => {
 
   client.on('runner', account => {
     streams[client.id] = client
-    console.log(account)
-    displayLength('Add')
     accounts = accounts.filter(a => a !== account)
-
+    
     client.on('player', clientId => {
+      displayLength('Add')
       try {
         clients[clientId].emit('goPlay')
       }
