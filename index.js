@@ -110,7 +110,8 @@ io.on('connection', client => {
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
-    client.on('play', playerLength => {
+    client.on('play', accountsValid => {
+      const playerLength = accountsValid ? accountsValid.length : 0
       if (playerLength >= max) { return }
 
       const account = getAccount(env)
@@ -147,8 +148,9 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('customDisconnect', playerLength => {
+  client.on('customDisconnect', data => {
     if (clients[client.id]) {
+      const playerLength = data ? data.length : 0
       if (playerLength) {
         console.log('retreive', playerLength)
       }
@@ -172,7 +174,7 @@ io.on('connection', client => {
 
       if (Object.values(streams).length === 0) {
         setTimeout(() => {
-          clients[playerLength].emit('exitRun')
+          clients[data].emit('exitRun')
         }, 1000 * 5);
       }
     }
