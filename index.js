@@ -121,11 +121,11 @@ io.on('connection', client => {
 
     client.on('loop', params => {
       const { errorMsg, account } = params
+      if (accounts.indexOf(account) < 0) { accounts.push(account) }
       displayLength(errorMsg + ' ' + account)
     });
 
     client.on('delete', account => {
-      playing = playing.filter(a => a !== account)
       displayLength('Del ' + account)
 
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
@@ -141,18 +141,12 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('disconnect', () => {
+  client.on('disconnect', playerLength => {
     if (clients[client.id]) {
-      if (playing.length) {
-        console.log('retreive', playing.length)
+      if (playerLength) {
+        console.log('retreive', playerLength)
       }
       console.log('Disconnect')
-
-      playing.forEach(a => {
-        if (accounts.indexOf(a) < 0) { accounts.push(a) }
-      });
-
-      playing = []
 
       delete clients[client.id]
     }
@@ -160,9 +154,6 @@ io.on('connection', client => {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
-      const runnerAccount = runnerAccounts[client.id]
-      if (runnerAccount && accounts.indexOf(runnerAccount) < 0) { accounts.push(runnerAccount) }
-
       delete imgs[client.id]
       delete streams[client.id]
       delete runnerAccounts[client.id]
