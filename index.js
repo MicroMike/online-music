@@ -68,6 +68,8 @@ io.on('connection', client => {
   client.on('runner', account => {
     streams[client.id] = client
 
+    displayLength('Add')
+
     accounts = accounts.filter(a => a !== account)
 
     client.on('player', clientId => {
@@ -114,7 +116,6 @@ io.on('connection', client => {
 
       if (account) {
         client.emit('run', account)
-        displayLength('Add')
       }
     })
 
