@@ -178,9 +178,10 @@ io.on('connection', client => {
         })
       }
 
-      if (data) {
+      try {
         clients[data].emit('goPlay')
       }
+      catch (e) { }
     }
 
     client.removeAllListeners()
