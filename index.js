@@ -66,6 +66,7 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('runner', account => {
+    client.account = account
     streams[client.id] = client
     accounts = accounts.filter(a => a !== account)
     displayLength('Add')
@@ -263,6 +264,9 @@ io.on('connection', client => {
 
           dataDel = dataDel.split(',').filter(e => e)
           accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+
+          const runnerAccounts = Object.values(streams).map(s => s.account)
+          accounts = accounts.filter(e => runnerAccounts.indexOf(e) < 0)
 
           console.log(accounts.length)
         })
