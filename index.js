@@ -100,11 +100,11 @@ io.on('connection', client => {
 
   client.on('ok', params => {
     clients[client.id] = client
-    const { del, max, env } = params
+    const { accountsValid, del, max, env } = params
 
     accounts = accounts.filter(a => del.indexOf(a) < 0)
 
-    displayLength('Connected')
+    console.log('Connected', accountsValid.length)
 
     client.on('play', playerLength => {
       if (playerLength >= max) { return }
@@ -144,11 +144,12 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('disconnect', playerLength => {
+  client.on('disconnect', () => {
     if (clients[client.id]) {
       console.log('Disconnect')
 
       delete clients[client.id]
+      streams = []
     }
     else if (webs[client.id]) {
       delete webs[client.id]
