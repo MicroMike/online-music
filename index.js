@@ -172,10 +172,9 @@ io.on('connection', client => {
       })
 
       if (Object.values(streams).length === 0) {
-        setTimeout(() => {
-          clients[data].emit('exitRun')
-          delete clients[client.id]
-        }, 1000 * 5);
+        console.log(data)
+        clients[data].emit('exitRun')
+        delete clients[client.id]
       }
     }
 
