@@ -137,14 +137,15 @@ io.on('connection', client => {
       });
     })
 
+    client.on('retrieve', playerLength => {
+      console.log('retreive', playerLength)
+    })
+
     client.emit('goPlay')
   })
 
   client.on('disconnect', playerLength => {
     if (clients[client.id]) {
-      if (playerLength) {
-        console.log('retreive', playerLength)
-      }
       console.log('Disconnect')
 
       delete clients[client.id]
