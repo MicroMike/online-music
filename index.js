@@ -151,7 +151,6 @@ io.on('connection', client => {
   client.on('disconnect', () => {
     if (clients[client.id]) {
       console.log('Disconnect')
-
       delete clients[client.id]
     }
     else if (webs[client.id]) {
