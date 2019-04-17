@@ -177,6 +177,8 @@ io.on('connection', client => {
           delete clients[c.id]
         })
       }
+
+      clients[data].emit('goPlay')
     }
 
     client.removeAllListeners()
