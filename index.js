@@ -105,7 +105,7 @@ io.on('connection', client => {
 
     accounts = accounts.filter(a => del.indexOf(a) < 0)
 
-    console.log('Connected', accountsValid.length)
+    console.log('Connected', accountsValid ? accountsValid.length : 0)
 
     client.on('play', playerLength => {
       if (playerLength >= max) { return }
