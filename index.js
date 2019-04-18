@@ -184,6 +184,7 @@ io.on('connection', client => {
         const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
         if (!streamLeft) {
           clients[clientId].emit('exitRun')
+          delete clients[clientId]
         }
       }
     }
