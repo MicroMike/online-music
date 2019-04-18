@@ -149,9 +149,9 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('customDisconnect', ({ accountValid, clientId, loop }) => {
+  client.on('customDisconnect', ({ accountsValid, clientId, loop }) => {
     if (clients[client.id]) {
-      const playerLength = accountValid ? accountValid.length : 0
+      const playerLength = accountsValid ? accountsValid.length : 0
       if (playerLength) {
         console.log('retreive', playerLength)
       }
