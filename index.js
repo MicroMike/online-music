@@ -66,6 +66,11 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('runner', account => {
+
+    if (Object.keys(clients).length === 0) {
+      console.log('LEAK')
+    }
+
     client.account = account
     streams[client.id] = client
     accounts = accounts.filter(a => a !== account)
