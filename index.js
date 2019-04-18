@@ -150,7 +150,10 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    client.emit('goPlay')
+    const streamLeft = Object.values(streams).find(s => s.parentId === client.id)
+    if (!streamLeft) {
+      client.emit('goPlay')
+    }
   })
 
   client.on('customDisconnect', ({ accountsValid, clientId, loop }) => {
