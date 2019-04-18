@@ -124,7 +124,11 @@ io.on('connection', client => {
 
     client.on('loop', params => {
       const { errorMsg, account } = params
-      if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      if (errorMsg === 'Used') {
+        setTimeout(() => {
+          if (accounts.indexOf(account) < 0) { accounts.push(account) }
+        }, 1000 * 60 * 5);
+      }
       displayLength(errorMsg + ' ' + account)
     });
 
