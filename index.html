@@ -61,13 +61,13 @@
       const streamBtn = streamOn ? 'streamOff' : 'streamOn'
       if (!isDom) {
         document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', `
-        <div>
-          <h2>${log} :</h2>
-          <img id="class${streamId}" src="data:image/png;base64,${img}"/>
-          <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
-          <textarea id="script${streamId}"></textarea>
-          <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">${streamBtn}</button>
-        </div>
+          <div>
+            <h2>${log} :</h2>
+            <img id="class${streamId}" src="data:image/png;base64,${img}"/>
+            <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
+            <textarea id="script${streamId}"></textarea>
+            <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">${streamBtn}</button>
+          </div>
         `)
       }
       else {
@@ -85,7 +85,6 @@
   <button onClick="spotifyPause()">SPOTIFY ON</button>
   <div id="del"></div>
   <div class="screenshot"></div>
-  <div class="stream"></div>
 </body>
 
 </html>
