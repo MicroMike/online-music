@@ -127,7 +127,7 @@ io.on('connection', client => {
       if (errorMsg === 'Used') {
         setTimeout(() => {
           if (accounts.indexOf(account) < 0) { accounts.push(account) }
-        }, 1000 * 60 * 5);
+        }, 1000 * 60 * 10);
       }
       displayLength(errorMsg + ' ' + account)
     });
