@@ -175,7 +175,10 @@ io.on('connection', client => {
       })
 
       if (loop) {
-        clients[clientId].emit('goPlay')
+        try {
+          clients[clientId].emit('goPlay')
+        }
+        catch (e) { }
       }
       else {
         const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
