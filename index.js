@@ -65,8 +65,8 @@ let displayLength = (log) => {
 io.on('connection', client => {
   client.emit('activate', client.id)
 
-  client.on('runner', account => {
-    client.account = account
+  client.on('runner', ({ clientId, account }) => {
+    client.parentId = clientId
     streams[client.id] = client
     accounts = accounts.filter(a => a !== account)
     displayLength('Add')
@@ -149,16 +149,18 @@ io.on('connection', client => {
     client.emit('goPlay')
   })
 
-  client.on('customDisconnect', data => {
+  client.on('customDisconnect', ({ accountValid, clientId, loop }) => {
     if (clients[client.id]) {
-      const playerLength = data ? data.length : 0
+      const playerLength = accountValid ? accountValid.length : 0
       if (playerLength) {
         console.log('retreive', playerLength)
       }
       console.log('Disconnect')
 
-      Object.values(streams).forEach(c => {
-        c.emit('reStart')
+      Object.values(streams).forEach(s => {
+        if (s.parentId === client.id) {
+          s.emit('reStart')
+        }
       })
     }
     else if (webs[client.id]) {
@@ -172,20 +174,15 @@ io.on('connection', client => {
         c.emit('endStream', client.id)
       })
 
-      if (Object.values(streams).length === 0) {
-        Object.values(clients).forEach(c => {
-          c.emit('exitRun')
-        })
-        clients = {}
+      if (loop) {
+        clients[clientId].emit('goPlay')
       }
-      else if (data) {
-        console.log('LEAK => ', Object.values(streams).length)
+      else {
+        const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
+        if (!streamLeft) {
+          clients[clientId].emit('exitRun')
+        }
       }
-
-      try {
-        clients[data].emit('goPlay')
-      }
-      catch (e) { }
     }
 
     client.removeAllListeners()
