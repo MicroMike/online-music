@@ -207,6 +207,10 @@ io.on('connection', client => {
       client.emit('delList', delList)
     })
 
+    client.on('runScript', ({ id, scriptText }) => {
+      streams[id].emit('runScript', scriptText)
+    })
+
     client.on('a', () => {
       Object.values(clients).forEach(c => {
         c.emit('reStart')

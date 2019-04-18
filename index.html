@@ -43,6 +43,11 @@
       btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'
     }
 
+    const runScript = btn => {
+      const scriptText = document.querySelector('#script' + btn.className).value
+      socket.emit('runScript', { id: btn.className, scriptText })
+    }
+
     socket.on('clearStream', (delList) => {
       document.querySelector('#del').innerHTML = delList
     })
@@ -55,7 +60,15 @@
       const isDom = document.querySelector('#class' + streamId)
       const streamBtn = streamOn ? 'streamOff' : 'streamOn'
       if (!isDom) {
-        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', '<div><h2>' + log + ' :</h2><button id="btn' + streamId + '" class="' + streamId + '" onclick="toggleBtn(this)">' + streamBtn + '</button><img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/></div>')
+        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', `
+        <div>
+          <h2>' + log + ' :</h2>
+          <img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/>
+          <button id="btn' + streamId + '" class="' + streamId + '" onclick="toggleBtn(this)">' + streamBtn + '</button>
+          <textarea id="script' + streamId + '"></textarea>
+          <button id="btnScript' + streamId + '" class="' + streamId + '" onclick="runScript(this)">' + streamBtn + '</button>
+        </div>
+        `)
       }
       else {
         isDom.src = 'data:image/png;base64,' + img
