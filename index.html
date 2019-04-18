@@ -62,11 +62,11 @@
       if (!isDom) {
         document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', `
         <div>
-          <h2>' + log + ' :</h2>
-          <img id="class' + streamId + '" src="data:image/png;base64,' + img + '"/>
-          <button id="btn' + streamId + '" class="' + streamId + '" onclick="toggleBtn(this)">' + streamBtn + '</button>
-          <textarea id="script' + streamId + '"></textarea>
-          <button id="btnScript' + streamId + '" class="' + streamId + '" onclick="runScript(this)">' + streamBtn + '</button>
+          <h2>${log} :</h2>
+          <img id="class${streamId}" src="data:image/png;base64,${img}"/>
+          <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
+          <textarea id="script${streamId}"></textarea>
+          <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">${streamBtn}</button>
         </div>
         `)
       }
