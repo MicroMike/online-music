@@ -184,7 +184,6 @@ io.on('connection', client => {
     delete clients[id]
     delete streams[id]
     delete imgs[id]
-    delete startRun[client.id]
     delete webs[client.id]
   })
 
@@ -218,6 +217,9 @@ io.on('connection', client => {
         clients[clientId] && clients[clientId].emit('exitRun')
         delete clients[clientId]
       }
+    }
+    else if (startRun[client.id]) {
+      delete startRun[client.id]
     }
 
     client.removeAllListeners()
