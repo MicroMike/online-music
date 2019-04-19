@@ -232,9 +232,9 @@ io.on('connection', client => {
       })
     })
 
-    client.on('getData', () => {
-      client.emit('sendData', { count, streams, startRun, clients, webs })
-    })
+    // client.on('getData', () => {
+    //   client.emit('sendData', { count, streams, startRun, clients, webs })
+    // })
 
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
       if (err) return console.log(err);
