@@ -7,9 +7,9 @@
   <script type="text/javascript">
     var socket = io();
 
-    setInterval(() => {
-      socket.emit('getData')
-    }, 1000 * 30)
+    const getData = () => {
+      socket.emit('runStart')
+    }
 
     const run = () => {
       socket.emit('runStart')
@@ -100,6 +100,7 @@
   <button onClick="check()">CHECK</button>
   <button onClick="endCheck()">END CHECK</button>
   <button onClick="spotifyPause()">SPOTIFY ON</button>
+  <button onClick="getData()">GET DATA</button>
   <div id="del"></div>
   <div class="screenshot"></div>
 </body>
