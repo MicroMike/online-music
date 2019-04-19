@@ -223,7 +223,6 @@ io.on('connection', client => {
       client.emit('allData', {
         count,
         streams: Object.values(streams).length,
-        startRun: Object.values(startRun).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length
       })
