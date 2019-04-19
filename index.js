@@ -172,6 +172,10 @@ io.on('connection', client => {
     }
   })
 
+  client.on('disconnect', () => {
+    delete webs[client.id]
+  })
+
   client.on('Cdisconnect', data => {
     count--
 
