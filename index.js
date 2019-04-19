@@ -56,6 +56,7 @@ let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
+let checkAccounts
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -238,29 +239,29 @@ io.on('connection', client => {
     })
 
     client.on('check', () => {
-      let checkAccounts
-      let checkClient = Object.values(clients)[0]
-
-      if (!checkClient) { return console.log('error check') }
-
-      client.on('endCheck', () => {
-        checkClient.emit('endCheck')
-      })
-
       fs.readFile('check.txt', 'utf8', async (err, data) => {
         if (err) return console.log(err);
 
         checkAccounts = data.split(',').filter(e => e)
 
+        let checkClient = Object.values(clients)[0]
+
+        if (!checkClient) { return console.log('error check') }
+
+
+        client.on('endCheck', () => {
+          checkClient.emit('endCheck')
+        })
+
+        checkClient.on('playCheck', () => {
+          checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+
+          if (checkAccount) {
+            checkClient.emit('runCheck', checkAccount)
+          }
+        })
+
         checkClient.emit('check')
-      })
-
-      checkClient.on('playCheck', () => {
-        checkAccount = checkAccounts.length ? checkAccounts.shift() : false
-
-        if (checkAccount) {
-          checkClient.emit('runCheck', checkAccount)
-        }
       })
     })
 
