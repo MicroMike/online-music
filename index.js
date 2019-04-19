@@ -172,13 +172,12 @@ io.on('connection', client => {
     }
   })
 
-  client.on('disconnect', data => {
+  client.on('Cdisconnect', data => {
     count--
 
     if (clients[client.id]) {
       const playerLength = data ? data.length : 0
       if (playerLength) {
-        console.log(data)
         data.forEach(a => {
           if (accounts.indexOf(a) < 0) { accounts.push(a) }
         })
