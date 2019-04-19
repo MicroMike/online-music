@@ -62,7 +62,6 @@ let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
-let startRun = {}
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -75,10 +74,6 @@ io.on('connection', client => {
   count++
 
   client.emit('activate', client.id)
-
-  client.on('startRun', () => {
-    startRun[client.id] = client
-  })
 
   client.on('runner', ({ clientId, account }) => {
     client.parentId = clientId
@@ -179,15 +174,9 @@ io.on('connection', client => {
     }
   })
 
-  client.on('disconnect', id => {
+  client.on('disconnect', accountsValid => {
     count--
-    delete clients[id]
-    delete streams[id]
-    delete imgs[id]
-    delete webs[client.id]
-  })
 
-  client.on('customDisconnect', ({ accountsValid, clientId }) => {
     if (clients[client.id]) {
       const playerLength = accountsValid ? accountsValid.length : 0
       if (playerLength) {
@@ -200,26 +189,22 @@ io.on('connection', client => {
           s.emit('reStart')
         }
       })
+
+      delete clients[client.id]
     }
     else if (webs[client.id]) {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
-      delete imgs[client.id]
-      delete streams[client.id]
-
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
 
-      const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
-      if (!streamLeft) {
-        clients[clientId] && clients[clientId].emit('exitRun')
-        delete clients[clientId]
-      }
+      delete streams[client.id]
+      delete imgs[client.id]
     }
-    else if (startRun[client.id]) {
-      delete startRun[client.id]
+    else {
+      console.log('Orphan proccess')
     }
 
     client.removeAllListeners()
@@ -253,15 +238,9 @@ io.on('connection', client => {
       streams[id].emit('runScript', scriptText)
     })
 
-    client.on('runStart', () => {
-      Object.values(startRun).forEach(c => {
-        c.emit('runStart')
-      })
-    })
-
-    client.on('runStop', () => {
+    client.on('restart', () => {
       Object.values(clients).forEach(c => {
-        c.emit('exitRun')
+        c.emit('restartClient')
       })
     })
 

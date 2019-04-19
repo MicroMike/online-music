@@ -11,12 +11,8 @@
       socket.emit('getAllData')
     }
 
-    const run = () => {
-      socket.emit('runStart')
-    }
-
-    const stop = () => {
-      socket.emit('runStop')
+    const restart = () => {
+      socket.emit('restart')
     }
 
     const spotifyPause = () => {
@@ -94,8 +90,7 @@
 
 <body>
   <div id="data"></div>
-  <button onClick="run()">RUN/RESET</button>
-  <button onClick="stop()">STOP</button>
+  <button onClick="restart()">RESTART</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="check()">CHECK</button>
   <button onClick="endCheck()">END CHECK</button>
