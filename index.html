@@ -8,7 +8,7 @@
     var socket = io();
 
     const getData = () => {
-      socket.emit('runStart')
+      socket.emit('getAllData')
     }
 
     const run = () => {
@@ -40,7 +40,7 @@
       socket.emit('web')
     })
 
-    socket.on('sendData', data => {
+    socket.on('allData', data => {
       document.querySelector('#data').innerHTML = ''
       Object.keys(data).forEach(k => {
         let d = data[k]
