@@ -74,10 +74,6 @@ let count = 0
 io.on('connection', client => {
   count++
 
-  client.on('getData', () => {
-    client.emit('sendData', { count, streams, startRun, clients, webs })
-  })
-
   client.emit('activate', client.id)
 
   client.on('startRun', () => {
@@ -234,6 +230,10 @@ io.on('connection', client => {
       Object.values(webs).forEach(c => {
         c.emit('stream', d)
       })
+    })
+
+    client.on('getData', () => {
+      client.emit('sendData', { count, streams, startRun, clients, webs })
     })
 
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
