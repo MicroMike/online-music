@@ -62,6 +62,7 @@ let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
+let startRun = {}
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -70,6 +71,10 @@ let displayLength = (log) => {
 
 io.on('connection', client => {
   client.emit('activate', client.id)
+
+  client.on('startRun', () => {
+    startRun[client.id] = client
+  })
 
   client.on('runner', ({ clientId, account }) => {
     client.parentId = clientId
@@ -170,11 +175,11 @@ io.on('connection', client => {
     }
   })
 
-  client.on('disconnect', () => {
-    delete clients[client.id]
-    delete webs[client.id]
-    delete streams[client.id]
-    delete imgs[client.id]
+  client.on('disconnect', id => {
+    delete clients[id]
+    delete streams[id]
+    delete imgs[id]
+    delete startRun[client.id]
   })
 
   client.on('customDisconnect', ({ accountsValid, clientId, loop }) => {
@@ -211,7 +216,11 @@ io.on('connection', client => {
       else {
         const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
         if (!streamLeft) {
-          clients[clientId].emit('exitRun')
+          const client = clients[clientId]
+          client.emit('exitRun')
+          if (client.restart) {
+
+          }
           delete clients[clientId]
         }
       }
@@ -238,9 +247,21 @@ io.on('connection', client => {
       streams[id].emit('runScript', scriptText)
     })
 
-    client.on('a', () => {
-      Object.values(clients).forEach(c => {
-        c.emit('reStart')
+    client.on('reset', () => {
+      Object.values(startRun).forEach(c => {
+        c.emit('reset')
+      })
+    })
+
+    client.on('start', () => {
+      Object.values(startRun).forEach(c => {
+        c.emit('start')
+      })
+    })
+
+    client.on('stop', () => {
+      Object.values(startRun).forEach(c => {
+        c.emit('stop')
       })
     })
 
