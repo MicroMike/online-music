@@ -258,8 +258,8 @@ io.on('connection', client => {
     })
 
     client.on('runStop', () => {
-      Object.values(startRun).forEach(c => {
-        c.emit('runStop')
+      Object.values(clients).forEach(c => {
+        c.emit('exitRun')
       })
     })
 
