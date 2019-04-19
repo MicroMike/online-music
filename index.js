@@ -172,6 +172,9 @@ io.on('connection', client => {
 
   client.on('disconnect', () => {
     delete clients[client.id]
+    delete webs[client.id]
+    delete streams[client.id]
+    delete imgs[client.id]
   })
 
   client.on('customDisconnect', ({ accountsValid, clientId, loop }) => {
