@@ -225,9 +225,10 @@ io.on('connection', client => {
     client.on('getAllData', () => {
       client.emit('allData', {
         count,
+        accounts: accounts.length,
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
-        webs: Object.values(webs).length
+        webs: Object.values(webs).length,
       })
     })
 
