@@ -16,6 +16,7 @@ function handler(req, res) {
 }
 
 let accounts
+let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 
 const rand = (max, min) => {
@@ -52,11 +53,16 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
+fs.readFile('check.txt', 'utf8', async (err, data) => {
+  if (err) return console.log(err);
+  checkAccounts = data.split(',').filter(e => e)
+})
+
 let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
-let checkAccounts
+let tempAccounts
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -239,13 +245,7 @@ io.on('connection', client => {
     })
 
     client.on('check', () => {
-      fs.readFile('check.txt', 'utf8', async (err, data) => {
-        if (err) return console.log(err);
-        checkAccounts = data.split(',').filter(e => e)
-      })
-
       let checkClient = Object.values(clients)[0]
-
       if (!checkClient) { return console.log('error check') }
 
       client.on('endCheck', () => {
