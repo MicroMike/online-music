@@ -249,19 +249,19 @@ io.on('connection', client => {
 
     client.on('reset', () => {
       Object.values(startRun).forEach(c => {
-        c.emit('reset')
+        c.emit('reseted')
       })
     })
 
     client.on('start', () => {
       Object.values(startRun).forEach(c => {
-        c.emit('start')
+        c.emit('started')
       })
     })
 
     client.on('stop', () => {
       Object.values(startRun).forEach(c => {
-        c.emit('stop')
+        c.emit('stopped')
       })
     })
 
