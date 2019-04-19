@@ -142,11 +142,9 @@ io.on('connection', client => {
 
     client.on('loop', params => {
       const { errorMsg, account } = params
-      if (errorMsg === 'Used') {
-        setTimeout(() => {
-          if (accounts.indexOf(account) < 0) { accounts.push(account) }
-        }, 1000 * 60 * 10);
-      }
+      setTimeout(() => {
+        if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      }, errorMsg === 'Used' ? 1000 * 60 * 10 : 0);
       displayLength(errorMsg + ' ' + account)
     });
 
@@ -180,6 +178,9 @@ io.on('connection', client => {
     if (clients[client.id]) {
       const playerLength = data ? data.length : 0
       if (playerLength) {
+        data.forEach(a => {
+          if (accounts.indexOf(a) < 0) { accounts.push(a) }
+        })
         console.log('retreive', playerLength)
       }
       console.log('Disconnect')
