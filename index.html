@@ -7,10 +7,6 @@
   <script type="text/javascript">
     var socket = io();
 
-    const reset = () => {
-      socket.emit('runReset')
-    }
-
     const run = () => {
       socket.emit('runStart')
     }
@@ -85,8 +81,7 @@
 </head>
 
 <body>
-  <button onClick="reset()">RESET</button>
-  <button onClick="run()">RUN</button>
+  <button onClick="run()">RUN/RESET</button>
   <button onClick="stop()">STOP</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="check()">CHECK</button>

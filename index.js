@@ -247,12 +247,6 @@ io.on('connection', client => {
       streams[id].emit('runScript', scriptText)
     })
 
-    client.on('runReset', () => {
-      Object.values(startRun).forEach(c => {
-        c.emit('runReset')
-      })
-    })
-
     client.on('runStart', () => {
       Object.values(startRun).forEach(c => {
         c.emit('runStart')
