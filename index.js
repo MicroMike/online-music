@@ -62,6 +62,7 @@ let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
+let checkClient
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -123,6 +124,9 @@ io.on('connection', client => {
 
     client.on('play', accountsValid => {
       const playerLength = accountsValid ? accountsValid.length : 0
+      if (max === 40) {
+        checkClient = client
+      }
       if (playerLength >= max) { return }
 
       const account = getAccount(env)
@@ -266,9 +270,6 @@ io.on('connection', client => {
     })
 
     client.on('check', () => {
-      let checkClient = Object.values(clients)[0]
-      if (!checkClient) { return console.log('error check') }
-
       checkClient.emit('check')
     })
 
