@@ -44,7 +44,7 @@
       document.querySelector('#data').innerHTML = ''
       Object.keys(data).forEach(k => {
         let d = data[k]
-        document.querySelector('#data').insertAdjacentHTM('beforeend', `<div>${k} => ${d}</div>`)
+        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${d}</div>`)
       })
     })
 
