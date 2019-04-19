@@ -69,7 +69,15 @@ let displayLength = (log) => {
   console.log(log, values.length)
 }
 
+let count = 0
+
 io.on('connection', client => {
+  count++
+
+  client.on('getData', () => {
+    client.emit('sendData', { count, streams, startRun, clients, webs })
+  })
+
   client.emit('activate', client.id)
 
   client.on('startRun', () => {
@@ -176,13 +184,14 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', id => {
+    count--
     delete clients[id]
     delete streams[id]
     delete imgs[id]
     delete startRun[client.id]
   })
 
-  client.on('customDisconnect', ({ accountsValid, clientId, loop }) => {
+  client.on('customDisconnect', ({ accountsValid, clientId }) => {
     if (clients[client.id]) {
       const playerLength = accountsValid ? accountsValid.length : 0
       if (playerLength) {
@@ -207,22 +216,11 @@ io.on('connection', client => {
         c.emit('endStream', client.id)
       })
 
-      if (loop) {
-        try {
-          clients[clientId].emit('goPlay')
-        }
-        catch (e) { }
-      }
-      else {
-        const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
-        if (!streamLeft) {
-          const client = clients[clientId]
-          client.emit('exitRun')
-          if (client.restart) {
-
-          }
-          delete clients[clientId]
-        }
+      const streamLeft = Object.values(streams).find(s => s.parentId === clientId)
+      if (!streamLeft) {
+        const client = clients[clientId]
+        client.emit('exitRun')
+        delete clients[clientId]
       }
     }
 

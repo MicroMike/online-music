@@ -7,6 +7,10 @@
   <script type="text/javascript">
     var socket = io();
 
+    setInterval(() => {
+      socket.emit('getData')
+    }, 1000 * 30)
+
     const run = () => {
       socket.emit('runStart')
     }
@@ -34,6 +38,14 @@
 
     socket.on('activate', () => {
       socket.emit('web')
+    })
+
+    socket.on('sendData', data => {
+      document.querySelector('#data').innerHTML = ''
+      Object.keys(data).forEach(k => {
+        let d = data[k]
+        document.querySelector('#data').insertAdjacentHTM('beforeend', `<div>${k} => ${d}</div>`)
+      })
     })
 
     socket.on('endStream', streamId => {
@@ -81,6 +93,7 @@
 </head>
 
 <body>
+  <div id="data"></div>
   <button onClick="run()">RUN/RESET</button>
   <button onClick="stop()">STOP</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
