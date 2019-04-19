@@ -129,6 +129,14 @@ io.on('connection', client => {
       }
     })
 
+    client.on('playCheck', () => {
+      const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+
+      if (checkAccount) {
+        client.emit('runCheck', checkAccount)
+      }
+    })
+
     client.on('loop', params => {
       const { errorMsg, account } = params
       if (errorMsg === 'Used') {
@@ -248,19 +256,14 @@ io.on('connection', client => {
       let checkClient = Object.values(clients)[0]
       if (!checkClient) { return console.log('error check') }
 
-      client.on('endCheck', () => {
-        checkClient.emit('endCheck')
-      })
-
-      checkClient.on('playCheck', () => {
-        checkAccount = checkAccounts.length ? checkAccounts.shift() : false
-
-        if (checkAccount) {
-          checkClient.emit('runCheck', checkAccount)
-        }
-      })
-
       checkClient.emit('check')
+    })
+
+    client.on('endCheck', () => {
+      let checkClient = Object.values(clients)[0]
+      if (!checkClient) { return console.log('error check') }
+
+      checkClient.emit('endCheck')
     })
 
     client.on('clearScreen', () => {
