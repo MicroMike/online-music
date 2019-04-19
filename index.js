@@ -201,7 +201,7 @@ io.on('connection', client => {
       })
 
       delete streams[client.id]
-      delete imgs[client.id]
+      // delete imgs[client.id]
     }
     else {
       console.log('Orphan proccess')
