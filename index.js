@@ -62,7 +62,6 @@ let imgs = {}
 let clients = {}
 let streams = {}
 let webs = {}
-let tempAccounts
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -169,6 +168,10 @@ io.on('connection', client => {
     if (!streamLeft) {
       client.emit('goPlay')
     }
+  })
+
+  client.on('disconnect', () => {
+    delete clients[client.id]
   })
 
   client.on('customDisconnect', ({ accountsValid, clientId, loop }) => {
