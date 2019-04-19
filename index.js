@@ -174,11 +174,11 @@ io.on('connection', client => {
     }
   })
 
-  client.on('disconnect', accountsValid => {
+  client.on('disconnect', data => {
     count--
 
     if (clients[client.id]) {
-      const playerLength = accountsValid ? accountsValid.length : 0
+      const playerLength = data ? data.length : 0
       if (playerLength) {
         console.log('retreive', playerLength)
       }
@@ -202,6 +202,8 @@ io.on('connection', client => {
 
       delete streams[client.id]
       // delete imgs[client.id]
+
+      clients[data] && clients[data].emit('goPlay')
     }
     else {
       console.log('Orphan proccess')
