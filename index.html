@@ -8,15 +8,15 @@
     var socket = io();
 
     const reset = () => {
-      socket.emit('reset')
+      socket.emit('runReset')
     }
 
     const run = () => {
-      socket.emit('run')
+      socket.emit('runStart')
     }
 
     const stop = () => {
-      socket.emit('stop')
+      socket.emit('runStop')
     }
 
     const spotifyPause = () => {

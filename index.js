@@ -247,21 +247,21 @@ io.on('connection', client => {
       streams[id].emit('runScript', scriptText)
     })
 
-    client.on('reset', () => {
+    client.on('runReset', () => {
       Object.values(startRun).forEach(c => {
-        c.emit('reset')
+        c.emit('runReset')
       })
     })
 
-    client.on('start', () => {
+    client.on('runStart', () => {
       Object.values(startRun).forEach(c => {
-        c.emit('start')
+        c.emit('runStart')
       })
     })
 
-    client.on('stop', () => {
+    client.on('runStop', () => {
       Object.values(startRun).forEach(c => {
-        c.emit('stop')
+        c.emit('runStop')
       })
     })
 
