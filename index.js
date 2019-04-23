@@ -251,7 +251,7 @@ io.on('connection', client => {
     })
 
     client.on('restart', () => {
-      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
+      // Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
       Object.values(clients).forEach(c => {
         c.emit('restartClient')
       })
