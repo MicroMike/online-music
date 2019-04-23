@@ -79,6 +79,8 @@ let count = 0
 io.on('connection', client => {
   count++
 
+  console.log(client.id)
+
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account }) => {
@@ -249,7 +251,7 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
-        nopeStreams: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).length,
+        nopeStreams: Object.values(streams).filter(s => !clients[s.parentId]).length,
         nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).length,
         restart
       })
