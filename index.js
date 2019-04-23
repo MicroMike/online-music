@@ -77,6 +77,9 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account }) => {
+    if (!clients[clientId]) {
+      console.log('NOPE')
+    }
     client.parentId = clientId
     streams[client.id] = client
     accounts = accounts.filter(a => a !== account)
