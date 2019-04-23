@@ -179,8 +179,8 @@ io.on('connection', client => {
     if (clients[client.uniqId]) {
       delete clients[client.uniqId]
     }
-    else if (webs[client.uniqId]) {
-      delete webs[client.uniqId]
+    else if (webs[client.id]) {
+      delete webs[client.id]
     }
     else if (streams[client.uniqId]) {
       delete streams[client.uniqId]
@@ -202,9 +202,6 @@ io.on('connection', client => {
 
       clients[client.uniqId].disconnect()
     }
-    else if (webs[client.uniqId]) {
-      webs[client.uniqId].disconnect()
-    }
     else if (streams[client.uniqId]) {
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
@@ -223,7 +220,7 @@ io.on('connection', client => {
   })
 
   client.on('web', () => {
-    webs[client.uniqId] = client
+    webs[client.id] = client
 
     Object.values(imgs).forEach(d => {
       Object.values(webs).forEach(c => {
