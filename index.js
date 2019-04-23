@@ -177,7 +177,9 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    client.emit('goPlay')
+    if (first) {
+      client.emit('goPlay')
+    }
   })
 
   client.on('disconnect', () => {
@@ -248,8 +250,8 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
-        nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.id === s.parentId) === undefined).length,
-        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).length,
+        nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqueId === s.parentId) === undefined).length,
+        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqueId) === undefined).length,
         restart
       })
     })
