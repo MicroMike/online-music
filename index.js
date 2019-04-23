@@ -154,10 +154,6 @@ io.on('connection', client => {
       }
     })
 
-    client.on('playCheck', () => {
-
-    })
-
     client.on('loop', params => {
       const { errorMsg, account } = params
       setTimeout(() => {
@@ -184,9 +180,7 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    if (first) {
-      client.emit('goPlay')
-    }
+    client.emit('goPlay')
   })
 
   client.on('disconnect', () => {
