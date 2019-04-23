@@ -113,7 +113,7 @@ io.on('connection', client => {
 
   client.on('ok', params => {
     clients[client.id] = client
-    const { accountsValid, del, max, env } = params
+    const { accountsValid, del, max, env, first } = params
 
     if (accountsValid) {
       accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
@@ -170,6 +170,10 @@ io.on('connection', client => {
     client.on('retrieve', playerLength => {
       console.log('retreive', playerLength)
     })
+
+    if (first) {
+      client.emit('goPlay')
+    }
   })
 
   client.on('disconnect', () => {
