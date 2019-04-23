@@ -68,13 +68,13 @@ let clients = {}
 let streams = {}
 let webs = {}
 let checkClient
+let count = 0
 
 let displayLength = (log) => {
   const values = Object.values(streams)
   console.log(log, values.length)
 }
 
-let count = 0
 
 io.on('connection', client => {
   count++
