@@ -199,15 +199,12 @@ io.on('connection', client => {
         console.log('retreive', playerLength)
       }
       console.log('Disconnect')
-
-      clients[client.uniqId].disconnect()
     }
     else if (streams[client.uniqId]) {
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
 
-      streams[client.uniqId].disconnect()
       // delete imgs[client.uniqId]
 
       clients[data] && clients[data].emit('goPlay')
@@ -216,6 +213,7 @@ io.on('connection', client => {
       console.log('Orphan proccess')
     }
 
+    client.disconnect()
     client.removeAllListeners()
   })
 
