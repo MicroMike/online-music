@@ -258,14 +258,18 @@ io.on('connection', client => {
       try {
         streams[clientId].emit('streamOn')
       }
-      catch (e) { }
+      catch (e) {
+        delete imgs[clientId]
+      }
     })
 
     client.on('streamOff', clientId => {
       try {
         streams[clientId].emit('streamOff')
       }
-      catch (e) { }
+      catch (e) {
+        delete imgs[clientId]
+      }
     })
 
     client.on('check', () => {
