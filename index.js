@@ -234,7 +234,7 @@ io.on('connection', client => {
     })
 
     client.on('getAllData', () => {
-      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
+      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => { c.disconnect(); count-- })
       client.emit('allData', {
         count,
         accounts: accounts.length,
