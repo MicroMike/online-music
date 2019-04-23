@@ -272,6 +272,12 @@ io.on('connection', client => {
     })
 
     client.on('restart', () => {
+      restart = true
+
+      setTimeout(() => {
+        restart = false
+      }, 1000 * 30);
+
       Object.values(clients).forEach(c => {
         c.emit('restartClient')
       })
