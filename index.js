@@ -122,8 +122,9 @@ io.on('connection', client => {
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
-    client.on('play', accountsValid => {
-      const playerLength = accountsValid ? accountsValid.length : 0
+    client.on('play', () => {
+      const playerLength = Object.values(streams).filter(s => s.parentId === client.id)
+
       if (max === 40) {
         checkClient = client
       }
