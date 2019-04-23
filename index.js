@@ -245,7 +245,7 @@ io.on('connection', client => {
       })
 
       Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => { c.disconnect(); count-- })
-      Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => { c.disconnect(); count-- }),
+      Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => { c.disconnect(); count-- })
     })
 
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
