@@ -77,9 +77,6 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account }) => {
-    if (!clients[clientId]) {
-      console.log('NOPE')
-    }
     client.parentId = clientId
     streams[client.id] = client
     accounts = accounts.filter(a => a !== account)
@@ -240,6 +237,7 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
+        nope: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).length,
       })
     })
 
