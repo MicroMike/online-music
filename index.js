@@ -237,7 +237,7 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
-        nope: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).length,
+        nope: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).forEach(c => c.disconnect()),
       })
     })
 
