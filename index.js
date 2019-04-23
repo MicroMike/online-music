@@ -270,6 +270,7 @@ io.on('connection', client => {
 
     client.on('restart', () => {
       restart = true
+      checking = false
 
       setTimeout(() => {
         restart = false
