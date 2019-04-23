@@ -83,8 +83,9 @@ io.on('connection', client => {
 
   client.emit('activate', client.id)
 
-  client.on('runner', ({ clientId, account }) => {
+  client.on('runner', ({ clientId, account, id }) => {
     client.parentId = clientId
+    client.uniqueId = id
     streams[client.id] = client
     accounts = accounts.filter(a => a !== account)
     displayLength('Add')
@@ -119,8 +120,9 @@ io.on('connection', client => {
   })
 
   client.on('ok', params => {
+    const { accountsValid, del, max, env, first, id } = params
+    client.uniqueId = id
     clients[client.id] = client
-    const { accountsValid, del, max, env, first } = params
 
     if (accountsValid) {
       accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
@@ -251,8 +253,8 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
-        nopeStreams: Object.values(streams).filter(s => !clients[s.parentId]).length,
-        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).length,
+        nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqueId === s.parentId) === undefined).length,
+        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqueId) === undefined).length,
         restart
       })
     })
