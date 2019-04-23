@@ -178,11 +178,16 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    if (webs[client.id]) {
+    if (clients[client.id]) {
+      count--
+      delete clients[client.id]
+    }
+    else if (webs[client.id]) {
       count--
       delete webs[client.id]
     }
     else if (streams[client.id]) {
+      count--
       delete streams[client.id]
     }
 
@@ -244,8 +249,8 @@ io.on('connection', client => {
         nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).length,
       })
 
-      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => { c.disconnect(); count-- })
-      Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => { c.disconnect(); count-- })
+      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
+      Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => c.disconnect())
     })
 
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
