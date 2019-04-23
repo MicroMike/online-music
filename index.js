@@ -184,10 +184,10 @@ io.on('connection', client => {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
-      console.log('stream disconnect')
       delete streams[client.id]
     }
-
+    
+    console.log('stream disconnect')
     client.removeAllListeners()
   })
 
