@@ -251,7 +251,7 @@ io.on('connection', client => {
     })
 
     client.on('runScript', ({ id, scriptText }) => {
-      streams[id].emit('runScript', scriptText)
+      streams[id] && streams[id].emit('runScript', scriptText)
     })
 
     client.on('restart', () => {
