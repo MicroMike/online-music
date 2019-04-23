@@ -248,7 +248,9 @@ io.on('connection', client => {
         nopeStreams: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).length,
         nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).length,
       })
+    })
 
+    client.on('clearData', () => {
       Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
       Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => c.disconnect())
     })
