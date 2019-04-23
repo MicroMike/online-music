@@ -237,7 +237,7 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
-        nope: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).forEach(c => c.disconnect()),
+        nope: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).length,
       })
     })
 
@@ -251,6 +251,7 @@ io.on('connection', client => {
     })
 
     client.on('restart', () => {
+      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
       Object.values(clients).forEach(c => {
         c.emit('restartClient')
       })
