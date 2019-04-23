@@ -182,6 +182,9 @@ io.on('connection', client => {
       count--
       delete webs[client.id]
     }
+    else if (streams[client.id]) {
+      delete streams[client.id]
+    }
 
     client.removeAllListeners()
   })
@@ -231,6 +234,7 @@ io.on('connection', client => {
     })
 
     client.on('getAllData', () => {
+      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
       client.emit('allData', {
         count,
         accounts: accounts.length,
@@ -251,7 +255,6 @@ io.on('connection', client => {
     })
 
     client.on('restart', () => {
-      // Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
       Object.values(clients).forEach(c => {
         c.emit('restartClient')
       })
