@@ -208,17 +208,17 @@ io.on('connection', client => {
       }
       console.log('Disconnect')
 
-      delete clients[client.uniqId]
+      clients[client.uniqId].disconnect()
     }
     else if (webs[client.uniqId]) {
-      delete webs[client.uniqId]
+      webs[client.uniqId].disconnect()
     }
     else if (streams[client.uniqId]) {
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
 
-      delete streams[client.uniqId]
+      streams[client.uniqId].disconnect()
       // delete imgs[client.uniqId]
 
       clients[data] && clients[data].emit('goPlay')
