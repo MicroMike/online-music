@@ -177,18 +177,11 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    if (clients[client.id]) {
-      delete clients[client.id]
-    }
-    else if (webs[client.id]) {
+    if (webs[client.id]) {
       count--
       delete webs[client.id]
     }
-    else if (streams[client.id]) {
-      delete streams[client.id]
-    }
 
-    console.log('stream disconnect')
     client.removeAllListeners()
   })
 
@@ -211,7 +204,6 @@ io.on('connection', client => {
       delete webs[client.id]
     }
     else if (streams[client.id]) {
-      console.log('stream Cdisconnect')
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
