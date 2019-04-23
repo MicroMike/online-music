@@ -59,11 +59,6 @@ fs.readFile(file, 'utf8', async (err, data) => {
   })
 });
 
-fs.readFile('check.txt', 'utf8', async (err, data) => {
-  if (err) return console.log(err);
-  checkAccounts = data.split(',').filter(e => e)
-})
-
 let imgs = {}
 let clients = {}
 let streams = {}
@@ -304,8 +299,13 @@ io.on('connection', client => {
     })
 
     client.on('check', () => {
-      checking = true
-      checkClient.emit('restartClient')
+      fs.readFile('check.txt', 'utf8', async (err, data) => {
+        if (err) return console.log(err);
+        checkAccounts = data.split(',').filter(e => e)
+
+        checking = true
+        checkClient.emit('restartClient')
+      })
     })
 
     client.on('endCheck', () => {
