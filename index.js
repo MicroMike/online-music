@@ -122,6 +122,10 @@ io.on('connection', client => {
     client.uniqId = id
     clients[id] = client
 
+    if (max === 40) {
+      checkClient = client
+    }
+
     if (accountsValid) {
       accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
     }
@@ -131,10 +135,6 @@ io.on('connection', client => {
 
     client.on('play', () => {
       const playerLength = Object.values(streams).map(s => s.parentId).filter(s => s === client.id).length
-
-      if (max === 40) {
-        checkClient = client
-      }
 
       if (playerLength >= max) { return }
 
