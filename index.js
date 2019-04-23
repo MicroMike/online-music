@@ -47,7 +47,7 @@ fs.readFile(file, 'utf8', async (err, data) => {
 
     dataDel = dataDel.split(',').filter(e => e)
     accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
-    accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
+    // accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
 
     console.log(accounts.length)
   })
