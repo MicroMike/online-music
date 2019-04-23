@@ -19,6 +19,7 @@ let accounts
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let restart = true
+let checking = false
 
 setTimeout(() => {
   restart = false
@@ -134,21 +135,27 @@ io.on('connection', client => {
       if (max === 40) {
         checkClient = client
       }
+
       if (playerLength >= max) { return }
 
-      const account = getAccount(env)
+      if (checking) {
+        const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
 
-      if (account) {
-        client.emit('run', account)
+        if (checkAccount) {
+          client.emit('runCheck', checkAccount)
+        }
+      }
+      else {
+        const account = getAccount(env)
+
+        if (account) {
+          client.emit('run', account)
+        }
       }
     })
 
     client.on('playCheck', () => {
-      const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
 
-      if (checkAccount) {
-        client.emit('runCheck', checkAccount)
-      }
     })
 
     client.on('loop', params => {
@@ -303,14 +310,12 @@ io.on('connection', client => {
     })
 
     client.on('check', () => {
-      checkClient.emit('check')
+      checking = true
+      checkClient.emit('restartClient')
     })
 
     client.on('endCheck', () => {
-      let checkClient = Object.values(clients)[0]
-      if (!checkClient) { return console.log('error check') }
-
-      checkClient.emit('endCheck')
+      checking = false
     })
 
     client.on('clearScreen', () => {
