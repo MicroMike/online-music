@@ -18,6 +18,11 @@ function handler(req, res) {
 let accounts
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
+let restart = true
+
+setTimeout(() => {
+  restart = false
+}, 1000 * 30);
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -170,11 +175,6 @@ io.on('connection', client => {
     client.on('retrieve', playerLength => {
       console.log('retreive', playerLength)
     })
-
-    const streamLeft = Object.values(streams).find(s => s.parentId === client.id)
-    if (!streamLeft) {
-      client.emit('goPlay')
-    }
   })
 
   client.on('disconnect', () => {
@@ -247,12 +247,13 @@ io.on('connection', client => {
         webs: Object.values(webs).length,
         nopeStreams: Object.values(streams).map(s => s.parentId).filter(id => !clients[id]).length,
         nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).length,
+        restart
       })
-    })
 
-    client.on('clearData', () => {
-      Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
-      Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => c.disconnect())
+      if (!restart) {
+        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
+        Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.id) === undefined).forEach(c => c.disconnect())
+      }
     })
 
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
