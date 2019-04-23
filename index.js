@@ -316,6 +316,7 @@ io.on('connection', client => {
 
     client.on('endCheck', () => {
       checking = false
+      checkClient.emit('restartClient')
     })
 
     client.on('clearScreen', () => {
