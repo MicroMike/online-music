@@ -124,7 +124,7 @@ io.on('connection', client => {
 
     client.on('play', () => {
       const playerLength = Object.values(streams).filter(s => s.parentId === client.id)
-
+      console.log('LENGTH', playerLength)
       if (max === 40) {
         checkClient = client
       }
