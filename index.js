@@ -82,7 +82,7 @@ io.on('connection', client => {
 
   client.on('runner', ({ clientId, account, id }) => {
     client.parentId = clientId
-    client.id = id
+    client.uniqId = id
     streams[id] = client
     accounts = accounts.filter(a => a !== account)
     displayLength('Add')
@@ -95,21 +95,21 @@ io.on('connection', client => {
     })
 
     client.on('screen', data => {
-      imgs[client.id] = data
+      imgs[client.uniqId] = data
       Object.values(webs).forEach(c => {
         c.emit('stream', data)
       })
     })
 
     client.on('stream', data => {
-      data.log = imgs[client.id] && imgs[client.id].log
+      data.log = imgs[client.uniqId] && imgs[client.uniqId].log
       Object.values(webs).forEach(c => {
         c.emit('stream', data)
       })
     })
 
     client.on('retryOk', () => {
-      delete imgs[client.id]
+      delete imgs[client.uniqId]
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
@@ -118,7 +118,7 @@ io.on('connection', client => {
 
   client.on('ok', params => {
     const { accountsValid, del, max, env, first, id } = params
-    client.id = id
+    client.uniqId = id
     clients[id] = client
 
     if (accountsValid) {
@@ -183,17 +183,17 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    if (clients[client.id]) {
+    if (clients[client.uniqId]) {
       count--
-      delete clients[client.id]
+      delete clients[client.uniqId]
     }
-    else if (webs[client.id]) {
+    else if (webs[client.uniqId]) {
       count--
-      delete webs[client.id]
+      delete webs[client.uniqId]
     }
-    else if (streams[client.id]) {
+    else if (streams[client.uniqId]) {
       count--
-      delete streams[client.id]
+      delete streams[client.uniqId]
     }
 
     client.removeAllListeners()
@@ -202,7 +202,7 @@ io.on('connection', client => {
   client.on('Cdisconnect', data => {
     count--
 
-    if (clients[client.id]) {
+    if (clients[client.uniqId]) {
       const playerLength = data ? data.length : 0
       if (playerLength) {
         data.forEach(a => {
@@ -212,18 +212,18 @@ io.on('connection', client => {
       }
       console.log('Disconnect')
 
-      delete clients[client.id]
+      delete clients[client.uniqId]
     }
-    else if (webs[client.id]) {
-      delete webs[client.id]
+    else if (webs[client.uniqId]) {
+      delete webs[client.uniqId]
     }
-    else if (streams[client.id]) {
+    else if (streams[client.uniqId]) {
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.id)
       })
 
-      delete streams[client.id]
-      // delete imgs[client.id]
+      delete streams[client.uniqId]
+      // delete imgs[client.uniqId]
 
       clients[data] && clients[data].emit('goPlay')
     }
@@ -235,7 +235,7 @@ io.on('connection', client => {
   })
 
   client.on('web', () => {
-    webs[client.id] = client
+    webs[client.uniqId] = client
 
     Object.values(imgs).forEach(d => {
       Object.values(webs).forEach(c => {
@@ -250,8 +250,8 @@ io.on('connection', client => {
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
         webs: Object.values(webs).length,
-        nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqueId === s.parentId) === undefined).length,
-        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqueId) === undefined).length,
+        nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
+        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
         restart
       })
     })
