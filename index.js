@@ -126,24 +126,28 @@ io.on('connection', client => {
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
     client.on('play', () => {
-      const playerLength = Object.values(streams).map(s => s.parentId).filter(s => s === client.uniqId).length
+      setTimeout(() => {
 
-      if (playerLength >= max) { return }
+        const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
-      if (checking && checkClient.uniqId === client.uniqId) {
-        const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+        if (playerLength >= max) { return }
 
-        if (checkAccount) {
-          client.emit('runCheck', checkAccount)
+        if (checking && checkClient.uniqId === client.uniqId) {
+          const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+
+          if (checkAccount) {
+            client.emit('runCheck', checkAccount)
+          }
         }
-      }
-      else {
-        const account = getAccount(env)
+        else {
+          const account = getAccount(env)
 
-        if (account) {
-          client.emit('run', account)
+          if (account) {
+            client.emit('run', account)
+          }
         }
-      }
+
+      }, 1000 * 10);
     })
 
     client.on('loop', params => {
