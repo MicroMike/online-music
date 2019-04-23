@@ -64,7 +64,6 @@ let clients = {}
 let streams = {}
 let webs = {}
 let checkClient
-let count = 0
 
 let displayLength = (log) => {
   const values = Object.values(streams)
@@ -72,8 +71,6 @@ let displayLength = (log) => {
 }
 
 io.on('connection', client => {
-  count++
-
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account, id }) => {
@@ -180,15 +177,12 @@ io.on('connection', client => {
 
   client.on('disconnect', () => {
     if (clients[client.uniqId]) {
-      count--
       delete clients[client.uniqId]
     }
     else if (webs[client.uniqId]) {
-      count--
       delete webs[client.uniqId]
     }
     else if (streams[client.uniqId]) {
-      count--
       delete streams[client.uniqId]
     }
 
@@ -196,8 +190,6 @@ io.on('connection', client => {
   })
 
   client.on('Cdisconnect', data => {
-    count--
-
     if (clients[client.uniqId]) {
       const playerLength = data ? data.length : 0
       if (playerLength) {
@@ -241,7 +233,6 @@ io.on('connection', client => {
 
     client.on('getAllData', () => {
       client.emit('allData', {
-        count,
         accounts: accounts.length,
         streams: Object.values(streams).length,
         clients: Object.values(clients).length,
