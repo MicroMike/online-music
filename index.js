@@ -94,13 +94,13 @@ io.on('connection', client => {
     accounts = accounts.filter(a => a !== account)
     displayLength('Add')
 
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+    })
+
     client.on('player', clientId => {
       try {
         clients[clientId].emit('goPlay')
-
-        Object.values(webs).forEach(w => {
-          w.emit('allData', getAllData())
-        })
       }
       catch (e) { }
     })
@@ -133,6 +133,10 @@ io.on('connection', client => {
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
     client.uniqId = id
     clients[id] = client
+
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+    })
 
     if (max === 40) {
       checkClient = client
@@ -231,14 +235,14 @@ io.on('connection', client => {
       // delete imgs[client.uniqId]
 
       clients[data] && clients[data].emit('goPlay')
-
-      Object.values(webs).forEach(w => {
-        w.emit('allData', getAllData())
-      })
     }
     else {
       console.log('Orphan proccess')
     }
+
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+    })
 
     client.disconnect()
     client.removeAllListeners()
