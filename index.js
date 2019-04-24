@@ -112,8 +112,7 @@ io.on('connection', client => {
     })
   })
 
-  client.on('ok', params => {
-    const { accountsValid, del, max, env, first, id } = params
+  client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
     client.uniqId = id
     clients[id] = client
 
@@ -153,12 +152,14 @@ io.on('connection', client => {
       }, 1000 * 10);
     })
 
-    client.on('loop', params => {
-      const { errorMsg, account } = params
+    client.on('loop', ({ errorMsg, account }) => {
       setTimeout(() => {
         if (accounts.indexOf(account) < 0) { accounts.push(account) }
       }, errorMsg === 'Used' ? 1000 * 60 * 10 : 0);
-      displayLength(errorMsg + ' ' + account)
+
+      if (errorMsg) {
+        displayLength(errorMsg + ' ' + account)
+      }
     });
 
     client.on('delete', account => {
