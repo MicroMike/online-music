@@ -43,21 +43,25 @@ const getAccount = env => {
   return accounts.length ? accounts.shift() : false
 }
 
-fs.readFile(file, 'utf8', async (err, data) => {
-  if (err) return console.log(err);
+const getAccounts = () => {
+  fs.readFile(file, 'utf8', async (err, data) => {
+    if (err) return console.log(err);
 
-  fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
-    if (err2) return console.log(err2);
+    fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
+      if (err2) return console.log(err2);
 
-    accounts = data.split(',')
+      accounts = data.split(',')
 
-    dataDel = dataDel.split(',').filter(e => e)
-    accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
-    // accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
+      dataDel = dataDel.split(',').filter(e => e)
+      accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+      // accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
 
-    console.log(accounts.length)
-  })
-});
+      console.log(accounts.length)
+    })
+  });
+}
+
+getAccounts()
 
 let imgs = {}
 let clients = {}
@@ -201,9 +205,6 @@ io.on('connection', client => {
     if (clients[client.uniqId]) {
       const playerLength = data ? data.length : 0
       if (playerLength) {
-        data.forEach(a => {
-          if (accounts.indexOf(a) < 0) { accounts.push(a) }
-        })
         console.log('retreive', playerLength)
       }
       console.log('Disconnect')
@@ -263,6 +264,8 @@ io.on('connection', client => {
     })
 
     client.on('restart', () => {
+      getAccounts()
+
       restart = true
       checking = false
 
