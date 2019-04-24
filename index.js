@@ -74,6 +74,16 @@ let displayLength = (log) => {
   console.log(log, values.length)
 }
 
+const getAllData = () => ({
+  accounts: accounts.length,
+  streams: Object.values(streams).length,
+  ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId).length),
+  webs: Object.values(webs).length,
+  nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
+  nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
+  restart
+})
+
 io.on('connection', client => {
   client.emit('activate', client.id)
 
@@ -87,6 +97,10 @@ io.on('connection', client => {
     client.on('player', clientId => {
       try {
         clients[clientId].emit('goPlay')
+
+        Object.values(webs).forEach(w => {
+          w.emit('allData', getAllData())
+        })
       }
       catch (e) { }
     })
@@ -103,15 +117,15 @@ io.on('connection', client => {
 
     client.on('stream', data => {
       data.log = imgs[client.uniqId] && imgs[client.uniqId].log
-      Object.values(webs).forEach(c => {
-        c.emit('stream', data)
+      Object.values(webs).forEach(w => {
+        w.emit('stream', data)
       })
     })
 
     client.on('retryOk', () => {
       delete imgs[client.uniqId]
-      Object.values(webs).forEach(c => {
-        c.emit('endStream', client.uniqId)
+      Object.values(webs).forEach(w => {
+        w.emit('endStream', client.uniqId)
       })
     })
   })
@@ -217,6 +231,10 @@ io.on('connection', client => {
       // delete imgs[client.uniqId]
 
       clients[data] && clients[data].emit('goPlay')
+
+      Object.values(webs).forEach(w => {
+        w.emit('allData', getAllData())
+      })
     }
     else {
       console.log('Orphan proccess')
@@ -236,15 +254,7 @@ io.on('connection', client => {
     })
 
     client.on('getAllData', () => {
-      client.emit('allData', {
-        accounts: accounts.length,
-        streams: Object.values(streams).length,
-        ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId).length),
-        webs: Object.values(webs).length,
-        nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
-        nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
-        restart
-      })
+      client.emit('allData', getAllData())
     })
 
     client.on('clearData', () => {
