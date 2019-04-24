@@ -294,6 +294,7 @@ io.on('connection', client => {
       }
       catch (e) {
         delete imgs[clientId]
+        client.emit('endStream', clientId)
       }
     })
 
@@ -303,6 +304,7 @@ io.on('connection', client => {
       }
       catch (e) {
         delete imgs[clientId]
+        client.emit('endStream', clientId)
       }
     })
 
