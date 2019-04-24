@@ -228,6 +228,7 @@ io.on('connection', client => {
       console.log('Disconnect')
     }
     else if (streams[client.uniqId]) {
+      delete imgs[client.uniqId]
       Object.values(webs).forEach(c => {
         c.emit('endStream', client.uniqId)
       })
