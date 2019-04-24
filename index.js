@@ -237,7 +237,7 @@ io.on('connection', client => {
       client.emit('allData', {
         accounts: accounts.length,
         streams: Object.values(streams).length,
-        clients: Object.values(clients).length,
+        ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId).length),
         webs: Object.values(webs).length,
         nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
         nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
