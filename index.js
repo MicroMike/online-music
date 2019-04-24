@@ -107,7 +107,7 @@ io.on('connection', client => {
     client.on('retryOk', () => {
       delete imgs[client.uniqId]
       Object.values(webs).forEach(c => {
-        c.emit('endStream', client.id)
+        c.emit('endStream', client.uniqId)
       })
     })
   })
@@ -210,7 +210,7 @@ io.on('connection', client => {
     }
     else if (streams[client.uniqId]) {
       Object.values(webs).forEach(c => {
-        c.emit('endStream', client.id)
+        c.emit('endStream', client.uniqId)
       })
 
       // delete imgs[client.uniqId]
