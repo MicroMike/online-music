@@ -214,6 +214,9 @@ io.on('connection', client => {
     }
     else if (streams[client.uniqId]) {
       delete streams[client.uniqId]
+      if (streams.length === 0) {
+        clients[client.uniqId].disconnect()
+      }
     }
 
     client.removeAllListeners()
@@ -226,6 +229,12 @@ io.on('connection', client => {
         console.log('retreive', playerLength)
       }
       console.log('Disconnect')
+
+      Object.values(streams).forEach(s => {
+        if (s.parentId === client.uniqId) {
+          s.emit('Sdisconnect')
+        }
+      })
     }
     else if (streams[client.uniqId]) {
       // delete imgs[client.uniqId]
