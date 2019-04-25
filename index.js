@@ -85,6 +85,7 @@ const getAllData = () => ({
 })
 
 io.on('connection', client => {
+  let playTimeout
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account, id }) => {
@@ -150,7 +151,8 @@ io.on('connection', client => {
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
     client.on('play', () => {
-      setTimeout(() => {
+      clearTimeout(playTimeout)
+      playTimeout = setTimeout(() => {
 
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
@@ -171,7 +173,7 @@ io.on('connection', client => {
           }
         }
 
-      }, 1000 * 10);
+      }, 1000 * 60);
     })
 
     client.on('loop', ({ errorMsg, account }) => {
