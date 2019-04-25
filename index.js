@@ -173,7 +173,7 @@ io.on('connection', client => {
           }
         }
 
-      }, 1000 * 60);
+      }, 1000 * 30);
     })
 
     client.on('loop', ({ errorMsg, account }) => {
