@@ -298,6 +298,10 @@ io.on('connection', client => {
       Object.values(streams).forEach(s => {
         s.emit('Sdisconnect')
       })
+
+      Object.values(webs).forEach(w => {
+        w.emit('clean')
+      })
     })
 
     client.on('streamOn', clientId => {

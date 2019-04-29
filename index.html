@@ -40,6 +40,10 @@
       socket.emit('web')
     })
 
+    socket.on('clean', () => {
+      document.querySelector('.screenshot').innerHTML = ''
+    })
+
     socket.on('allData', data => {
       document.querySelector('#data').innerHTML = ''
       Object.keys(data).forEach(k => {
