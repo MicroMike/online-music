@@ -293,6 +293,7 @@ io.on('connection', client => {
 
       setTimeout(() => {
         restart = false
+        reboot = false
       }, 1000 * 30);
 
       Object.values(streams).forEach(s => {
