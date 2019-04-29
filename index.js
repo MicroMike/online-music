@@ -20,6 +20,7 @@ let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let restart = true
 let checking = false
+let reboot = false
 
 setTimeout(() => {
   restart = false
@@ -152,6 +153,9 @@ io.on('connection', client => {
 
     client.on('play', () => {
       clearTimeout(playTimeout)
+
+      if (reboot) { return }
+
       playTimeout = setTimeout(() => {
 
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
@@ -283,6 +287,7 @@ io.on('connection', client => {
     client.on('restart', () => {
       getAccounts()
 
+      reboot = true
       restart = true
       checking = false
 
