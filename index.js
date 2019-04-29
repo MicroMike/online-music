@@ -154,7 +154,7 @@ io.on('connection', client => {
     client.on('play', () => {
       clearTimeout(playTimeout)
 
-      if (reboot) { return }
+      if (reboot && !first) { return }
 
       playTimeout = setTimeout(() => {
 
