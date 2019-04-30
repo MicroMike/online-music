@@ -236,10 +236,11 @@ io.on('connection', client => {
 
       if (left === 0) {
         Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
-        clients[data] && clients[data].disconnect()
+        clients[data] && clients[data].emit('restart')
       }
 
       clients[data] && clients[data].emit('goPlay')
+
       client.disconnect()
     }
 
