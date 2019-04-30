@@ -236,7 +236,10 @@ io.on('connection', client => {
         clients[data] && clients[data].emit('restart')
       }
 
-      clients[data] && clients[data].emit('goPlay')
+      if (!reboot) {
+        clients[data] && clients[data].emit('goPlay')
+      }
+
       delete streams[client.uniqId]
       client.removeAllListeners()
     }
