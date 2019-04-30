@@ -214,36 +214,26 @@ io.on('connection', client => {
       delete clients[client.uniqId]
 
       setTimeout(() => {
+        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
         restart = false
       }, 1000 * 15);
+    }
+    else if (streams[client.uniqId]) {
+      if (!restart) {
+        clients[client.parentId] && clients[client.parentId].emit('goPlay')
+      }
+
+      delete streams[client.uniqId]
     }
     else if (webs[client.id]) {
       delete webs[client.id]
     }
 
-    client.removeAllListeners()
-  })
-
-  client.on('Cdisconnect', data => {
-    if (streams[client.uniqId]) {
-      delete streams[client.uniqId]
-      client.removeAllListeners()
-
-      const left = Object.values(streams).filter(s => s.parentId === data).length
-
-      if (left === 0) {
-        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
-        clients[data] && clients[data].emit('restart')
-      }
-
-      if (!restart) {
-        clients[data] && clients[data].emit('goPlay')
-      }
-    }
-
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
+
+    client.removeAllListeners()
   })
 
   client.on('web', () => {
@@ -281,10 +271,9 @@ io.on('connection', client => {
       restart = true
       checking = false
 
-      Object.values(clients).forEach(c => clearTimeout(c.playTimeout))
-
-      Object.values(streams).forEach(s => {
-        s.emit('Sdisconnect')
+      Object.values(clients).forEach(c => {
+        clearTimeout(c.playTimeout)
+        c.emit('restart')
       })
 
       Object.values(webs).forEach(w => {
