@@ -223,9 +223,6 @@ io.on('connection', client => {
     else if (webs[client.id]) {
       delete webs[client.id]
     }
-    else if (streams[client.uniqId]) {
-      delete streams[client.uniqId]
-    }
 
     client.removeAllListeners()
   })
@@ -240,8 +237,8 @@ io.on('connection', client => {
       }
 
       clients[data] && clients[data].emit('goPlay')
-
-      client.disconnect()
+      delete streams[client.uniqId]
+      client.removeAllListeners()
     }
 
     Object.values(webs).forEach(w => {
