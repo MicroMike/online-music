@@ -217,6 +217,7 @@ io.on('connection', client => {
 
   client.on('disconnect', () => {
     if (clients[client.uniqId]) {
+      console.log('Disconnect')
       delete clients[client.uniqId]
     }
     else if (webs[client.id]) {
@@ -230,33 +231,21 @@ io.on('connection', client => {
   })
 
   client.on('Cdisconnect', data => {
-    if (clients[client.uniqId]) {
-      const playerLength = data ? data.length : 0
-      if (playerLength) {
-        console.log('retreive', playerLength)
-      }
-      console.log('Disconnect')
-    }
-    else if (streams[client.uniqId]) {
+    if (streams[client.uniqId]) {
       const left = Object.values(streams).filter(s => s.parentId === data).length
 
       if (left === 0) {
         Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
-        clients[data] && clients[data].emit('restartClient')
+        clients[data] && clients[data].disconnect()
       }
 
       clients[data] && clients[data].emit('goPlay')
-    }
-    else {
-      console.log('Orphan proccess')
+      client.disconnect()
     }
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
-
-    client.disconnect()
-    client.removeAllListeners()
   })
 
   client.on('web', () => {
