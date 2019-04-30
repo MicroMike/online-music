@@ -297,13 +297,16 @@ io.on('connection', client => {
         reboot = false
       }, 1000 * 30);
 
-      Object.values(streams).forEach(s => {
-        s.emit('Sdisconnect')
-      })
+      setTimeout(() => {
+        Object.values(streams).forEach(s => {
+          s.emit('Sdisconnect')
+        })
 
-      Object.values(webs).forEach(w => {
-        w.emit('clean')
-      })
+        Object.values(webs).forEach(w => {
+          w.emit('clean')
+        })
+      }, 1000 * 15);
+
     })
 
     client.on('streamOn', clientId => {
