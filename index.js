@@ -231,6 +231,8 @@ io.on('connection', client => {
     if (streams[client.uniqId]) {
       const left = Object.values(streams).filter(s => s.parentId === data).length
 
+      console.log(left)
+
       if (left === 0) {
         Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
         clients[data] && clients[data].emit('restart')
