@@ -86,10 +86,12 @@ const getAllData = () => ({
 })
 
 io.on('connection', client => {
-  let playTimeout
+
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account, id }) => {
+    if (reboot) { return client.emit('Sdisconnect') }
+
     client.parentId = clientId
     client.uniqId = id
     streams[id] = client
@@ -134,6 +136,7 @@ io.on('connection', client => {
   })
 
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
+    client.playTimeout
     client.uniqId = id
     clients[id] = client
 
@@ -153,7 +156,7 @@ io.on('connection', client => {
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
     client.on('play', () => {
-      clearTimeout(playTimeout)
+      clearTimeout(client.playTimeout)
 
       if (reboot && !first) { return }
 
@@ -296,6 +299,8 @@ io.on('connection', client => {
         restart = false
         reboot = false
       }, 1000 * 30);
+
+      Object.values(clients).forEach(c => clearTimeout(c.playTimeout))
 
       Object.values(streams).forEach(s => {
         s.emit('Sdisconnect')
