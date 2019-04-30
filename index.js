@@ -235,12 +235,12 @@ io.on('connection', client => {
       console.log('Disconnect')
     }
     else if (streams[client.uniqId]) {
-      // delete imgs[client.uniqId]
-      // Object.values(webs).forEach(c => {
-      //   c.emit('endStream', client.uniqId)
-      // })
+      const left = Object.values(streams).filter(s => s.parentId === data).length
 
-      // delete imgs[client.uniqId]
+      if (left === 0) {
+        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
+        clients[data] && clients[data].emit('restartClient')
+      }
 
       clients[data] && clients[data].emit('goPlay')
     }
@@ -297,16 +297,13 @@ io.on('connection', client => {
         reboot = false
       }, 1000 * 30);
 
-      setTimeout(() => {
-        Object.values(streams).forEach(s => {
-          s.emit('Sdisconnect')
-        })
+      Object.values(streams).forEach(s => {
+        s.emit('Sdisconnect')
+      })
 
-        Object.values(webs).forEach(w => {
-          w.emit('clean')
-        })
-      }, 1000 * 15);
-
+      Object.values(webs).forEach(w => {
+        w.emit('clean')
+      })
     })
 
     client.on('streamOn', clientId => {
