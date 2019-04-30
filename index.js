@@ -212,7 +212,10 @@ io.on('connection', client => {
     if (clients[client.uniqId]) {
       console.log('Disconnect')
       delete clients[client.uniqId]
-      restart = false
+
+      setTimeout(() => {
+        restart = false
+      }, 1000 * 15);
     }
     else if (webs[client.id]) {
       delete webs[client.id]
