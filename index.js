@@ -216,7 +216,7 @@ io.on('connection', client => {
       setTimeout(() => {
         Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
         restart = false
-      }, 1000 * 15);
+      }, 1000 * 3);
     }
     else if (streams[client.uniqId]) {
       if (!restart) {
