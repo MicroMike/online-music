@@ -229,9 +229,10 @@ io.on('connection', client => {
 
   client.on('Cdisconnect', data => {
     if (streams[client.uniqId]) {
-      const left = Object.values(streams).filter(s => s.parentId === data).length
+      delete streams[client.uniqId]
+      client.removeAllListeners()
 
-      console.log(left)
+      const left = Object.values(streams).filter(s => s.parentId === data).length
 
       if (left === 0) {
         Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
@@ -241,9 +242,6 @@ io.on('connection', client => {
       if (!reboot) {
         clients[data] && clients[data].emit('goPlay')
       }
-
-      delete streams[client.uniqId]
-      client.removeAllListeners()
     }
 
     Object.values(webs).forEach(w => {
