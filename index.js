@@ -111,7 +111,11 @@ io.on('connection', client => {
       if (data.errorMsg) {
         displayLength(data.errorMsg + ' ' + data.account)
       }
-      imgs[client.uniqId] = data
+
+      if (data.img) {
+        imgs[client.uniqId] = data
+      }
+
       Object.values(webs).forEach(c => {
         c.emit('stream', data)
       })

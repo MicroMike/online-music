@@ -78,16 +78,19 @@
     socket.on('stream', ({ streamOn, streamId, log, img }) => {
       const isDom = document.querySelector('#class' + streamId)
       const streamBtn = streamOn ? 'streamOff' : 'streamOn'
-      if (!isDom) {
-        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', `
-          <div>
+      const html = img
+        ? `<div>
             <h2>${log} :</h2>
             <img id="class${streamId}" src="data:image/png;base64,${img}"/>
             <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
             <textarea id="script${streamId}"></textarea>
             <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">Run script</button>
-          </div>
-        `)
+          </div>`
+        : `<div>
+            <h2>${log} :</h2>
+          </div>`
+      if (!isDom) {
+        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', html)
       }
       else {
         isDom.src = 'data:image/png;base64,' + img
