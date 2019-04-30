@@ -18,13 +18,8 @@ function handler(req, res) {
 let accounts
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
-let restart = true
+let restart = false
 let checking = false
-let reboot = false
-
-setTimeout(() => {
-  restart = false
-}, 1000 * 30);
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -90,8 +85,6 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('runner', ({ clientId, account, id }) => {
-    if (reboot) { return client.emit('Sdisconnect') }
-
     client.parentId = clientId
     client.uniqId = id
     streams[id] = client
@@ -158,7 +151,7 @@ io.on('connection', client => {
     client.on('play', () => {
       clearTimeout(client.playTimeout)
 
-      if (reboot && !first) { return }
+      if (restart && !first) { return }
 
       playTimeout = setTimeout(() => {
 
@@ -219,6 +212,10 @@ io.on('connection', client => {
     if (clients[client.uniqId]) {
       console.log('Disconnect')
       delete clients[client.uniqId]
+
+      if (clients.length === 0) {
+        restart = false
+      }
     }
     else if (webs[client.id]) {
       delete webs[client.id]
@@ -239,7 +236,7 @@ io.on('connection', client => {
         clients[data] && clients[data].emit('restart')
       }
 
-      if (!reboot) {
+      if (!restart) {
         clients[data] && clients[data].emit('goPlay')
       }
     }
@@ -281,14 +278,8 @@ io.on('connection', client => {
     client.on('restart', () => {
       getAccounts()
 
-      reboot = true
       restart = true
       checking = false
-
-      setTimeout(() => {
-        restart = false
-        reboot = false
-      }, 1000 * 30);
 
       Object.values(clients).forEach(c => clearTimeout(c.playTimeout))
 
