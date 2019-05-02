@@ -224,6 +224,10 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
+    Object.values(streams).filter(s => {
+      if (!clients[s.parentId]) { s.disconnect() }
+    })
+
     client.removeAllListeners()
   })
 
@@ -232,7 +236,6 @@ io.on('connection', client => {
       console.log('Disconnect')
 
       setTimeout(() => {
-        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
         restart = false
       }, 1000 * 3);
     }
