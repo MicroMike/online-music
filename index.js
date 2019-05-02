@@ -72,7 +72,7 @@ let displayLength = (log) => {
 
 const getAllData = () => ({
   clients: {
-    ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId).length),
+    ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
   },
   accounts: accounts.length,
   streams: Object.values(streams).length,
