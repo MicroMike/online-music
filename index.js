@@ -50,7 +50,6 @@ const getAccounts = () => {
 
       dataDel = dataDel.split(',').filter(e => e)
       accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
-      // accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
 
       console.log(accounts.length)
     })
@@ -333,7 +332,7 @@ io.on('connection', client => {
     })
 
     client.on('spotifyPause', () => {
-      accounts = accounts.filter(m => m.split(':')[0] !== 'spotify')
+      accounts = accounts.filter(a => a.split(':')[0] !== 'spotify')
     })
   })
 });
