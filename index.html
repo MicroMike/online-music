@@ -49,7 +49,7 @@
       delete data.clients
 
       document.querySelector('#data').innerHTML = ''
-      Object.keys(datas).forEach(k => {
+      Object.keys(data).forEach(k => {
         let d = data[k]
         document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${d}</div>`)
       })
