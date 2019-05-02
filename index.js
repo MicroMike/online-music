@@ -84,6 +84,10 @@ io.on('connection', client => {
 
   client.emit('activate', client.id)
 
+  client.on('log', log => {
+    console.log(log)
+  })
+
   client.on('runner', ({ clientId, account, id }) => {
     client.parentId = clientId
     client.uniqId = id
