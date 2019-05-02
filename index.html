@@ -45,8 +45,9 @@
     })
 
     socket.on('allData', data => {
+      const { clients, datas } = data
       document.querySelector('#data').innerHTML = ''
-      Object.keys(data).forEach(k => {
+      Object.keys(datas).forEach(k => {
         let d = data[k]
         document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${d}</div>`)
       })
