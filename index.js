@@ -79,7 +79,9 @@ const getAllData = () => ({
   nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
-  ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId).length),
+  clients: {
+    ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
+  }
 })
 
 io.on('connection', client => {
