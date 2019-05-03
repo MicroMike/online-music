@@ -287,7 +287,7 @@ io.on('connection', client => {
       restart = true
       checking = false
 
-      if (id) {
+      if (cid) {
         let c = clients[cid]
         clearTimeout(c.playTimeout)
         c.emit('restart')
