@@ -56,11 +56,10 @@
 
       console.log(clients)
 
-      // Object.keys(clients).forEach(k => {
-      //   let d = data[k].length
-      //   console.log(data[k])
-      //   document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${d}</div>`)
-      // })
+      Object.keys(clients).forEach(k => {
+        let d = clients[k]
+        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${d.id} => ${d.L}</div>`)
+      })
     })
 
     socket.on('endStream', streamId => {

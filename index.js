@@ -80,7 +80,10 @@ const getAllData = () => ({
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
   clients: {
-    ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
+    ...Object.values(clients).map(c => ({
+      id: c.uniqId,
+      L: Object.values(streams).filter(s => s.parentId === c.uniqId).length,
+    }))
   }
 })
 
