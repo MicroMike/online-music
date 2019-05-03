@@ -331,13 +331,13 @@ io.on('connection', client => {
         checkAccounts = data.split(',').filter(e => e)
 
         checking = true
-        checkClient.emit('restartClient')
+        checkClient.emit('restart')
       })
     })
 
     client.on('endCheck', () => {
       checking = false
-      checkClient.emit('restartClient')
+      checkClient.emit('restart')
     })
 
     client.on('clearScreen', () => {
