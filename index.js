@@ -60,6 +60,7 @@ getAccounts()
 
 let imgs = {}
 let clients = {}
+let stop = {}
 let streams = {}
 let webs = {}
 let checkClient
@@ -162,7 +163,7 @@ io.on('connection', client => {
     client.on('play', () => {
       clearTimeout(client.playTimeout)
 
-      if (client.stop || (restart && !first)) { return }
+      if (stop[client.uniqId] || (restart && !first)) { return }
 
       playTimeout = setTimeout(() => {
 
@@ -287,14 +288,17 @@ io.on('connection', client => {
       restart = true
       checking = false
 
+
       if (cid) {
         let c = clients[cid]
+        delete stop[cid]
         clearTimeout(c.playTimeout)
         c.emit('restart')
       }
       else {
         Object.values(clients).forEach(c => {
           clearTimeout(c.playTimeout)
+          delete stop[c.uniqId]
           c.emit('restart')
         })
 
@@ -308,9 +312,9 @@ io.on('connection', client => {
       getAccounts()
 
       let c = clients[cid]
-      clients[cid].stop = true
+      stop[cid] = true
       clearTimeout(c.playTimeout)
-      c.emit('restart')
+      c.emit('restart', true)
     })
 
     client.on('streamOn', clientId => {
@@ -339,7 +343,7 @@ io.on('connection', client => {
         checkAccounts = data.split(',').filter(e => e)
 
         checking = true
-        checkClient.stop = false
+        delete stop[checkClient.uniqId]
         checkClient.emit('restartClient')
       })
     })
