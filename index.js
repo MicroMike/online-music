@@ -19,6 +19,7 @@ let accounts
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let restart = false
+let stop = false
 let checking = false
 
 const rand = (max, min) => {
@@ -162,7 +163,7 @@ io.on('connection', client => {
     client.on('play', () => {
       clearTimeout(client.playTimeout)
 
-      if (restart && !first) { return }
+      if (stop || (restart && !first)) { return }
 
       playTimeout = setTimeout(() => {
 
@@ -284,6 +285,7 @@ io.on('connection', client => {
     client.on('restart', cid => {
       getAccounts()
 
+      stop = false
       restart = true
       checking = false
 
@@ -302,6 +304,23 @@ io.on('connection', client => {
           w.emit('clean')
         })
       }
+    })
+
+    client.on('stop', cid => {
+      getAccounts()
+
+      stop = true
+      restart = true
+      checking = false
+
+      Object.values(clients).forEach(c => {
+        clearTimeout(c.playTimeout)
+        c.emit('restart')
+      })
+
+      Object.values(webs).forEach(w => {
+        w.emit('clean')
+      })
     })
 
     client.on('streamOn', clientId => {

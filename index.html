@@ -19,6 +19,10 @@
       socket.emit('restart', id)
     }
 
+    const stop = (id = null) => {
+      socket.emit('stop', id)
+    }
+
     const spotifyPause = () => {
       socket.emit('spotifyPause')
     }
@@ -111,6 +115,7 @@
 <body>
   <div id="data"></div>
   <button onClick="restart()">RESTART</button>
+  <button onClick="stop()">RESTART</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="check()">CHECK</button>
   <button onClick="endCheck()">END CHECK</button>
