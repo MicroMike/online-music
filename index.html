@@ -56,7 +56,7 @@
 
       Object.keys(clients).forEach((k, i) => {
         let d = clients[k]
-        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></div>`)
+        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button> <button onClick="stop('${d.id}')">S</button></div>`)
       })
 
       Object.keys(data).forEach(k => {
@@ -115,7 +115,6 @@
 <body>
   <div id="data"></div>
   <button onClick="restart()">RESTART</button>
-  <button onClick="stop()">STOP</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="check()">CHECK</button>
   <button onClick="endCheck()">END CHECK</button>
