@@ -339,6 +339,7 @@ io.on('connection', client => {
         checkAccounts = data.split(',').filter(e => e)
 
         checking = true
+        checkClient.stop = false
         checkClient.emit('restartClient')
       })
     })
