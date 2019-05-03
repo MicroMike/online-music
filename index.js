@@ -281,20 +281,27 @@ io.on('connection', client => {
       streams[id] && streams[id].emit('runScript', scriptText)
     })
 
-    client.on('restart', () => {
+    client.on('restart', cid => {
       getAccounts()
 
       restart = true
       checking = false
 
-      Object.values(clients).forEach(c => {
+      if (id) {
+        let c = clients[cid]
         clearTimeout(c.playTimeout)
         c.emit('restart')
-      })
+      }
+      else {
+        Object.values(clients).forEach(c => {
+          clearTimeout(c.playTimeout)
+          c.emit('restart')
+        })
 
-      Object.values(webs).forEach(w => {
-        w.emit('clean')
-      })
+        Object.values(webs).forEach(w => {
+          w.emit('clean')
+        })
+      }
     })
 
     client.on('streamOn', clientId => {

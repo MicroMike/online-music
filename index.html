@@ -15,8 +15,8 @@
       socket.emit('clearData')
     }
 
-    const restart = () => {
-      socket.emit('restart')
+    const restart = (id = null) => {
+      socket.emit('restart', id)
     }
 
     const spotifyPause = () => {
@@ -56,9 +56,9 @@
 
       console.log(clients)
 
-      Object.keys(clients).forEach(k => {
+      Object.keys(clients).forEach((k, i) => {
         let d = clients[k]
-        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${d.id} => ${d.L}</div>`)
+        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${i} => ${d.L}<button id="R_${d.id}" onclick="restart('${d.id}')">R</button></div>`)
       })
     })
 
