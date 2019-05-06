@@ -20,6 +20,7 @@ let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let restart = false
 let checking = false
+let plays = 0
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -79,6 +80,7 @@ const getAllData = () => ({
   nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
+  plays,
   clients: {
     ...Object.values(clients).map(c => ({
       id: c.uniqId,
@@ -93,6 +95,10 @@ io.on('connection', client => {
 
   client.on('log', log => {
     console.log(log)
+  })
+
+  client.on('plays', () => {
+    plays++
   })
 
   client.on('runner', ({ clientId, account, id }) => {
