@@ -112,6 +112,21 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
+    client.on('change', clientId => {
+      try {
+        const c = clients[clientId]
+        c.change++
+        c.changeTimeout.push(
+          setTimeout(() => {
+            c.emit('change')
+            c.change--
+            c.changeTimeout.shift()
+          }, 1000 * 30 * c.change)
+        )
+      }
+      catch (e) { }
+    })
+
     client.on('player', clientId => {
       try {
         clients[clientId].emit('goPlay')
@@ -147,7 +162,9 @@ io.on('connection', client => {
 
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
     client.playTimeout
+    client.changeTimeout = []
     client.uniqId = id
+    client.change = 0
     clients[id] = client
 
     Object.values(webs).forEach(w => {
@@ -170,7 +187,7 @@ io.on('connection', client => {
 
       if (restart && !first) { return }
 
-      playTimeout = setTimeout(() => {
+      client.playTimeout = setTimeout(() => {
 
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
@@ -244,6 +261,8 @@ io.on('connection', client => {
   client.on('Cdisconnect', () => {
     if (clients[client.uniqId]) {
       console.log('Disconnect')
+
+      client.changeTimeout.forEach(t => clearTimeout(t))
 
       setTimeout(() => {
         restart = false
