@@ -113,18 +113,12 @@ io.on('connection', client => {
     })
 
     client.on('change', () => {
-      try {
-        const c = clients[client.parentId]
-        c.change++
-        c.changeTimeout.push(
-          setTimeout(() => {
-            c.emit('change')
-            c.change--
-            c.changeTimeout.shift()
-          }, 1000 * 30 * c.change)
-        )
-      }
-      catch (e) { }
+      const c = clients[client.parentId]
+      const time = 1000 * 30 * (++c.change)
+      c.emit('change', time)
+      setTimeout(() => {
+        c.change--
+      }, time);
     })
 
     client.on('player', clientId => {
@@ -162,7 +156,6 @@ io.on('connection', client => {
 
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
     client.playTimeout
-    client.changeTimeout = []
     client.uniqId = id
     client.change = 0
     clients[id] = client
@@ -261,8 +254,6 @@ io.on('connection', client => {
   client.on('Cdisconnect', () => {
     if (clients[client.uniqId]) {
       console.log('Disconnect')
-
-      client.changeTimeout.forEach(t => clearTimeout(t))
 
       setTimeout(() => {
         restart = false
