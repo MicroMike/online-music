@@ -114,7 +114,7 @@ io.on('connection', client => {
 
     client.on('change', () => {
       try {
-        const c = clients[clientId]
+        const c = clients[client.parentId]
         c.change++
         c.changeTimeout.push(
           setTimeout(() => {
