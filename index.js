@@ -112,7 +112,7 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    client.on('change', clientId => {
+    client.on('change', () => {
       try {
         const c = clients[clientId]
         c.change++
