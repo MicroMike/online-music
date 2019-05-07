@@ -121,6 +121,11 @@ io.on('connection', client => {
       }, time);
     })
 
+    client.on('changeMinus', () => {
+      const c = clients[client.parentId]
+      c.change--
+    })
+
     client.on('player', clientId => {
       try {
         clients[clientId].emit('goPlay')
