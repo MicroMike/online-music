@@ -158,6 +158,7 @@ io.on('connection', client => {
     client.playTimeout
     client.uniqId = id
     client.change = 0
+    client.max = false
     clients[id] = client
 
     Object.values(webs).forEach(w => {
@@ -184,7 +185,15 @@ io.on('connection', client => {
 
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
-        if (playerLength >= max) { return }
+        if (playerLength >= max) {
+          if (!client.max) {
+            client.max = true
+            Object.values(streams).forEach(s => {
+              if (s.parentId === client.uniqId) { s.emit('startChange') }
+            })
+          }
+          return
+        }
 
         if (checking && checkClient.uniqId === client.uniqId) {
           const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
