@@ -302,7 +302,9 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    client.emit('goPlay')
+    if (Object.values(streams).length === 0 || Object.values(streams).filter(s => s.parentId === client.uniqId).length === 0) {
+      client.emit('goPlay')
+    }
   })
 
   client.on('disconnect', () => {
@@ -314,11 +316,11 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (restart && clients.length === 0 && streams.length > 0) {
+    if (restart && Object.values(clients).length === 0 && Object.values(streams).length > 0) {
       Object.values(streams).filter(s => s.disconnect())
     }
 
-    if (clients.length === 0 && streams.length === 0) {
+    if (Object.values(clients).length === 0 && Object.values(streams).length === 0) {
       restart = false
     }
 
