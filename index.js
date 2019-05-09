@@ -36,6 +36,8 @@ const albums = {
     'https://music.amazon.fr/albums/B07MTV7JYS',
     'https://music.amazon.fr/albums/B07PGN58LX',
     'https://music.amazon.fr/albums/B07QCBN3Z4',
+    'https://music.amazon.fr/albums/B07RGRZL9F',
+    'https://music.amazon.fr/albums/B07RNYTBXG',
   ],
   tidal: [
     'https://listen.tidal.com/album/93312939',
@@ -67,6 +69,7 @@ let file = process.env.FILE || 'napsterAccount.txt'
 let restart = false
 let checking = false
 let plays = 0
+let nexts = 0
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -126,7 +129,7 @@ const getAllData = () => ({
   nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
-  plays: plays * 0.004 + '€ (' + plays + ')',
+  plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ')',
   clients: {
     ...Object.values(clients).map(c => ({
       id: c.uniqId,
@@ -143,8 +146,13 @@ io.on('connection', client => {
     console.log(log)
   })
 
-  client.on('plays', () => {
-    plays++
+  client.on('plays', next => {
+    if (next) { nexts++ }
+    else { plays++ }
+
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+    })
   })
 
   client.on('runner', ({ clientId, account, id, player }) => {
