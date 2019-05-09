@@ -249,7 +249,7 @@ io.on('connection', client => {
 
       client.playTimeout = setTimeout(() => {
         client.emit('goPlay')
-      }, 1000 * 30);
+      }, 1000 * 60);
     })
 
     client.on('loop', ({ errorMsg, account }) => {
