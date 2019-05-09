@@ -162,8 +162,6 @@ io.on('connection', client => {
     accounts = accounts.filter(a => a !== account)
     // displayLength('Add')
 
-    client.emit('albums', albums[player])
-
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
@@ -213,6 +211,8 @@ io.on('connection', client => {
         w.emit('endStream', client.uniqId)
       })
     })
+
+    client.emit('albums', albums[player])
   })
 
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
