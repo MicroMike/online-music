@@ -315,7 +315,7 @@ io.on('connection', client => {
     })
 
     if (restart && clients.length === 0 && streams.length > 0) {
-      Object.values(streams).filter(s => s.disconnect())
+      // Object.values(streams).filter(s => s.disconnect())
     }
 
     if (clients.length === 0 && streams.length === 0) {
