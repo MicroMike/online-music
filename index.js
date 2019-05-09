@@ -304,6 +304,7 @@ io.on('connection', client => {
 
     setTimeout(() => {
       if (Object.values(streams).length === 0 || Object.values(streams).filter(s => s.parentId === client.uniqId).length === 0) {
+        console.log('play')
         client.emit('goPlay')
       }
     }, 1000 * 10);
@@ -319,6 +320,7 @@ io.on('connection', client => {
     })
 
     if (Object.values(clients).length === 0 && Object.values(streams).length === 0) {
+      console.log('finish restart')
       restart = false
     }
 
@@ -334,7 +336,7 @@ io.on('connection', client => {
 
       if (restart && Object.values(clients).length === 0 && Object.values(streams).length > 0) {
         console.log(Object.values(clients), Object.values(streams))
-        // Object.values(streams).filter(s => s.disconnect())
+        Object.values(streams).filter(s => s.disconnect())
       }
     }
     else if (streams[client.uniqId]) {
