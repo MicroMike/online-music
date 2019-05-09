@@ -333,7 +333,8 @@ io.on('connection', client => {
       console.log('Disconnect')
 
       if (restart && Object.values(clients).length === 0 && Object.values(streams).length > 0) {
-        Object.values(streams).filter(s => s.disconnect())
+        console.log(Object.values(clients), Object.values(streams))
+        // Object.values(streams).filter(s => s.disconnect())
       }
     }
     else if (streams[client.uniqId]) {
