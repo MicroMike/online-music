@@ -299,7 +299,7 @@ io.on('connection', client => {
 
     setTimeout(() => {
       restart = false
-    }, 1000 * 30);
+    }, 1000 * 10);
 
     client.removeAllListeners()
   })
