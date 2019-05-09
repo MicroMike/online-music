@@ -281,7 +281,7 @@ io.on('connection', client => {
     })
 
     if (first) {
-      // client.emit('goPlay')
+      client.emit('goPlay')
     }
   })
 
