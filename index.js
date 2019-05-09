@@ -166,11 +166,8 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    client.on('player', clientId => {
-      try {
-        clients[clientId].emit('goPlay')
-      }
-      catch (e) { }
+    client.on('player', () => {
+      clients[client.parentId].emit('goPlay')
     })
 
     client.on('screen', data => {
