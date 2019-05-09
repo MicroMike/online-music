@@ -314,9 +314,13 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    Object.values(streams).filter(s => {
-      if (!clients[s.parentId]) { s.disconnect() }
-    })
+    if (restart && clients.length === 0 && streams.length > 0) {
+      Object.values(streams).filter(s => s.disconnect())
+    }
+
+    if (clients.length === 0 && streams.length === 0) {
+      restart = false
+    }
 
     client.removeAllListeners()
   })
@@ -324,10 +328,6 @@ io.on('connection', client => {
   client.on('Cdisconnect', () => {
     if (clients[client.uniqId]) {
       console.log('Disconnect')
-
-      setTimeout(() => {
-        restart = false
-      }, 1000 * 3);
     }
     else if (streams[client.uniqId]) {
       if (!restart) {
@@ -378,6 +378,10 @@ io.on('connection', client => {
         let c = clients[cid]
         clearTimeout(c.playTimeout)
         c.emit('restart')
+
+        setTimeout(() => {
+          restart = false
+        }, 1000 * 10);
       }
       else {
         Object.values(clients).forEach(c => {
