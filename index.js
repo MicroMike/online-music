@@ -312,6 +312,7 @@ io.on('connection', client => {
 
   client.on('disconnect', () => {
     console.log('disconnect')
+
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
@@ -320,10 +321,9 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (Object.values(clients).length === 0 && Object.values(streams).length === 0) {
-      console.log('finish restart')
+    setTimeout(() => {
       restart = false
-    }
+    }, 1000 * 30);
 
     client.removeAllListeners()
   })
@@ -333,12 +333,7 @@ io.on('connection', client => {
     delete streams[client.uniqId]
 
     if (clients[client.uniqId]) {
-      console.log('Disconnect')
-
-      if (restart && Object.values(clients).length === 0 && Object.values(streams).length > 0) {
-        console.log(Object.values(clients), Object.values(streams))
-        Object.values(streams).filter(s => s.disconnect())
-      }
+      console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
       if (!restart) {
@@ -383,7 +378,6 @@ io.on('connection', client => {
 
       restart = true
       checking = false
-
 
       if (cid) {
         let c = clients[cid]
