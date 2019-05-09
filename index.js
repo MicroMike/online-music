@@ -15,6 +15,52 @@ function handler(req, res) {
     });
 }
 
+const albums = {
+  napster: [
+    'https://app.napster.com/artist/honey/album/just-another-emotion',
+    'https://app.napster.com/artist/yokem/album/boombeats',
+    'https://app.napster.com/artist/hanke/album/new-york-story',
+    'https://app.napster.com/artist/hanke/album/100-revenge',
+    'https://app.napster.com/artist/mahone/album/stone-distraction',
+    'https://app.napster.com/artist/hazel/album/electric-nature',
+    'https://app.napster.com/artist/lapilluledors/album/red-beast',
+    'https://app.napster.com/artist/dj-reid/album/satisfaction-spell',
+    'https://app.napster.com/artist/xondes/album/the-last-heat',
+  ],
+  amazon: [
+    'https://music.amazon.fr/albums/B07G9RM2MG',
+    'https://music.amazon.fr/albums/B07CZDXC9B',
+    'https://music.amazon.fr/albums/B07D3NQ235',
+    'https://music.amazon.fr/albums/B07G5PPYSY',
+    'https://music.amazon.fr/albums/B07D3PGSR4',
+    'https://music.amazon.fr/albums/B07MTV7JYS',
+    'https://music.amazon.fr/albums/B07PGN58LX',
+    'https://music.amazon.fr/albums/B07QCBN3Z4',
+  ],
+  tidal: [
+    'https://listen.tidal.com/album/93312939',
+    'https://listen.tidal.com/album/93087422',
+    'https://listen.tidal.com/album/88716570',
+    'https://listen.tidal.com/album/101927847',
+    'https://listen.tidal.com/album/102564740',
+    'https://listen.tidal.com/album/102503463',
+    'https://listen.tidal.com/album/105237098',
+    'https://listen.tidal.com/album/108790098',
+    'https://listen.tidal.com/album/108980716',
+  ],
+  spotify: [
+    'https://open.spotify.com/album/3FJdPTLyJVPYMqQQUyb6lr',
+    'https://open.spotify.com/album/5509gS9cZUrbTFege0fpTk',
+    'https://open.spotify.com/album/2jmPHLM2be2g19841vHjWE',
+    'https://open.spotify.com/album/5CPIRky6BGgl3CCdzMYAXZ',
+    'https://open.spotify.com/album/0Tt1ldQ8b4zn5LRcM706ll',
+    'https://open.spotify.com/album/2kFEMTIWWw0jXD57Ewr7go',
+    'https://open.spotify.com/album/4BR7o0DwEPj1wF1nfcypiY',
+    'https://open.spotify.com/album/6045wkKBhEx1DBoqn3aXSe',
+    'https://open.spotify.com/album/7Jh67aHTA9ly7R1OTbzqGF',
+  ]
+}
+
 let accounts
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
@@ -101,12 +147,14 @@ io.on('connection', client => {
     plays++
   })
 
-  client.on('runner', ({ clientId, account, id }) => {
+  client.on('runner', ({ clientId, account, id, player }) => {
     client.parentId = clientId
     client.uniqId = id
     streams[id] = client
     accounts = accounts.filter(a => a !== account)
     // displayLength('Add')
+
+    client.emit('albums', albums[player])
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
