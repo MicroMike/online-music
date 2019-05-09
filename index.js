@@ -302,9 +302,11 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    if (Object.values(streams).length === 0 || Object.values(streams).filter(s => s.parentId === client.uniqId).length === 0) {
-      client.emit('goPlay')
-    }
+    setTimeout(() => {
+      if (Object.values(streams).length === 0 || Object.values(streams).filter(s => s.parentId === client.uniqId).length === 0) {
+        client.emit('goPlay')
+      }
+    }, 1000 * 10);
   })
 
   client.on('disconnect', () => {
