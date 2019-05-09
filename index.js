@@ -318,10 +318,6 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (restart && Object.values(clients).length === 0 && Object.values(streams).length > 0) {
-      Object.values(streams).filter(s => s.disconnect())
-    }
-
     if (Object.values(clients).length === 0 && Object.values(streams).length === 0) {
       restart = false
     }
@@ -330,8 +326,15 @@ io.on('connection', client => {
   })
 
   client.on('Cdisconnect', () => {
+    delete clients[client.uniqId]
+    delete streams[client.uniqId]
+
     if (clients[client.uniqId]) {
       console.log('Disconnect')
+
+      if (restart && Object.values(clients).length === 0 && Object.values(streams).length > 0) {
+        Object.values(streams).filter(s => s.disconnect())
+      }
     }
     else if (streams[client.uniqId]) {
       if (!restart) {
