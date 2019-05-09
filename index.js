@@ -166,20 +166,6 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    client.on('change', () => {
-      const c = clients[client.parentId]
-      const time = 1000 * 30 * (++c.change)
-      c.emit('change', time)
-      setTimeout(() => {
-        c.change--
-      }, time);
-    })
-
-    client.on('changeMinus', () => {
-      const c = clients[client.parentId]
-      c.change--
-    })
-
     client.on('player', clientId => {
       try {
         clients[clientId].emit('goPlay')
@@ -218,8 +204,6 @@ io.on('connection', client => {
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
     client.playTimeout
     client.uniqId = id
-    client.change = 0
-    client.max = false
     clients[id] = client
 
     Object.values(webs).forEach(w => {
@@ -247,12 +231,9 @@ io.on('connection', client => {
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
         if (playerLength >= max) {
-          if (!client.max) {
-            client.max = true
-            Object.values(streams).forEach(s => {
-              if (s.parentId === client.uniqId) { s.emit('startChange') }
-            })
-          }
+          Object.values(streams).forEach(s => {
+            if (s.parentId === client.uniqId) { s.emit('startChange') }
+          })
           return
         }
 
