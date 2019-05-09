@@ -289,8 +289,6 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    console.log('disconnect')
-
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
@@ -307,7 +305,6 @@ io.on('connection', client => {
   })
 
   client.on('Cdisconnect', () => {
-    console.log('Cdisconnect')
     delete clients[client.uniqId]
     delete streams[client.uniqId]
 
