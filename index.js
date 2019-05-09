@@ -167,7 +167,7 @@ io.on('connection', client => {
     })
 
     client.on('player', () => {
-      clients[client.parentId].emit('goPlay')
+      // clients[client.parentId].emit('goPlay')
     })
 
     client.on('screen', data => {
@@ -223,17 +223,14 @@ io.on('connection', client => {
 
       if (restart && !first) { return }
 
-      client.playTimeout = setTimeout(() => {
+      const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
-        const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
-
-        if (playerLength >= max) {
-          Object.values(streams).forEach(s => {
-            if (s.parentId === client.uniqId) { s.emit('startChange') }
-          })
-          return
-        }
-
+      if (playerLength >= max) {
+        Object.values(streams).forEach(s => {
+          if (s.parentId === client.uniqId) { s.emit('startChange') }
+        })
+      }
+      else {
         if (checking && checkClient.uniqId === client.uniqId) {
           const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
 
@@ -248,8 +245,11 @@ io.on('connection', client => {
             client.emit('run', account)
           }
         }
+      }
 
-      }, 1000 * 5);
+      client.playTimeout = setTimeout(() => {
+        client.emit('goPlay')
+      }, 1000 * 30);
     })
 
     client.on('loop', ({ errorMsg, account }) => {
@@ -281,7 +281,7 @@ io.on('connection', client => {
     })
 
     if (first) {
-      client.emit('goPlay')
+      // client.emit('goPlay')
     }
   })
 
