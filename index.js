@@ -269,6 +269,7 @@ io.on('connection', client => {
           if (checkAccount) {
             client.emit('runCheck', checkAccount)
           }
+          else { checking = false }
         }
         else {
           const account = getAccount(env)
@@ -361,13 +362,13 @@ io.on('connection', client => {
       checking = false
 
       if (cid) {
-        let c = clients[cid]
-        clearTimeout(c.playTimeout)
-        c.emit('restart')
+        fs.readFile('check.txt', 'utf8', async (err, data) => {
+          if (err) return console.log(err);
+          checkAccounts = data.split(',').filter(e => e)
 
-        setTimeout(() => {
-          restart = false
-        }, 1000 * 10);
+          checking = true
+          checkClient = clients[cid]
+        })
       }
       else {
         Object.values(clients).forEach(c => {
