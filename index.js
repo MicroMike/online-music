@@ -137,7 +137,7 @@ const getAllData = () => ({
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
-  gain: gain + '€/min ' + gain * 60 * 24 * 30 + '€/mois',
+  gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
     ...Object.values(clients).map(c => ({
       id: c.uniqId,
