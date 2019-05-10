@@ -208,8 +208,8 @@ io.on('connection', client => {
         if (accounts.indexOf(account) < 0) { accounts.push(account) }
       }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
 
-      if (errorMsg) {
-        // displayLength(errorMsg + ' ' + account)
+      if (errorMsg === 'used') {
+        displayLength(errorMsg + ' ' + account)
       }
     });
 
