@@ -89,6 +89,13 @@ const getAccount = env => {
   return accounts.length ? accounts.shift() : false
 }
 
+let tempPlays = 0
+let gain = 0
+setInterval(() => {
+  gain = (plays - tempPlays) * 0.004
+  tempPlays = plays
+}, 1000 * 60)
+
 const getAccounts = () => {
   fs.readFile(file, 'utf8', async (err, data) => {
     if (err) return console.log(err);
@@ -130,6 +137,7 @@ const getAllData = () => ({
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
+  gain: gain + '€/min',
   clients: {
     ...Object.values(clients).map(c => ({
       id: c.uniqId,
