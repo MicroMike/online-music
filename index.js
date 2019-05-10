@@ -206,15 +206,15 @@ io.on('connection', client => {
     client.on('loop', ({ errorMsg, account }) => {
       setTimeout(() => {
         if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      }, errorMsg === 'Used' ? 1000 * 60 * 10 : 0);
+      }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
 
       if (errorMsg) {
-        displayLength(errorMsg + ' ' + account)
+        // displayLength(errorMsg + ' ' + account)
       }
     });
 
     client.on('delete', account => {
-      displayLength('Del ' + account)
+      // displayLength('Del ' + account)
       accounts = accounts.filter(a => a !== account)
 
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
