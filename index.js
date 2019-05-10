@@ -195,6 +195,30 @@ io.on('connection', client => {
       })
     })
 
+    client.on('loop', ({ errorMsg, account }) => {
+      setTimeout(() => {
+        if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      }, errorMsg === 'Used' ? 1000 * 60 * 10 : 0);
+
+      if (errorMsg) {
+        displayLength(errorMsg + ' ' + account)
+      }
+    });
+
+    client.on('delete', account => {
+      displayLength('Del ' + account)
+      accounts = accounts.filter(a => a !== account)
+
+      fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
+        if (err) return console.log(err);
+        data = data.split(',').filter(e => e)
+        if (data.indexOf(account) < 0) { data.push(account) }
+        fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
+          if (err) return console.log(err);
+        });
+      });
+    })
+
     client.emit('albums', albums[player])
   })
 
@@ -252,30 +276,6 @@ io.on('connection', client => {
       }, 1000 * 60);
     })
 
-    client.on('loop', ({ errorMsg, account }) => {
-      setTimeout(() => {
-        if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      }, errorMsg === 'Used' ? 1000 * 60 * 10 : 0);
-
-      if (errorMsg) {
-        displayLength(errorMsg + ' ' + account)
-      }
-    });
-
-    client.on('delete', account => {
-      displayLength('Del ' + account)
-      accounts = accounts.filter(a => a !== account)
-
-      fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
-        if (err) return console.log(err);
-        data = data.split(',').filter(e => e)
-        if (data.indexOf(account) < 0) { data.push(account) }
-        fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
-          if (err) return console.log(err);
-        });
-      });
-    })
-
     client.on('retrieve', playerLength => {
       console.log('retreive', playerLength)
     })
@@ -301,7 +301,7 @@ io.on('connection', client => {
     client.removeAllListeners()
   })
 
-  client.on('Cdisconnect', () => {
+  client.on('Cdisconnect', code => {
     delete clients[client.uniqId]
     delete streams[client.uniqId]
 
@@ -309,7 +309,7 @@ io.on('connection', client => {
       console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
-      if (!restart) {
+      if (code !== 100) {
         clients[client.parentId] && clients[client.parentId].emit('goPlay')
       }
     }
