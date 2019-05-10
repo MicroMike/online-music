@@ -92,9 +92,9 @@ const getAccount = env => {
 let tempPlays = 0
 let gain = 0
 setInterval(() => {
-  gain = (plays - tempPlays) * 0.004 * 6
+  gain = (plays - tempPlays) * 0.004
   tempPlays = plays
-}, 1000 * 10)
+}, 1000 * 60)
 
 const getAccounts = () => {
   fs.readFile(file, 'utf8', async (err, data) => {
