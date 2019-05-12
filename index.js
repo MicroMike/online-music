@@ -319,6 +319,7 @@ io.on('connection', client => {
     }
     else if (streams[client.uniqId]) {
       // if (code !== 100) {
+      console.log(account)
       if (accounts.indexOf(account) < 0) { accounts.push(account) }
       // clients[client.parentId] && clients[client.parentId].emit('goPlay')
       // }
