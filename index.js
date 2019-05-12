@@ -204,9 +204,9 @@ io.on('connection', client => {
     })
 
     client.on('loop', ({ errorMsg, account }) => {
-      setTimeout(() => {
-        if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
+      // setTimeout(() => {
+      //   if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      // }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
 
       if (errorMsg === 'used') {
         displayLength(errorMsg + ' ' + account)
@@ -318,9 +318,10 @@ io.on('connection', client => {
       console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
-      if (code !== 100) {
-        clients[client.parentId] && clients[client.parentId].emit('goPlay')
-      }
+      // if (code !== 100) {
+      if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      // clients[client.parentId] && clients[client.parentId].emit('goPlay')
+      // }
     }
 
     client.disconnect()
