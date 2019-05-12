@@ -175,7 +175,7 @@ io.on('connection', client => {
     })
 
     client.on('player', () => {
-      // clients[client.parentId].emit('goPlay')
+      clients[client.parentId].emit('goPlay')
     })
 
     client.on('screen', data => {
@@ -204,9 +204,9 @@ io.on('connection', client => {
     })
 
     client.on('loop', ({ errorMsg, account }) => {
-      // setTimeout(() => {
-      //   if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      // }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
+      setTimeout(() => {
+        if (accounts.indexOf(account) < 0) { accounts.push(account) }
+      }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
 
       if (errorMsg === 'used') {
         displayLength(errorMsg + ' ' + account)
@@ -280,9 +280,9 @@ io.on('connection', client => {
         }
       }
 
-      client.playTimeout = setTimeout(() => {
-        client.emit('goPlay')
-      }, 1000 * 60);
+      // client.playTimeout = setTimeout(() => {
+      //   client.emit('goPlay')
+      // }, 1000 * 60);
     })
 
     client.on('retrieve', playerLength => {
@@ -311,19 +311,17 @@ io.on('connection', client => {
   })
 
   client.on('Cdisconnect', code => {
-    delete clients[client.uniqId]
-    delete streams[client.uniqId]
-
     if (clients[client.uniqId]) {
       console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
-      // if (code !== 100) {
-      console.log(account)
-      if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      // clients[client.parentId] && clients[client.parentId].emit('goPlay')
-      // }
+      if (code !== 100) {
+        clients[client.parentId] && clients[client.parentId].emit('goPlay')
+      }
     }
+
+    delete clients[client.uniqId]
+    delete streams[client.uniqId]
 
     client.disconnect()
   })
