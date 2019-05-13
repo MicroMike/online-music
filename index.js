@@ -176,11 +176,10 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    client.on('out', () => {
-      const c = clients[client.parentId]
-      const playerLength = Object.values(streams).filter(s => s.parentId === c.uniqId).length
+    client.on('out', cid => {
+      const playerLength = Object.values(streams).filter(s => s.parentId === cid).length
       console.log('out: ' + playerLength)
-      client.emit('outOk', playerLength === c.max)
+      client.emit('outOk', playerLength === clients[cid].max)
     })
 
     client.on('player', () => {
