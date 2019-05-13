@@ -176,6 +176,15 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
+    client.on('out', cid => {
+      const c = clients[cid]
+      const playerLength = Object.values(streams).filter(s => s.parentId === c.uniqId).length
+      console.log(playerLength)
+      if (playerLength === c.max) {
+        client.emit('outOk')
+      }
+    })
+
     client.on('player', () => {
       clients[client.parentId].emit('goPlay')
     })
@@ -230,6 +239,7 @@ io.on('connection', client => {
 
   client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
     client.playTimeout
+    client.max = max
     client.uniqId = id
     clients[id] = client
 
