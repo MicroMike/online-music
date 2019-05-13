@@ -179,7 +179,7 @@ io.on('connection', client => {
     client.on('out', cid => {
       const playerLength = Object.values(streams).filter(s => s.parentId === cid).length
       console.log('out: ' + playerLength)
-      client.emit('outOk', playerLength === clients[cid].max)
+      client.emit('outOk', playerLength >= clients[cid].max)
     })
 
     client.on('player', () => {
