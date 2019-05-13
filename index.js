@@ -165,8 +165,10 @@ io.on('connection', client => {
 
   client.on('runner', ({ clientId, account, id, player }) => {
     client.parentId = clientId
+    client.account = account
     client.uniqId = id
     streams[id] = client
+
     accounts = accounts.filter(a => a !== account)
     // displayLength('Add')
 
@@ -204,10 +206,6 @@ io.on('connection', client => {
     })
 
     client.on('loop', ({ errorMsg, account }) => {
-      setTimeout(() => {
-        if (accounts.indexOf(account) < 0) { accounts.push(account) }
-      }, errorMsg === 'used' ? 1000 * 60 * 10 : 0);
-
       if (errorMsg === 'used') {
         displayLength(errorMsg + ' ' + account)
       }
@@ -315,6 +313,10 @@ io.on('connection', client => {
       console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
+      if (code !== 4) {
+        console.log(client.account)
+        if (accounts.indexOf(client.account) < 0) { accounts.push(client.account) }
+      }
       if (code !== 100) {
         clients[client.parentId] && clients[client.parentId].emit('goPlay')
       }
