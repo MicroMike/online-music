@@ -322,7 +322,6 @@ io.on('connection', client => {
     }
     else if (streams[client.uniqId]) {
       if (code !== 4) {
-        console.log(client.account)
         if (accounts.indexOf(client.account) < 0) { accounts.push(client.account) }
       }
       if (code !== 100) {
