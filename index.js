@@ -295,13 +295,13 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    delete webs[client.id]
-    delete clients[client.uniqId]
-    delete streams[client.uniqId]
-
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
+
+    delete webs[client.id]
+    delete clients[client.uniqId]
+    delete streams[client.uniqId]
 
     setTimeout(() => {
       restart = false
