@@ -181,11 +181,11 @@ io.on('connection', client => {
       const ok = !clients[cid] || playerLength >= clients[cid].max
       console.log('out: ' + playerLength + ' ' + ok)
       client.emit('outOk', ok)
-      clients[cid] && clients[cid].emit('goPlay')
+      // clients[cid] && clients[cid].emit('goPlay')
     })
 
     client.on('player', () => {
-      clients[client.parentId] && clients[client.parentId].emit('goPlay')
+      // clients[client.parentId] && clients[client.parentId].emit('goPlay')
     })
 
     client.on('screen', data => {
@@ -287,9 +287,9 @@ io.on('connection', client => {
         }
       }
 
-      // client.playTimeout = setTimeout(() => {
-      //   client.emit('goPlay')
-      // }, 1000 * 60);
+      client.playTimeout = setTimeout(() => {
+        client.emit('goPlay')
+      }, 1000 * 60);
     })
 
     client.on('retrieve', playerLength => {
@@ -326,7 +326,7 @@ io.on('connection', client => {
         if (accounts.indexOf(client.account) < 0) { accounts.push(client.account) }
       }
       if (code !== 100) {
-        clients[client.parentId] && clients[client.parentId].emit('goPlay')
+        // clients[client.parentId] && clients[client.parentId].emit('goPlay')
       }
     }
 
