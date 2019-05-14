@@ -185,7 +185,7 @@ io.on('connection', client => {
     })
 
     client.on('player', () => {
-      clients[client.parentId].emit('goPlay')
+      clients[client.parentId] && clients[client.parentId].emit('goPlay')
     })
 
     client.on('screen', data => {
