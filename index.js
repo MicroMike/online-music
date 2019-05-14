@@ -258,7 +258,7 @@ io.on('connection', client => {
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
     client.on('play', () => {
-      clearTimeout(client.playTimeout)
+      // clearTimeout(client.playTimeout)
 
       if (!restart || first) {
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
