@@ -264,29 +264,23 @@ io.on('connection', client => {
         client.emit('goPlay')
       }, 1000 * 60);
 
-      if (!restart || first) {
-        const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
+      if (restart && !first) { return }
+      const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
-        if (playerLength >= max) {
-          Object.values(streams).forEach(s => {
-            if (s.parentId === client.uniqId) { s.emit('startChange') }
-          })
+      if (playerLength < max) {
+        if (checking && checkClient.uniqId === client.uniqId) {
+          const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+
+          if (checkAccount) {
+            client.emit('runCheck', checkAccount)
+          }
+          else { checking = false }
         }
         else {
-          if (checking && checkClient.uniqId === client.uniqId) {
-            const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+          const account = getAccount(env)
 
-            if (checkAccount) {
-              client.emit('runCheck', checkAccount)
-            }
-            else { checking = false }
-          }
-          else {
-            const account = getAccount(env)
-
-            if (account) {
-              client.emit('run', account)
-            }
+          if (account) {
+            client.emit('run', account)
           }
         }
       }
