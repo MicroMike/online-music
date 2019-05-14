@@ -260,6 +260,10 @@ io.on('connection', client => {
     client.on('play', () => {
       // clearTimeout(client.playTimeout)
 
+      client.playTimeout = setTimeout(() => {
+        client.emit('goPlay')
+      }, 1000 * 60);
+
       if (!restart || first) {
         const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
@@ -286,10 +290,6 @@ io.on('connection', client => {
           }
         }
       }
-
-      client.playTimeout = setTimeout(() => {
-        client.emit('goPlay')
-      }, 1000 * 60);
     })
 
     client.on('retrieve', playerLength => {
