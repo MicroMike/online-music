@@ -290,9 +290,7 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    if (first) {
-      client.emit('goPlay')
-    }
+    client.emit('goPlay')
   })
 
   client.on('disconnect', () => {
