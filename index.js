@@ -256,7 +256,7 @@ io.on('connection', client => {
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
-    client.on('play', () => {
+    client.on('play', async () => {
       // clearTimeout(client.playTimeout)
 
       client.playTimeout = setTimeout(() => {
