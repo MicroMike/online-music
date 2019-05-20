@@ -83,35 +83,35 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
-const getAccount = async env => {
-  return new Promise(resolve => {
-    fs.readFile(file, 'utf8', async (err, data) => {
-      if (err) return console.log(err);
+const getAccounts = async env => {
+  fs.readFile(file, 'utf8', async (err, data) => {
+    if (err) return console.log(err);
 
-      fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
-        if (err2) return console.log(err2);
+    fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
+      if (err2) return console.log(err2);
 
-        accounts = data.split(',')
+      accounts = data.split(',')
 
-        dataDel = dataDel.split(',').filter(e => e)
-        accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+      dataDel = dataDel.split(',').filter(e => e)
+      accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
 
-        Object.values(streams).forEach(s => accounts = accounts.filter(a => a !== s.account))
+      Object.values(streams).forEach(s => accounts = accounts.filter(a => a !== s.account))
+    })
+  });
+}
 
-        if (env.RAND) {
-          for (let i = 0; i < accounts.length; i++) {
-            accounts.sort(() => { return rand(2) })
-          }
-        }
+const getAccount = () => {
+  if (env.RAND) {
+    for (let i = 0; i < accounts.length; i++) {
+      accounts.sort(() => { return rand(2) })
+    }
+  }
 
-        if (env.TYPE) {
-          accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
-        }
+  if (env.TYPE) {
+    accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+  }
 
-        resolve(accounts.length ? accounts.shift() : false)
-      })
-    });
-  })
+  return accounts.length ? accounts.shift() : false
 }
 
 let tempPlays = 0
@@ -119,6 +119,7 @@ let gain = 0
 setInterval(() => {
   gain = (plays - tempPlays) * 0.004
   tempPlays = plays
+  getAccounts()
 }, 1000 * 60)
 
 let displayLength = (log) => {
@@ -220,7 +221,7 @@ io.on('connection', client => {
 
     client.on('delete', account => {
       // displayLength('Del ' + account)
-      accounts = accounts.filter(a => a !== account)
+      // accounts = accounts.filter(a => a !== account)
 
       fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
         if (err) return console.log(err);
@@ -249,14 +250,14 @@ io.on('connection', client => {
       checkClient = client
     }
 
-    if (accountsValid) {
-      accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
-    }
-    accounts = accounts.filter(a => del.indexOf(a) < 0)
+    // if (accountsValid) {
+    //   accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
+    // }
+    // accounts = accounts.filter(a => del.indexOf(a) < 0)
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
-    client.on('play', async () => {
+    client.on('play', () => {
       // clearTimeout(client.playTimeout)
 
       client.playTimeout = setTimeout(() => {
@@ -276,7 +277,7 @@ io.on('connection', client => {
           else { checking = false }
         }
         else {
-          const account = await getAccount(env)
+          const account = getAccount(env)
 
           if (account) {
             client.emit('run', account)
