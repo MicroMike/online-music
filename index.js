@@ -100,6 +100,8 @@ const getAccounts = async env => {
   });
 }
 
+getAccounts()
+
 const getAccount = () => {
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
