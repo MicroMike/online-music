@@ -90,12 +90,14 @@ const getAccounts = () => {
     fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
       if (err2) return console.log(err2);
 
-      accounts = data.split(',')
+      let Taccounts = data.split(',')
 
       dataDel = dataDel.split(',').filter(e => e)
-      accounts = accounts.filter(e => dataDel.indexOf(e) < 0)
+      Taccounts = Taccounts.filter(e => dataDel.indexOf(e) < 0)
 
-      Object.values(streams).forEach(s => accounts = accounts.filter(a => a !== s.account))
+      Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+
+      accounts = Taccounts
     })
   });
 }
