@@ -26,6 +26,8 @@ const albums = {
     'https://app.napster.com/artist/lapilluledors/album/red-beast',
     'https://app.napster.com/artist/dj-reid/album/satisfaction-spell',
     'https://app.napster.com/artist/xondes/album/the-last-heat',
+    'https://app.napster.com/artist/dj-otl/album/about-other-people',
+    'https://app.napster.com/artist/dhn/album/blue-gun',
   ],
   amazon: [
     'https://music.amazon.fr/albums/B07G9RM2MG',
