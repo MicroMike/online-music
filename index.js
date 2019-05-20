@@ -78,6 +78,7 @@ let clients = {}
 let streams = {}
 let webs = {}
 let checkClient
+let used = {}
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -96,6 +97,7 @@ const getAccounts = () => {
       Taccounts = Taccounts.filter(e => dataDel.indexOf(e) < 0)
 
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+      Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
       accounts = Taccounts
     })
@@ -219,6 +221,8 @@ io.on('connection', client => {
     client.on('loop', ({ errorMsg, account }) => {
       if (errorMsg === 'used') {
         displayLength(errorMsg + ' ' + account)
+        used[account] = account
+        setTimeout(() => { delete used[account] }, 1000 * 60 * 10);
       }
     });
 
