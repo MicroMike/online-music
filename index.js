@@ -287,7 +287,7 @@ io.on('connection', client => {
           }
         }
       }
-      else {
+      else if (!rand(5)) {
         Object.values(streams).filter(s => s.parentId === client.uniqId)[0].emit('out')
       }
 
