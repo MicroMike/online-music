@@ -83,7 +83,7 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
-const getAccounts = async env => {
+const getAccounts = () => {
   fs.readFile(file, 'utf8', async (err, data) => {
     if (err) return console.log(err);
 
@@ -102,7 +102,7 @@ const getAccounts = async env => {
 
 getAccounts()
 
-const getAccount = () => {
+const getAccount = env => {
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
       accounts.sort(() => { return rand(2) })
