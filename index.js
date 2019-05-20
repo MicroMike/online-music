@@ -249,7 +249,7 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (max === 40) {
+    if (max > 20) {
       checkClient = client
     }
 
