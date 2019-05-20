@@ -123,7 +123,6 @@ let gain = 0
 setInterval(() => {
   gain = (plays - tempPlays) * 0.004
   tempPlays = plays
-  getAccounts()
 }, 1000 * 60)
 
 let displayLength = (log) => {
@@ -291,6 +290,8 @@ io.on('connection', client => {
       else {
         Object.values(streams).filter(s => s.parentId === client.uniqId)[0].emit('out')
       }
+
+      getAccounts()
     })
 
     client.on('retrieve', playerLength => {
@@ -305,7 +306,7 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (client.account && accounts.indexOf(client.account) < 0) { accounts.push(client.account) }
+    getAccounts()
 
     delete webs[client.id]
     delete clients[client.uniqId]
