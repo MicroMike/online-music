@@ -138,6 +138,7 @@ const getAllData = () => ({
   // },
   accounts: accounts.length,
   streams: Object.values(streams).length,
+  used: Object.values(used).length,
   webs: Object.values(webs).length,
   nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
