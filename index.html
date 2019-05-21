@@ -113,10 +113,7 @@
 
     socket.on('playerInfos', ({ account, time, id, freeze }) => {
       const isDom = document.querySelector('#players-' + id)
-      const html = `
-      <div id="#players-${id}" >
-        <p ${freeze && 'style="color:red;"'}>${account} : ${time}</p>
-      </div>`
+      const html = `<div id="#players-${id}" ${freeze && 'style="color:red;"'}>${account} : ${time}</div>`
 
       if (isDom) { isDom.remove() }
 
