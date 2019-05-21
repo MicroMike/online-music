@@ -46,6 +46,8 @@
 
     socket.on('clean', () => {
       document.querySelector('.screenshot').innerHTML = ''
+      document.querySelector('.players').innerHTML = ''
+      document.querySelector('.freezedPlayers').innerHTML = ''
     })
 
     socket.on('allData', data => {
