@@ -112,16 +112,20 @@
     })
 
     socket.on('playerInfos', ({ account, time, id, freeze }) => {
-      const isDom = document.querySelector('#players-' + id)
-      const html = `<div id="#players-${id}" ${freeze && 'style="color:red;"'}>${account} : ${time}</div>`
+      const isDomF = document.querySelector('#players-' + id + '.freeze')
+      const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
+      const html = `<div id="#players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${account} : ${time}</div>`
 
-      if (isDom) { isDom.remove() }
-
-      if (freeze) {
+      if (isDomF && !freeze) {
+        isDomF.remove()
+        document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
+      }
+      else if (isDom && freeze) {
+        isDom.remove()
         document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
       else {
-        document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
+        document.querySelector('#players-' + id).innerText = `${account} : ${time}`
       }
     })
   </script>
