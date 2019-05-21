@@ -115,7 +115,7 @@
       const dom = document.querySelector('#players-' + id)
       const isDomF = document.querySelector('#players-' + id + '.freeze')
       const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
-      const html = `<div id="#players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${account} : ${time}</div>`
+      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${account} : ${time}</div>`
 
       if (!freeze && (isDomF || !dom)) {
         isDomF && isDomF.remove()
