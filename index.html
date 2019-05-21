@@ -111,7 +111,7 @@
       }
     })
 
-    client.on('playerInfos', ({ account, time, id }) => {
+    socket.on('playerInfos', ({ account, time, id }) => {
       const isDom = document.querySelector('#players-' + id)
       const html = `
         <div id="#players-${id}">
