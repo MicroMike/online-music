@@ -4,6 +4,23 @@
 <head>
   <title>Socket.IO chat</title>
   <script src="/socket.io/socket.io.js"></script>
+  <style>
+    [id^="players-"] {
+      position: relative;
+    }
+
+    [id^="players-"]::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: lightskyblue;
+      z-index: -1;
+      transition: width 3s;
+    }
+  </style>
   <script type="text/javascript">
     var socket = io();
 
@@ -129,6 +146,7 @@
       }
       else {
         dom.innerText = `${account} : ${time}`
+        dom.style.width = time + '%'
       }
     })
   </script>
