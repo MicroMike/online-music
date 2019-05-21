@@ -10,7 +10,6 @@
     }
 
     [id^="players-"] span {
-      content: '';
       position: absolute;
       top: 0;
       left: 0;
@@ -145,8 +144,7 @@
         document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
       else {
-        dom.innerText = `${account} : ${time}`
-        document.querySelector('#players-' + id + ' span').style.width = time + '%'
+        dom.innerText = `<span style="width=${time}%;"></span>${account} : ${time}`
       }
     })
   </script>
