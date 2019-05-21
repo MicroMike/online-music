@@ -146,8 +146,14 @@
         document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
       else {
-        document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
-        document.querySelector('#players-' + id + ' div').style.width = time + '%'
+        const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
+        if (time > currentTime) {
+          document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
+          document.querySelector('#players-' + id + ' div').style.width = time + '%'
+        }
+        else {
+          dom.innerHTML = insideHtml
+        }
       }
     })
   </script>
