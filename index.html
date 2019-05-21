@@ -9,7 +9,7 @@
       position: relative;
     }
 
-    [id^="players-"]::before {
+    [id^="players-"] span {
       content: '';
       position: absolute;
       top: 0;
@@ -134,7 +134,7 @@
       const dom = document.querySelector('#players-' + id)
       const isDomF = document.querySelector('#players-' + id + '.freeze')
       const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
-      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${account} : ${time}</div>`
+      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}><span></span>${account} : ${time}</div>`
 
       if (!freeze && (isDomF || !dom)) {
         isDomF && isDomF.remove()
@@ -146,7 +146,7 @@
       }
       else {
         dom.innerText = `${account} : ${time}`
-        dom.style.width = time + '%'
+        document.querySelector('#players-' + id + ' span').style.width = time + '%'
       }
     })
   </script>
