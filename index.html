@@ -146,7 +146,8 @@
         document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
       else {
-        dom.innerHTML = insideHtml
+        dom.innerText = `${account} : ${time}`
+        document.querySelector('#players-' + id + ' span').style.width = time + '%'
       }
     })
   </script>
