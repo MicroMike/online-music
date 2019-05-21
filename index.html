@@ -9,7 +9,7 @@
       position: relative;
     }
 
-    [id^="players-"] p {
+    [id^="players-"] div {
       position: absolute;
       top: 0;
       left: 0;
@@ -134,7 +134,7 @@
       const isDomF = document.querySelector('#players-' + id + '.freeze')
       const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
 
-      const insideHtml = `<p style="width:${time}%;"></p><span>${account} : ${time}</span>`
+      const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span>`
       const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
       if (!freeze && (isDomF || !dom)) {
