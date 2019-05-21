@@ -118,11 +118,13 @@
         <p ${freeze && 'style="color:red;"'}>${account} : ${time}</p>
       </div>`
 
-      if (!isDom) {
-        document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
+      if (isDom) { isDom.remove() }
+
+      if (freeze) {
+        document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
       else {
-        isDom.innerHTML = `<p ${freeze && 'style="color:red;"'}>${account} : ${time}</p>`
+        document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
       }
     })
   </script>
@@ -138,7 +140,10 @@
   <button onClick="getData()">GET DATA</button>
   <button onClick="clearData()">CLEAR</button>
   <div id="del"></div>
-  <div class="players"></div>
+  <div style="display: flex;">
+    <div class="players"></div>
+    <div class="freezedPlayers"></div>
+  </div>
   <div class="screenshot"></div>
 </body>
 
