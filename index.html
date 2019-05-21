@@ -115,14 +115,14 @@
       const isDom = document.querySelector('#players-' + id)
       const html = `
       <div id="#players-${id}" >
-        <h2 ${freeze && 'style="color:red;"'}>${account} :</h2><h3>${time}</h3>
+        <p ${freeze && 'style="color:red;"'}>${account} : ${time}</p>
       </div>`
 
       if (!isDom) {
         document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
       }
       else {
-        isDom.innerHTML = `<h2 ${freeze && 'style="color:red;"'}>${account} :</h2><h3>${time}</h3>`
+        isDom.innerHTML = `<p ${freeze && 'style="color:red;"'}>${account} : ${time}</p>`
       }
     })
   </script>
