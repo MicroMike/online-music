@@ -111,18 +111,18 @@
       }
     })
 
-    socket.on('playerInfos', ({ account, time, id }) => {
+    socket.on('playerInfos', ({ account, time, id, freeze }) => {
       const isDom = document.querySelector('#players-' + id)
       const html = `
-        <div id="#players-${id}">
-          <h2>${account} :</h2><h3>${time}</h3>
-        </div>
-      `
+      <div id="#players-${id}" >
+        <h2 ${freeze && 'style="color:red;"'}>${account} :</h2><h3>${time}</h3>
+      </div>`
+
       if (!isDom) {
         document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
       }
       else {
-        isDom.innerHTML = `<h2>${account} :</h2><h3>${time}</h3>`
+        isDom.innerHTML = `<h2 ${freeze && 'style="color:red;"'}>${account} :</h2><h3>${time}</h3>`
       }
     })
   </script>
