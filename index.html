@@ -133,7 +133,9 @@
       const dom = document.querySelector('#players-' + id)
       const isDomF = document.querySelector('#players-' + id + '.freeze')
       const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
-      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}><span></span>${account} : ${time}</div>`
+
+      const insideHtml = `<span style="width:${time}%;"></span>${account} : ${time}`
+      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
       if (!freeze && (isDomF || !dom)) {
         isDomF && isDomF.remove()
@@ -144,7 +146,7 @@
         document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
       else {
-        dom.innerHTML = `<span style="width=${time}%;"></span>${account} : ${time}`
+        dom.innerHTML = insideHtml
       }
     })
   </script>
