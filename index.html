@@ -110,6 +110,21 @@
         isDom.src = 'data:image/png;base64,' + img
       }
     })
+
+    client.on('playerInfos', ({ account, time, id }) => {
+      const isDom = document.querySelector('#players-' + id)
+      const html = `
+        <div id="#players-${id}">
+          <h2>${account} :</h2><h3>${time}</h3>
+        </div>
+      `
+      if (!isDom) {
+        document.querySelector('.players').insertAdjacentHTML('beforeEnd', html)
+      }
+      else {
+        isDom.innerHTML = `<h2>${account} :</h2><h3>${time}</h3>`
+      }
+    })
   </script>
 </head>
 
@@ -123,6 +138,7 @@
   <button onClick="getData()">GET DATA</button>
   <button onClick="clearData()">CLEAR</button>
   <div id="del"></div>
+  <div class="players"></div>
   <div class="screenshot"></div>
 </body>
 

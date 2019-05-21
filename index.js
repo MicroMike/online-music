@@ -190,8 +190,10 @@ io.on('connection', client => {
     //   client.emit('outOk', ok)
     // })
 
-    client.on('player', () => {
-      // clients[client.parentId] && clients[client.parentId].emit('goPlay')
+    client.on('playerInfos', datas => {
+      Object.values(webs).forEach(w => {
+        w.emit('playerInfos', { ...datas, id: client.uniqId })
+      })
     })
 
     client.on('screen', data => {
