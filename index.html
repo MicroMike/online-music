@@ -132,6 +132,9 @@
 
     socket.on('playerInfos', ({ account, time, id, freeze }) => {
       const dom = document.querySelector('#players-' + id)
+
+      if (!time) { return dom && dom.remove() }
+
       const isDomF = document.querySelector('#players-' + id + '.freeze')
       const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
 
