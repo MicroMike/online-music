@@ -307,7 +307,7 @@ io.on('connection', client => {
 
     setTimeout(() => {
       client.emit('goPlay')
-    }, 1000 * 30);
+    }, 1000 * 30 + rand(1000 * 30));
   })
 
   client.on('disconnect', () => {
