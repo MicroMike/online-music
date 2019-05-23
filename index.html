@@ -83,6 +83,9 @@
         let d = data[k]
         document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${d}</div>`)
       })
+
+      const count = document.querySelectorAll('[id^=players-]').length
+      document.querySelector('#count').innerText = count
     })
 
     socket.on('endStream', streamId => {
@@ -173,6 +176,7 @@
   <button onClick="getData()">GET DATA</button>
   <button onClick="clearData()">CLEAR</button>
   <div id="del"></div>
+  <div id="count"></div>
   <div style="display: flex;">
     <div class="players"></div>
     <div class="freezedPlayers"></div>
