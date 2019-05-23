@@ -305,7 +305,9 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    client.emit('goPlay')
+    setTimeout(() => {
+      client.emit('goPlay')
+    }, 1000 * 30);
   })
 
   client.on('disconnect', () => {
