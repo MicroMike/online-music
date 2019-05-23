@@ -333,7 +333,11 @@ io.on('connection', client => {
     if (clients[client.uniqId]) {
       console.log('Disconnect Client ' + client.uniqId)
     }
-    else if (streams[client.uniqId] && code !== 4) { }
+    else if (streams[client.uniqId]) {
+      Object.values(webs).forEach(w => {
+        w.emit('playerInfos', { id: client.uniqId })
+      })
+    }
 
     delete clients[client.uniqId]
     delete streams[client.uniqId]
