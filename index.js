@@ -129,9 +129,9 @@ const getAccount = env => {
   }
 
   let account = accounts.length ? accounts.shift() : false
+  account = account && !busy[account] && account
 
   if (account) {
-    account = !busy[account] && account
     busy[account] = true
     setTimeout(() => {
       delete busy[account]
