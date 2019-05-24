@@ -288,6 +288,8 @@ io.on('connection', client => {
     client.on('play', () => {
       // clearTimeout(client.playTimeout)
 
+      if (!clients[client.uniqId]) { return }
+
       setTimeout(() => {
         client.emit('goPlay')
       }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
