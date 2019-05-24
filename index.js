@@ -288,9 +288,9 @@ io.on('connection', client => {
     client.on('play', () => {
       // clearTimeout(client.playTimeout)
 
-      client.playTimeout = setTimeout(() => {
+      setTimeout(() => {
         client.emit('goPlay')
-      }, 1000 * 60);
+      }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
 
       if (restart && !first) { return }
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
@@ -324,7 +324,7 @@ io.on('connection', client => {
 
     setTimeout(() => {
       client.emit('goPlay')
-    }, 1000 * 30 + rand(1000 * 90));
+    }, 1000 * 30 + rand(1000 * 30));
   })
 
   client.on('disconnect', () => {
