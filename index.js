@@ -281,7 +281,12 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (check) { checkClient = client }
+    if (check) {
+      getCheckAccounts()
+      const wait = async () => (new Promise(res => setTimeout(() => { res(true) }, 1000 * 3)))
+      await wait()
+      checkClient = client
+    }
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
