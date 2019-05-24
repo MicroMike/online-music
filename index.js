@@ -272,7 +272,7 @@ io.on('connection', client => {
     client.emit('albums', albums[player])
   })
 
-  client.on('ok', ({ accountsValid, del, max, env, first, id, check }) => {
+  client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
     client.playTimeout
     client.max = max
     client.uniqId = id
