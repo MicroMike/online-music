@@ -354,6 +354,10 @@ io.on('connection', client => {
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', { id: client.uniqId })
       })
+
+      if (code === 5) {
+        checkAccounts.push(client.account)
+      }
     }
 
     delete clients[client.uniqId]
