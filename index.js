@@ -280,7 +280,7 @@ io.on('connection', client => {
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
       if (playerLength < max) {
-        if (checkClient.uniqId === client.uniqId) {
+        if (checkClient && checkClient.uniqId === client.uniqId) {
           const checkAccount = checkAccounts.length > 0 && checkAccounts.shift()
 
           if (checkAccount) {
