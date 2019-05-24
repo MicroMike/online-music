@@ -208,9 +208,9 @@ io.on('connection', client => {
     //   client.emit('outOk', ok)
     // })
 
-    client.on('tidalOk', account => {
-      checkAccounts = checkAccounts.filter(a => a !== account)
-    })
+    // client.on('tidalOk', account => {
+    //   checkAccounts = checkAccounts.filter(a => a !== account)
+    // })
 
     client.on('playerInfos', datas => {
       Object.values(webs).forEach(w => {
