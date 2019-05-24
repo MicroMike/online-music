@@ -84,6 +84,15 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
+const getCheckAccounts = () => {
+  fs.readFile('check.txt', 'utf8', async (err, data) => {
+    if (err) return console.log(err);
+    checkAccounts = data.split(',').filter(e => e)
+  })
+}
+
+getCheckAccounts()
+
 const getAccounts = () => {
   fs.readFile(file, 'utf8', async (err, data) => {
     if (err) return console.log(err);
@@ -246,7 +255,7 @@ io.on('connection', client => {
     client.emit('albums', albums[player])
   })
 
-  client.on('ok', ({ accountsValid, del, max, env, first, id }) => {
+  client.on('ok', ({ accountsValid, del, max, env, first, id, check }) => {
     client.playTimeout
     client.max = max
     client.uniqId = id
@@ -256,14 +265,7 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
-    if (max > 20) {
-      checkClient = client
-    }
-
-    // if (accountsValid) {
-    //   accounts = accounts.filter(a => accountsValid.indexOf(a) < 0)
-    // }
-    // accounts = accounts.filter(a => del.indexOf(a) < 0)
+    if (check) { checkClient = client }
 
     console.log('Connected', accountsValid ? accountsValid.length : 0)
 
@@ -278,13 +280,15 @@ io.on('connection', client => {
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
       if (playerLength < max) {
-        if (checking && checkClient.uniqId === client.uniqId) {
-          const checkAccount = checkAccounts.length ? checkAccounts.shift() : false
+        if (checkClient.uniqId === client.uniqId) {
+          const checkAccount = checkAccounts.length > 0 && checkAccounts.shift()
 
           if (checkAccount) {
             client.emit('runCheck', checkAccount)
           }
-          else { checking = false }
+          else {
+            client.emit('restart')
+          }
         }
         else {
           const account = getAccount(env)
