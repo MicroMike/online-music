@@ -95,7 +95,7 @@ const getCheckAccounts = async () => {
   })
 }
 
-const getAccounts = () => {
+const getAccounts = async () => {
   fs.readFile(file, 'utf8', async (err, data) => {
     if (err) return console.log(err);
 
@@ -158,7 +158,7 @@ const getAllData = () => ({
   // clients: {
   //   ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
   // },
-  accounts: accounts.length,
+  accounts: accounts && accounts.length,
   streams: Object.values(streams).length,
   used: Object.values(used).length,
   webs: Object.values(webs).length,
