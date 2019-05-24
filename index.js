@@ -95,8 +95,6 @@ const getCheckAccounts = async () => {
   })
 }
 
-await getCheckAccounts()
-
 const getAccounts = () => {
   fs.readFile(file, 'utf8', async (err, data) => {
     if (err) return console.log(err);
