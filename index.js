@@ -108,6 +108,7 @@ const getAccounts = () => {
 
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
       Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+      checkAccounts.forEach(CA => Taccounts = Taccounts.filter(a => a !== CA))
 
       accounts = Taccounts
     })
@@ -206,6 +207,10 @@ io.on('connection', client => {
     //   console.log('out: ' + playerLength + ' ' + ok)
     //   client.emit('outOk', ok)
     // })
+
+    client.on('tidalOk', account => {
+      checkAccounts = checkAccounts.filter(a => a !== account)
+    })
 
     client.on('playerInfos', datas => {
       Object.values(webs).forEach(w => {
