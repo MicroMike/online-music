@@ -66,6 +66,7 @@ const albums = {
 }
 
 let accounts
+let busy = {}
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
 let restart = false
@@ -126,7 +127,14 @@ const getAccount = env => {
     accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
   }
 
-  return accounts.length ? accounts.shift() : false
+  const account = accounts.length && !busy[account] ? accounts.shift() : false
+
+  busy[account] = true
+  setTimeout(() => {
+    delete busy[account]
+  }, 1000 * 60);
+
+  return account
 }
 
 let tempPlays = 0
