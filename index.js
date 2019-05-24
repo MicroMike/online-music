@@ -85,14 +85,17 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
-const getCheckAccounts = () => {
-  fs.readFile('check.txt', 'utf8', async (err, data) => {
-    if (err) return console.log(err);
-    checkAccounts = data.split(',').filter(e => e)
+const getCheckAccounts = async () => {
+  return new Promise(res => {
+    fs.readFile('check.txt', 'utf8', async (err, data) => {
+      if (err) return console.log(err);
+      checkAccounts = data.split(',').filter(e => e)
+      res(true)
+    })
   })
 }
 
-getCheckAccounts()
+await getCheckAccounts()
 
 const getAccounts = () => {
   fs.readFile(file, 'utf8', async (err, data) => {
@@ -282,9 +285,7 @@ io.on('connection', client => {
     })
 
     if (check) {
-      getCheckAccounts()
-      const wait = async () => (new Promise(res => setTimeout(() => { res(true) }, 1000 * 3)))
-      await wait()
+      await getCheckAccounts()
       checkClient = client
     }
 
