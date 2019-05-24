@@ -286,9 +286,6 @@ io.on('connection', client => {
           if (checkAccount) {
             client.emit('runCheck', checkAccount)
           }
-          else {
-            client.emit('restart')
-          }
         }
         else {
           const account = getAccount(env)
