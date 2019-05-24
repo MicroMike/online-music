@@ -162,6 +162,7 @@ const getAllData = () => ({
   streams: Object.values(streams).length,
   used: Object.values(used).length,
   webs: Object.values(webs).length,
+  checkLeft: checkAccounts && checkAccounts.length,
   nopeStreams: Object.values(streams).filter(s => Object.values(clients).find(c => c.uniqId === s.parentId) === undefined).length,
   nopeClients: Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length,
   restart,
@@ -212,9 +213,9 @@ io.on('connection', client => {
     //   client.emit('outOk', ok)
     // })
 
-    // client.on('tidalOk', account => {
-    //   checkAccounts = checkAccounts.filter(a => a !== account)
-    // })
+    client.on('tidalOk', () => {
+      clients[client.parentId] && clients[client.parentId].emit('goPlay')
+    })
 
     client.on('playerInfos', datas => {
       Object.values(webs).forEach(w => {
@@ -294,9 +295,11 @@ io.on('connection', client => {
 
       if (!clients[client.uniqId]) { return }
 
-      setTimeout(() => {
-        client.emit('goPlay')
-      }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
+      if (!check) {
+        setTimeout(() => {
+          client.emit('goPlay')
+        }, 1000 * 30 + rand(1000 * 90));
+      }
 
       if (restart && !first) { return }
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
