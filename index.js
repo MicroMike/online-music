@@ -128,12 +128,15 @@ const getAccount = env => {
     accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
   }
 
-  const account = accounts.length && !busy[account] ? accounts.shift() : false
+  let account = accounts.length ? accounts.shift() : false
+  account = !busy[account] && account
 
-  busy[account] = true
-  setTimeout(() => {
-    delete busy[account]
-  }, 1000 * 60);
+  if (account) {
+    busy[account] = true
+    setTimeout(() => {
+      delete busy[account]
+    }, 1000 * 60);
+  }
 
   return account
 }
