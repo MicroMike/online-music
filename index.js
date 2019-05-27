@@ -80,6 +80,7 @@ let streams = {}
 let webs = {}
 let checkClient
 let used = {}
+let playings = {}
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -149,6 +150,12 @@ setInterval(() => {
   tempPlays = plays
 }, 1000 * 60)
 
+setInterval(() => {
+  Object.values(webs).forEach(w => {
+    w.emit('playerInfos', playings)
+  })
+}, 1000 * 15)
+
 let displayLength = (log) => {
   const values = Object.values(streams)
   console.log(log, values.length)
@@ -214,9 +221,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      Object.values(webs).forEach(w => {
-        w.emit('playerInfos', { ...datas, id: client.uniqId })
-      })
+      playings[client.uniqId] = { ...datas, id: client.uniqId }
     })
 
     client.on('screen', data => {
@@ -354,9 +359,7 @@ io.on('connection', client => {
       console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
-      Object.values(webs).forEach(w => {
-        w.emit('playerInfos', { id: client.uniqId })
-      })
+      delete playings[client.uniqId]
 
       if (code === 5) {
         checkAccounts.push(client.account)
