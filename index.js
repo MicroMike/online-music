@@ -213,10 +213,6 @@ io.on('connection', client => {
     //   client.emit('outOk', ok)
     // })
 
-    client.on('tidalOk', () => {
-      clients[client.parentId] && clients[client.parentId].emit('goPlay')
-    })
-
     client.on('playerInfos', datas => {
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', { ...datas, id: client.uniqId })
@@ -295,11 +291,9 @@ io.on('connection', client => {
 
       if (!clients[client.uniqId]) { return }
 
-      if (!check) {
-        setTimeout(() => {
-          client.emit('goPlay')
-        }, 1000 * 30 + rand(1000 * 90));
-      }
+      setTimeout(() => {
+        client.emit('goPlay')
+      }, check ? 1000 * 60 : 1000 * 30 + rand(1000 * 90));
 
       if (restart && !first) { return }
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
@@ -366,6 +360,10 @@ io.on('connection', client => {
 
       if (code === 5) {
         checkAccounts.push(client.account)
+      }
+
+      if (checkClient && checkClient.uniqId === client.uniqId) {
+        clients[client.parentId] && clients[client.parentId].emit('goPlay')
       }
     }
 
