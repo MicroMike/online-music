@@ -150,15 +150,15 @@ setInterval(() => {
   tempPlays = plays
 }, 1000 * 60)
 
-// setInterval(() => {
-//   const others = Object.values(streams).filter(s => Object.keys(playings).indexOf(s.uniqId) === -1)
-//   console.log(others.length)
-//   Object.values(webs).forEach(w => {
-//     w.emit('playerInfos', playings)
-//     w.emit('others', others)
-//   })
-//   console.log(others.length)
-// }, 1000 * 5)
+setInterval(() => {
+  const others = streams && Object.values(streams).filter(s => playings[s.uniqId])
+  console.log(others.length)
+  Object.values(webs).forEach(w => {
+    w.emit('playerInfos', playings)
+    w.emit('others', others)
+  })
+  console.log(others.length)
+}, 1000 * 5)
 
 let displayLength = (log) => {
   const values = Object.values(streams)
