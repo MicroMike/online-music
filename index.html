@@ -134,38 +134,41 @@
       }
     })
 
-    socket.on('playerInfos', ({ account, time, id, freeze }) => {
-      const dom = document.querySelector('#players-' + id)
+    socket.on('playerInfos', playings => {
+      playings.forEach(p => {
+        const { account, time, id, freeze } = p
+        const dom = document.querySelector('#players-' + id)
 
-      if (!time) { return dom && dom.remove() }
+        if (!time) { return dom && dom.remove() }
 
-      const isDomF = document.querySelector('#players-' + id + '.freeze')
-      const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
+        const isDomF = document.querySelector('#players-' + id + '.freeze')
+        const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
 
-      const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
-      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
+        const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
+        const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
-      if (!freeze && (isDomF || !dom)) {
-        isDomF && isDomF.remove()
-        document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
-      }
-      else if (freeze && (isDom || !dom)) {
-        isDom && isDom.remove()
-        document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
-      }
-      else {
-        const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
-        if (time > currentTime) {
-          document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
-          document.querySelector('#players-' + id + ' div').style.width = time + '%'
+        if (!freeze && (isDomF || !dom)) {
+          isDomF && isDomF.remove()
+          document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+        }
+        else if (freeze && (isDom || !dom)) {
+          isDom && isDom.remove()
+          document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
         }
         else {
-          dom.innerHTML = insideHtml
+          const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
+          if (time > currentTime) {
+            document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
+            document.querySelector('#players-' + id + ' div').style.width = time + '%'
+          }
+          else {
+            dom.innerHTML = insideHtml
+          }
         }
-      }
 
-      const count = document.querySelectorAll('[id^=players-]').length
-      document.querySelector('#count').innerText = count
+        const count = document.querySelectorAll('[id^=players-]').length
+        document.querySelector('#count').innerText = count
+      })
     })
   </script>
 </head>
