@@ -345,7 +345,6 @@ io.on('connection', client => {
     })
 
     getAccounts()
-    playings = {}
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
@@ -360,6 +359,7 @@ io.on('connection', client => {
 
   client.on('Cdisconnect', code => {
     if (clients[client.uniqId]) {
+      playings = {}
       console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
