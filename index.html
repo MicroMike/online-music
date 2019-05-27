@@ -181,11 +181,11 @@
     }
 
     socket.on('playerInfos', playings => {
-      Object.values(playings).forEach(p => displayPlays(p))
+      playings && Object.values(playings).forEach(p => displayPlays(p))
     })
 
     socket.on('others', others => {
-      others.forEach(o => displayPlays(o, true))
+      others && others.forEach(o => displayPlays(o, true))
     })
   </script>
 </head>
