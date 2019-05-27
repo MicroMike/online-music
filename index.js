@@ -157,7 +157,7 @@ setInterval(() => {
 
   const others = Object.values(streams).filter(s => Object.keys(playings).indexOf(s.uniqId) === -1)
   Object.values(webs).forEach(w => {
-    w.emit('where', others)
+    w.emit('others', others)
   })
 }, 1000 * 5)
 
