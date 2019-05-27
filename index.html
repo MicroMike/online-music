@@ -185,13 +185,13 @@
     }
 
     socket.on('playerInfos', playings => {
-      console.log(playings)
-      // playings && Object.values(playings).forEach(p => displayPlays(p))
+      // console.log(playings)
+      playings && Object.values(playings).forEach(p => displayPlays(p))
     })
 
     socket.on('others', others => {
-      console.log(others)
-      // others && others.forEach(o => displayPlays(o, true))
+      // console.log(others)
+      others && others.forEach(o => displayPlays(o, true))
     })
   </script>
 </head>

@@ -152,10 +152,9 @@ setInterval(() => {
 
 setInterval(() => {
   const others = Object.values(streams).length && Object.values(streams).filter(s => playings[s.uniqId])
-  console.log(others)
   Object.values(webs).forEach(w => {
     w.emit('playerInfos', playings)
-    // w.emit('others', others)
+    w.emit('others', others)
   })
 }, 1000 * 5)
 
