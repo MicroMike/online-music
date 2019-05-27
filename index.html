@@ -18,7 +18,7 @@
       height: 100%;
       background: lightskyblue;
       z-index: -1;
-      transition: width 15s;
+      transition: width 5s;
     }
   </style>
   <script type="text/javascript">
@@ -79,7 +79,7 @@
 
       Object.keys(clients).forEach((k, i) => {
         let d = clients[k]
-        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></div>`)
+        document.querySelector('#data').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
       })
       // <button onClick="stop('${d.id}')">S</button>
 
@@ -134,41 +134,53 @@
       }
     })
 
-    socket.on('playerInfos', playings => {
-      Object.values(playings).forEach(p => {
-        const { account, time, id, freeze } = p
-        const dom = document.querySelector('#players-' + id)
+    const displayPlays = (p, noError) => {
+      const { account, time, step, id, freeze } = p
+      const dom = document.querySelector('#players-' + id)
 
-        if (!time) { return dom && dom.remove() }
+      if (!noError && !time && !step) { return dom && dom.remove() }
 
-        const isDomF = document.querySelector('#players-' + id + '.freeze')
-        const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
+      const isDomF = document.querySelector('.freezedPlayers #players-' + id)
+      const isDomOk = document.querySelector('.players #players-' + id)
+      const isOthers = document.querySelector('.others #players-' + id)
 
-        const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
-        const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
+      const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time || step}</span><button onClick="screenshot('${id}')"></button>`
+      const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
-        if (!freeze && (isDomF || !dom)) {
-          isDomF && isDomF.remove()
-          document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
-        }
-        else if (freeze && (isDom || !dom)) {
-          isDom && isDom.remove()
-          document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
+      !time && !step && isDomOk && isDomOk.remove()
+      !freeze && isDomF && isDomF.remove()
+      !noError && isOthers && isOthers.remove()
+
+      if (noError && !dom) {
+        document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
+      }
+      if ((time || step) && !dom) {
+        document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+      }
+      else if (freeze && !dom) {
+        document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
+      }
+      else {
+        const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
+        if (time > currentTime) {
+          document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time || step}`
+          document.querySelector('#players-' + id + ' div').style.width = time + '%'
         }
         else {
-          const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
-          if (time > currentTime) {
-            document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
-            document.querySelector('#players-' + id + ' div').style.width = time + '%'
-          }
-          else {
-            dom.innerHTML = insideHtml
-          }
+          dom.innerHTML = insideHtml
         }
+      }
 
-        const count = document.querySelectorAll('[id^=players-]').length
-        document.querySelector('#count').innerText = count
-      })
+      const count = document.querySelectorAll('[id^=players-]').length
+      document.querySelector('#count').innerText = count
+    }
+
+    socket.on('playerInfos', playings => {
+      Object.values(playings).forEach(p => displayPlays(p))
+    })
+
+    socket.on('others', others => {
+      others.forEach(o => displayPlays(o, true))
     })
   </script>
 </head>
@@ -187,6 +199,7 @@
   <div style="display: flex;">
     <div class="players"></div>
     <div class="freezedPlayers"></div>
+    <div class="others"></div>
   </div>
   <div class="screenshot"></div>
 </body>
