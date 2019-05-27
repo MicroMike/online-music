@@ -5,6 +5,10 @@
   <title>Socket.IO chat</title>
   <script src="/socket.io/socket.io.js"></script>
   <style>
+    #servers {
+      display: flex;
+    }
+
     [id^="players-"] {
       position: relative;
     }
@@ -76,10 +80,11 @@
       delete data.clients
 
       document.querySelector('#data').innerHTML = ''
+      document.querySelector('#servers').innerHTML = ''
 
       Object.keys(clients).forEach((k, i) => {
         let d = clients[k]
-        document.querySelector('#data').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
+        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
       })
       // <button onClick="stop('${d.id}')">S</button>
 
@@ -186,6 +191,7 @@
 </head>
 
 <body>
+  <div id="servers"></div>
   <div id="data"></div>
   <button onClick="restart()">RESTART</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
