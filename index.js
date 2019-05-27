@@ -345,7 +345,7 @@ io.on('connection', client => {
     })
 
     getAccounts()
-
+    playings = {}
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
@@ -413,7 +413,6 @@ io.on('connection', client => {
 
       restart = true
       checking = false
-      playings = {}
 
       if (cid) {
         fs.readFile('check.txt', 'utf8', async (err, data) => {
