@@ -24,6 +24,10 @@
   <script type="text/javascript">
     var socket = io();
 
+    const screenshot = id => {
+      socket.emit('screenshot', id)
+    }
+
     const getData = () => {
       socket.emit('getAllData')
     }
@@ -138,7 +142,7 @@
       const isDomF = document.querySelector('#players-' + id + '.freeze')
       const isDom = document.querySelector('#players-' + id + ':not(.freeze)')
 
-      const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span>`
+      const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
       const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
       if (!freeze && (isDomF || !dom)) {

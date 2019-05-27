@@ -467,6 +467,10 @@ io.on('connection', client => {
       imgs = {}
     })
 
+    client.on('screenshot', id => {
+      streams[id].emit('screenshot')
+    })
+
     client.on('spotifyPause', () => {
       accounts = accounts.filter(a => a.split(':')[0] !== 'spotify')
     })
