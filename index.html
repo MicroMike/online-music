@@ -143,11 +143,11 @@
       }
     })
 
-    const displayPlays = (p, noError) => {
-      const { account, time, id, freeze } = p
+    const displayPlays = (p) => {
+      const { account, time, id, freeze, other } = p
       const dom = document.querySelector('#players-' + id)
 
-      if (!noError && !time) { return dom && dom.remove() }
+      if (!other && !time) { return dom && dom.remove() }
 
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
       const isDomOk = document.querySelector('.players #players-' + id)
@@ -158,9 +158,9 @@
 
       !time && isDomOk && isDomOk.remove()
       !freeze && isDomF && isDomF.remove()
-      !noError && isOthers && isOthers.remove()
+      !other && isOthers && isOthers.remove()
 
-      if (noError && !dom) {
+      if (other && !dom) {
         document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
       }
       if (time && !dom) {
