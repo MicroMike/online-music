@@ -135,7 +135,7 @@
     })
 
     socket.on('playerInfos', playings => {
-      playings.forEach(p => {
+      Object.values(playings).forEach(p => {
         const { account, time, id, freeze } = p
         const dom = document.querySelector('#players-' + id)
 
