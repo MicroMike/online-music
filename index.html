@@ -151,6 +151,7 @@
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
       const isDomOk = document.querySelector('.players #players-' + id)
       const isOthers = document.querySelector('.others #players-' + id)
+      const isNope = document.querySelector('body > #players-' + id)
 
       const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
       const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
@@ -158,6 +159,7 @@
       !ok && isDomOk && isDomOk.remove()
       !freeze && isDomF && isDomF.remove()
       !other && isOthers && isOthers.remove()
+      !nope && isNope && isNope.remove()
 
       const dom = document.querySelector('#players-' + id)
       if (out) { return dom && dom.remove() }
