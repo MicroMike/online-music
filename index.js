@@ -292,8 +292,6 @@ io.on('connection', client => {
       checkClient = client
     }
 
-    console.log('Connected', accountsValid ? accountsValid.length : 0)
-
     client.on('play', () => {
       // clearTimeout(client.playTimeout)
 
@@ -339,7 +337,7 @@ io.on('connection', client => {
         const C = Object.values(checkoutC).length
 
         if (!S && !C) {
-          console.log('launch')
+          console.log('Connected', accountsValid ? accountsValid.length : 0)
           client.emit('goPlay')
         }
         else {
