@@ -490,7 +490,7 @@ io.on('connection', client => {
     })
 
     client.on('screenshot', id => {
-      streams[id].emit('screenshot')
+      streams[id] && streams[id].emit('screenshot')
     })
 
     client.on('spotifyPause', () => {
