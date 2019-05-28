@@ -65,11 +65,16 @@ const albums = {
   ]
 }
 
+let restart = true
+setTimeout(() => {
+  restart = false
+}, 1000 * 60);
+
+
 let accounts
 let busy = {}
 let checkAccounts
 let file = process.env.FILE || 'napsterAccount.txt'
-let restart = false
 let checking = false
 let plays = 0
 let nexts = 0
@@ -215,7 +220,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      if (!clients[client.parentId]) { client.emit('forceOut') }
+      if (!restart && !clients[client.parentId]) { client.emit('forceOut') }
 
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', { ...datas, id: client.uniqId })
