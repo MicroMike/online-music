@@ -82,7 +82,6 @@ let streams = {}
 let webs = {}
 let checkClient
 let used = {}
-let playings = {}
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -216,11 +215,13 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      playings[client.uniqId] = { ...datas, id: client.uniqId }
+      if (!clients[client.parentId]) { client.emit('forceOut') }
+
       const others = Object.values(streams).filter(s => !playings[s.uniqId]).map(s => ({ account: s.account, id: s.uniqId, other: true }))
+
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', {
-          ...playings,
+          0: { ...datas, id: client.uniqId },
           ...others,
         })
       })
@@ -372,12 +373,8 @@ io.on('connection', client => {
   })
 
   client.on('Cdisconnect', code => {
-    if (clients[client.uniqId]) {
-      playings = {}
-    }
+    if (clients[client.uniqId]) { }
     else if (streams[client.uniqId]) {
-      delete playings[client.uniqId]
-
       if (code === 5) {
         checkAccounts.push(client.account)
       }
