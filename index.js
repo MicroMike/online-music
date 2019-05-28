@@ -295,15 +295,14 @@ io.on('connection', client => {
     }
 
     client.on('play', () => {
-      // clearTimeout(client.playTimeout)
-
-      if (!clients[client.uniqId]) { return }
+      if (!clients[client.uniqId]) { return clearTimeout(client.playTimeout) }
 
       client.playTimeout = setTimeout(() => {
         client.emit('goPlay')
-      }, check ? 1000 * 60 : 1000 * 30 + rand(1000 * 90));
+      }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
 
-      if (restart && !first) { return }
+      // if ((start || restart) && !first) { return }
+
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
 
       if (playerLength < max) {
@@ -333,25 +332,28 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    const waitForReboot = () => {
-      setTimeout(() => {
-        const S = Object.values(checkoutS).length
-        const C = Object.values(checkoutC).length
+    // const waitForReboot = () => {
+    //   setTimeout(() => {
+    //     const S = Object.values(checkoutS).length
+    //     const C = Object.values(checkoutC).length
 
-        if (!S && !C) {
-          restart = false
-          console.log('Connected', accountsValid ? accountsValid.length : 0)
-          client.emit('goPlay')
-        }
-        else {
-          console.log(client.uniqId, Object.values(checkoutS).length, Object.values(checkoutC).length)
-          if (S && !C) { Object.values(checkoutS).forEach(s => s.emit('forceOut')) }
-          waitForReboot()
-        }
-      }, rand(1000 * 60));
-    }
+    //     if (!S && !C) {
+    //       restart = false
+    //       console.log('Connected', accountsValid ? accountsValid.length : 0)
+    //       client.emit('goPlay')
+    //     }
+    //     else {
+    //       console.log(client.uniqId, Object.values(checkoutS).length, Object.values(checkoutC).length)
+    //       if (S && !C) { Object.values(checkoutS).forEach(s => s.emit('forceOut')) }
+    //       waitForReboot()
+    //     }
+    //   }, rand(1000 * 60));
+    // }
 
-    waitForReboot()
+    // waitForReboot()
+    setTimeout(() => {
+      client.emit('goPlay')
+    }, rand(1000 * 60));
   })
 
   client.on('disconnect', () => {
@@ -363,8 +365,8 @@ io.on('connection', client => {
     getAccounts()
     delete webs[client.id]
     delete clients[client.uniqId]
-    delete checkoutC[client.uniqId]
-    delete checkoutS[client.uniqId]
+    // delete checkoutC[client.uniqId]
+    // delete checkoutS[client.uniqId]
     delete streams[client.uniqId]
     // delete imgs[client.uniqId]
 
@@ -418,8 +420,8 @@ io.on('connection', client => {
 
       restart = true
       checking = false
-      Object.values(streams).forEach(s => checkoutS[s.uniqId] = s)
-      Object.values(clients).forEach(c => checkoutC[c.uniqId] = c)
+      // Object.values(streams).forEach(s => checkoutS[s.uniqId] = s)
+      // Object.values(clients).forEach(c => checkoutC[c.uniqId] = c)
 
       if (cid) {
         fs.readFile('check.txt', 'utf8', async (err, data) => {
