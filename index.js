@@ -299,7 +299,7 @@ io.on('connection', client => {
 
       if (!clients[client.uniqId]) { return }
 
-      setTimeout(() => {
+      c.playTimeout = setTimeout(() => {
         client.emit('goPlay')
       }, check ? 1000 * 60 : 1000 * 30 + rand(1000 * 90));
 
