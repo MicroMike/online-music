@@ -216,7 +216,6 @@ io.on('connection', client => {
 
     client.on('playerInfos', datas => {
       playings[client.uniqId] = { ...datas, id: client.uniqId }
-      datas.out ? delete playings[client.uniqId] : false
       const others = Object.values(streams).filter(s => playings[s.uniqId]).map(s => ({ account: s.account, id: s.uniqId, other: true }))
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', {

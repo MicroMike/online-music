@@ -144,7 +144,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, id, freeze, other } = p
+      let { account, time, id, freeze, other, out } = p
       time = time || 0
 
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
@@ -159,7 +159,7 @@
       !other && isOthers && isOthers.remove()
 
       const dom = document.querySelector('#players-' + id)
-      if (!other && !time) { return dom && dom.remove() }
+      if (out) { return dom && dom.remove() }
 
       if (dom) {
         const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
