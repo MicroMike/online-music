@@ -224,6 +224,7 @@ io.on('connection', client => {
       if (!start && !clients[client.parentId]) { client.emit('forceOut') }
 
       Object.values(webs).forEach(w => {
+        Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
         w.emit('playerInfos', { ...datas, id: client.uniqId })
       })
     })
@@ -394,12 +395,6 @@ io.on('connection', client => {
     })
 
     client.on('getAllData', () => {
-      Object.values(webs).forEach(w => {
-        w.emit('playerInfos', {
-          ...Object.values(streams).filter(s => !clients[s.parentId]).map(s => ({ account: s.account, id: s.uniqId, nope: true }))
-        })
-      })
-
       client.emit('allData', getAllData())
     })
 
