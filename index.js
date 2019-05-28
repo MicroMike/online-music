@@ -340,8 +340,8 @@ io.on('connection', client => {
 
         if (!S) { client.emit('goPlay') }
         else {
+          console.log(client.uniqId, Object.values(checkoutS).length, Object.values(checkoutC).length)
           if (S && !C) { Object.values(checkoutS).forEach(s => s.emit('forceOut')) }
-          console.log(client.uniqId, Object.values(checkoutS).length)
           waitForReboot()
         }
       }, rand(1000 * 60));
