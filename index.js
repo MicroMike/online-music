@@ -409,9 +409,9 @@ io.on('connection', client => {
     })
 
     client.on('clearData', () => {
-      if (!restart) {
-        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.disconnect())
-        Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).forEach(c => c.disconnect())
+      if (!Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length) {
+        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.emit('forceOut'))
+        // Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).forEach(c => c.disconnect())
       }
     })
 
