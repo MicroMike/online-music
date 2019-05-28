@@ -143,11 +143,10 @@ const getAccount = env => {
   return account
 }
 
-let tempPlays = 0
 let gain = 0
+let timeCount = 0
 setInterval(() => {
-  gain = (plays - tempPlays) * 0.004
-  tempPlays = plays
+  gain = plays * 0.004 / ++timeCount
 }, 1000 * 60)
 
 let displayLength = (log) => {
