@@ -76,6 +76,7 @@ let nexts = 0
 
 let imgs = {}
 let clients = {}
+let checkout = {}
 let streams = {}
 let webs = {}
 let checkClient
@@ -332,7 +333,10 @@ io.on('connection', client => {
     })
 
     setTimeout(() => {
-      client.emit('goPlay')
+      console.log(client.uniqId, Object.values(checkout).length)
+      if (!Object.values(checkout).length) {
+        client.emit('goPlay')
+      }
     }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
   })
 
@@ -344,6 +348,7 @@ io.on('connection', client => {
     getAccounts()
     delete webs[client.id]
     delete clients[client.uniqId]
+    delete checkout[client.uniqId]
     delete streams[client.uniqId]
     // delete imgs[client.uniqId]
 
@@ -410,6 +415,7 @@ io.on('connection', client => {
 
       restart = true
       checking = false
+      checkout = streams
 
       if (cid) {
         fs.readFile('check.txt', 'utf8', async (err, data) => {
