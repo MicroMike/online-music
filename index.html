@@ -182,9 +182,8 @@
       document.querySelector('#count').innerText = count
     }
 
-    socket.on('playerInfos', playings => {
-      // console.log(playings)
-      playings && Object.values(playings).forEach(p => displayPlays(p))
+    socket.on('playerInfos', p => {
+      displayPlays(p)
     })
   </script>
 </head>
