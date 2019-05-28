@@ -352,6 +352,7 @@ io.on('connection', client => {
 
     // waitForReboot()
     setTimeout(() => {
+      console.log('Connected', accountsValid ? accountsValid.length : 0)
       client.emit('goPlay')
     }, rand(1000 * 60));
   })
