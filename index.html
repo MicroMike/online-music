@@ -144,7 +144,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time = time || 0, id, freeze, other } = p
+      let { account, time, id, freeze, other } = p
       const dom = document.querySelector('#players-' + id)
       time = time || 0
 
