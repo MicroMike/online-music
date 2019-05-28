@@ -76,7 +76,8 @@ let nexts = 0
 
 let imgs = {}
 let clients = {}
-let checkout = {}
+let checkoutC = {}
+let checkoutS = {}
 let streams = {}
 let webs = {}
 let checkClient
@@ -334,7 +335,12 @@ io.on('connection', client => {
 
     const waitForReboot = () => {
       setTimeout(() => {
-        if (!Object.values(checkout).length) { client.emit('goPlay') }
+        const S = Object.values(checkoutS).length
+        const C = Object.values(checkoutC).length
+        if (!S) { client.emit('goPlay') }
+        else if (S && !C) {
+          Object.values(checkoutS).forEach(s => s.emit('forceOut'))
+        }
         else {
           console.log(client.uniqId, Object.values(checkout).length)
           waitForReboot()
@@ -353,7 +359,8 @@ io.on('connection', client => {
     getAccounts()
     delete webs[client.id]
     delete clients[client.uniqId]
-    delete checkout[client.uniqId]
+    delete checkoutC[client.uniqId]
+    delete checkoutS[client.uniqId]
     delete streams[client.uniqId]
     // delete imgs[client.uniqId]
 
@@ -420,7 +427,8 @@ io.on('connection', client => {
 
       restart = true
       checking = false
-      checkout = streams
+      checkoutS = streams
+      checkoutC = clients
 
       if (cid) {
         fs.readFile('check.txt', 'utf8', async (err, data) => {
