@@ -426,8 +426,8 @@ io.on('connection', client => {
 
       restart = true
       checking = false
-      checkoutS = streams
-      checkoutC = clients
+      Object.values(streams).forEach(s => checkoutS[s.uniqId] = s)
+      Object.values(clients).forEach(c => checkoutC[c.uniqId] = c)
 
       if (cid) {
         fs.readFile('check.txt', 'utf8', async (err, data) => {
