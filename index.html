@@ -145,7 +145,6 @@
 
     const displayPlays = (p) => {
       let { account, time, id, freeze, other } = p
-      const dom = document.querySelector('#players-' + id)
       time = time || 0
 
       if (!other && !time) { return dom && dom.remove() }
@@ -161,16 +160,9 @@
       !freeze && isDomF && isDomF.remove()
       !other && isOthers && isOthers.remove()
 
-      if (other && !dom) {
-        document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
-      }
-      if (time && !dom) {
-        document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
-      }
-      else if (freeze && !dom) {
-        document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
-      }
-      else {
+      const dom = document.querySelector('#players-' + id)
+
+      if (dom) {
         const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
         if (time > currentTime) {
           document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
@@ -179,6 +171,11 @@
         else {
           dom.innerHTML = insideHtml
         }
+      }
+      else {
+        other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
+        time && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+        freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
 
       const count = document.querySelectorAll('[id^=players-]').length
