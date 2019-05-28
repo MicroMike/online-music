@@ -399,6 +399,12 @@ io.on('connection', client => {
     })
 
     client.on('getAllData', () => {
+      Object.values(webs).forEach(w => {
+        w.emit('playerInfos', {
+          ...Object.values(streams).filter(s => !clients[s.parentId]).map(s => ({ account: s.account, id: s.uniqId, nope: true }))
+        })
+      })
+
       client.emit('allData', getAllData())
     })
 

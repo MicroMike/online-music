@@ -144,7 +144,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, id, freeze, other, out, ok } = p
+      let { account, time, id, freeze, other, out, ok, nope } = p
       time = time || 0
 
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
@@ -175,6 +175,7 @@
         other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
         ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
         freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
+        nope && document.querySelector('body').insertAdjacentHTML('afterBegin', html)
       }
 
       const count = document.querySelectorAll('[id^=players-]').length
