@@ -356,6 +356,7 @@ io.on('connection', client => {
   client.on('disconnect', () => {
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
+      w.emit('playerInfos', { account: client.account, id: client.uniqId, out: true })
     })
 
     getAccounts()
