@@ -150,16 +150,6 @@ setInterval(() => {
   tempPlays = plays
 }, 1000 * 60)
 
-setInterval(() => {
-  const others = Object.values(streams).filter(s => playings[s.uniqId]).map(s => ({ account: s.account, id: s.uniqId, other: true }))
-  Object.values(webs).forEach(w => {
-    w.emit('playerInfos', {
-      ...playings,
-      ...others,
-    })
-  })
-}, 1000 * 5)
-
 let displayLength = (log) => {
   const values = Object.values(streams)
   console.log(log, values.length)
@@ -226,6 +216,13 @@ io.on('connection', client => {
 
     client.on('playerInfos', datas => {
       playings[client.uniqId] = { ...datas, id: client.uniqId }
+      const others = Object.values(streams).filter(s => playings[s.uniqId]).map(s => ({ account: s.account, id: s.uniqId, other: true }))
+      Object.values(webs).forEach(w => {
+        w.emit('playerInfos', {
+          ...playings,
+          ...others,
+        })
+      })
     })
 
     client.on('screen', data => {

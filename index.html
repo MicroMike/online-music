@@ -147,8 +147,6 @@
       let { account, time, id, freeze, other } = p
       time = time || 0
 
-      if (!other && !time) { return dom && dom.remove() }
-
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
       const isDomOk = document.querySelector('.players #players-' + id)
       const isOthers = document.querySelector('.others #players-' + id)
@@ -161,6 +159,7 @@
       !other && isOthers && isOthers.remove()
 
       const dom = document.querySelector('#players-' + id)
+      if (!other && !time) { return dom && dom.remove() }
 
       if (dom) {
         const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
