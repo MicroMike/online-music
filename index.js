@@ -337,12 +337,11 @@ io.on('connection', client => {
       setTimeout(() => {
         const S = Object.values(checkoutS).length
         const C = Object.values(checkoutC).length
+
         if (!S) { client.emit('goPlay') }
-        else if (S && !C) {
-          Object.values(checkoutS).forEach(s => s.emit('forceOut'))
-        }
         else {
-          console.log(client.uniqId, Object.values(checkout).length)
+          if (S && !C) { Object.values(checkoutS).forEach(s => s.emit('forceOut')) }
+          console.log(client.uniqId, Object.values(checkoutS).length)
           waitForReboot()
         }
       }, rand(1000 * 60));
