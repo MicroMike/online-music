@@ -173,7 +173,7 @@
       }
       else {
         other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
-        time && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+        time && !freeze && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
         freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
 
