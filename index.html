@@ -144,7 +144,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, id, freeze, other, out } = p
+      let { account, time, id, freeze, other, out, ok } = p
       time = time || 0
 
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
@@ -154,7 +154,7 @@
       const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
       const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
-      !time && isDomOk && isDomOk.remove()
+      !ok && isDomOk && isDomOk.remove()
       !freeze && isDomF && isDomF.remove()
       !other && isOthers && isOthers.remove()
 
@@ -173,7 +173,7 @@
       }
       else {
         other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
-        time && !freeze && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+        ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
         freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
       }
 
