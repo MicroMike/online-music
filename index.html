@@ -146,6 +146,7 @@
     const displayPlays = (p) => {
       let { account, time = time || 0, id, freeze, other } = p
       const dom = document.querySelector('#players-' + id)
+      time = time || 0
 
       if (!other && !time) { return dom && dom.remove() }
 
