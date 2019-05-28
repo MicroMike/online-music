@@ -66,8 +66,9 @@ const albums = {
 }
 
 let restart = true
+let start = true
 setTimeout(() => {
-  restart = false
+  start = false
 }, 1000 * 60);
 
 
@@ -220,7 +221,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      if (!restart && !clients[client.parentId]) { client.emit('forceOut') }
+      if (!start && !clients[client.parentId]) { client.emit('forceOut') }
 
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', { ...datas, id: client.uniqId })
@@ -337,6 +338,7 @@ io.on('connection', client => {
         const C = Object.values(checkoutC).length
 
         if (!S && !C) {
+          restart = false
           console.log('Connected', accountsValid ? accountsValid.length : 0)
           client.emit('goPlay')
         }
@@ -363,10 +365,6 @@ io.on('connection', client => {
     delete checkoutS[client.uniqId]
     delete streams[client.uniqId]
     // delete imgs[client.uniqId]
-
-    setTimeout(() => {
-      restart = false
-    }, 1000 * 10);
 
     client.removeAllListeners()
   })
