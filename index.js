@@ -333,10 +333,8 @@ io.on('connection', client => {
     })
 
     setTimeout(() => {
-      console.log(client.uniqId, Object.values(checkout).length)
-      if (!Object.values(checkout).length) {
-        client.emit('goPlay')
-      }
+      if (!Object.values(checkout).length) { client.emit('goPlay') }
+      else { console.log(client.uniqId, Object.values(checkout).length) }
     }, rand(1000 * 60));
   })
 
