@@ -148,16 +148,18 @@
       let { account, time, id, freeze, other, out, ok, nope } = p
       time = time || 0
 
+      document.querySelector('.others').innerHTML = ''
+
       const isDomF = document.querySelector('.freezedPlayers #players-' + id)
       const isDomOk = document.querySelector('.players #players-' + id)
-      const isOthers = document.querySelector('.others #players-' + id)
+      // const isOthers = document.querySelector('.others #players-' + id)
 
       const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
       const html = `<div id="players-${id}" ${freeze && 'class="freeze" style="color:red;"'}>${insideHtml}</div>`
 
       !ok && isDomOk && isDomOk.remove()
       !freeze && isDomF && isDomF.remove()
-      isOthers && isOthers.remove()
+      // !other && isOthers && isOthers.remove()
 
       const dom = document.querySelector('#players-' + id)
       if (out) { return dom && dom.remove() }
