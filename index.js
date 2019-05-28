@@ -337,7 +337,7 @@ io.on('connection', client => {
       if (!Object.values(checkout).length) {
         client.emit('goPlay')
       }
-    }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
+    }, rand(1000 * 60));
   })
 
   client.on('disconnect', () => {
