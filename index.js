@@ -220,7 +220,6 @@ io.on('connection', client => {
       Object.values(webs).forEach(w => {
         w.emit('playerInfos', { ...datas, id: client.uniqId })
       })
-      if (datas.out) { delete playings[client.uniqId] }
     })
 
     client.on('screen', data => {
