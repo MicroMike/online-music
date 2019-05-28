@@ -338,7 +338,10 @@ io.on('connection', client => {
         const S = Object.values(checkoutS).length
         const C = Object.values(checkoutC).length
 
-        if (!S) { client.emit('goPlay') }
+        if (!S && !C) {
+          console.log('launch')
+          client.emit('goPlay')
+        }
         else {
           console.log(client.uniqId, Object.values(checkoutS).length, Object.values(checkoutC).length)
           if (S && !C) { Object.values(checkoutS).forEach(s => s.emit('forceOut')) }
@@ -373,17 +376,12 @@ io.on('connection', client => {
   client.on('Cdisconnect', code => {
     if (clients[client.uniqId]) {
       playings = {}
-      console.log('Disconnect Client ' + client.uniqId)
     }
     else if (streams[client.uniqId]) {
       delete playings[client.uniqId]
 
       if (code === 5) {
         checkAccounts.push(client.account)
-      }
-
-      if (checkClient && checkClient.uniqId === client.uniqId) {
-        clients[client.parentId] && clients[client.parentId].emit('goPlay')
       }
     }
 
