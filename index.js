@@ -1,6 +1,7 @@
 var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
+const request = require('ajax-request');
 
 function handler(req, res) {
   fs.readFile(__dirname + '/index.html',
@@ -15,62 +16,11 @@ function handler(req, res) {
     });
 }
 
-const albums = {
-  napster: [
-    'https://app.napster.com/artist/honey/album/just-another-emotion',
-    'https://app.napster.com/artist/yokem/album/boombeats',
-    'https://app.napster.com/artist/mahone/album/stone-distraction',
-    'https://app.napster.com/artist/hazel/album/electric-nature',
-    'https://app.napster.com/artist/dj-reid/album/satisfaction-spell',
-    'https://app.napster.com/artist/xondes/album/the-last-heat',
-    'https://app.napster.com/artist/dj-otl/album/about-other-people',
-    'https://app.napster.com/artist/dhn/album/blue-gun',
-    // 'https://app.napster.com/artist/hanke/album/new-york-story',
-    // 'https://app.napster.com/artist/hanke/album/100-revenge',
-    // 'https://app.napster.com/artist/lapilluledors/album/red-beast',
-  ],
-  amazon: [
-    'https://music.amazon.fr/albums/B07G9RM2MG',
-    'https://music.amazon.fr/albums/B07CZDXC9B',
-    'https://music.amazon.fr/albums/B07D3NQ235',
-    'https://music.amazon.fr/albums/B07G5PPYSY',
-    'https://music.amazon.fr/albums/B07D3PGSR4',
-    'https://music.amazon.fr/albums/B07MTV7JYS',
-    'https://music.amazon.fr/albums/B07PGN58LX',
-    'https://music.amazon.fr/albums/B07QCBN3Z4',
-    'https://music.amazon.fr/albums/B07RGRZL9F',
-    'https://music.amazon.fr/albums/B07RNYTBXG',
-  ],
-  tidal: [
-    'https://listen.tidal.com/album/93312939',
-    'https://listen.tidal.com/album/93087422',
-    'https://listen.tidal.com/album/88716570',
-    'https://listen.tidal.com/album/101927847',
-    'https://listen.tidal.com/album/102564740',
-    'https://listen.tidal.com/album/102503463',
-    'https://listen.tidal.com/album/105237098',
-    'https://listen.tidal.com/album/108790098',
-    'https://listen.tidal.com/album/108980716',
-  ],
-  spotify: [
-    'https://open.spotify.com/album/3FJdPTLyJVPYMqQQUyb6lr',
-    'https://open.spotify.com/album/5509gS9cZUrbTFege0fpTk',
-    'https://open.spotify.com/album/2jmPHLM2be2g19841vHjWE',
-    'https://open.spotify.com/album/5CPIRky6BGgl3CCdzMYAXZ',
-    'https://open.spotify.com/album/0Tt1ldQ8b4zn5LRcM706ll',
-    'https://open.spotify.com/album/2kFEMTIWWw0jXD57Ewr7go',
-    'https://open.spotify.com/album/4BR7o0DwEPj1wF1nfcypiY',
-    'https://open.spotify.com/album/6045wkKBhEx1DBoqn3aXSe',
-    'https://open.spotify.com/album/7Jh67aHTA9ly7R1OTbzqGF',
-  ]
-}
-
-let restart = true
+let restart = false
 let start = true
 setTimeout(() => {
   start = false
 }, 1000 * 60);
-
 
 let accounts
 let busy = {}
@@ -93,38 +43,45 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
+let albums
+const getAlbums = async () => {
+  return new Promise(res => {
+    request('https://online-accounts.herokuapp.com/albums', function (error, response, body) {
+      albums = JSON.parse(body)
+      res(true)
+    })
+  })
+}
+
+(async () => await getAlbums())()
+
 const getCheckAccounts = async () => {
   return new Promise(res => {
-    fs.readFile('check.txt', 'utf8', async (err, data) => {
-      if (err) return console.log(err);
-      checkAccounts = data.split(',').filter(e => e)
+    request('https://online-accounts.herokuapp.com/checkAccounts', function (error, response, body) {
+      checkAccounts = JSON.parse(body)
       res(true)
     })
   })
 }
 
 const getAccounts = async () => {
-  fs.readFile(file, 'utf8', async (err, data) => {
-    if (err) return console.log(err);
-
-    fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
-      if (err2) return console.log(err2);
-
-      let Taccounts = data.split(',')
-
-      dataDel = dataDel.split(',').filter(e => e)
-      Taccounts = Taccounts.filter(e => dataDel.indexOf(e) < 0)
+  return new Promise(res => {
+    request('https://online-accounts.herokuapp.com/accounts', function (error, response, body) {
+      let Taccounts = JSON.parse(body)
 
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
       Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+
+      await getCheckAccounts()
       checkAccounts && checkAccounts.forEach(CA => Taccounts = Taccounts.filter(a => a !== CA))
 
       accounts = Taccounts
+      res(true)
     })
-  });
+  })
 }
 
-getAccounts()
+(async () => await getAccounts())()
 
 const getAccount = env => {
   if (env.RAND) {
@@ -297,6 +254,8 @@ io.on('connection', client => {
     client.on('play', () => {
       if (!clients[client.uniqId]) { return clearTimeout(client.playTimeout) }
 
+      await getAccounts()
+
       client.playTimeout = setTimeout(() => {
         client.emit('goPlay')
       }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
@@ -324,8 +283,6 @@ io.on('connection', client => {
       else if (!rand(5)) {
         Object.values(streams).filter(s => s.parentId === client.uniqId)[0].emit('out')
       }
-
-      getAccounts()
     })
 
     client.on('retrieve', playerLength => {
