@@ -216,7 +216,7 @@ io.on('connection', client => {
 
     client.on('loop', ({ errorMsg, account }) => {
       if (errorMsg === 'used') {
-        displayLength(errorMsg + ' ' + account)
+        // displayLength(errorMsg + ' ' + account)
         used[account] = account
         setTimeout(() => { delete used[account] }, 1000 * 60 * 10);
       }
