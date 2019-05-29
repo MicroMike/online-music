@@ -65,7 +65,7 @@ const getCheckAccounts = async () => {
 }
 
 const getAccounts = async () => {
-  return new Promise(res => {
+  return new Promise(async res => {
     request('https://online-accounts.herokuapp.com/accounts', function (error, response, body) {
       let Taccounts = JSON.parse(body)
 
