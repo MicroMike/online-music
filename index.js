@@ -65,8 +65,8 @@ const getCheckAccounts = async () => {
 }
 
 const getAccounts = async () => {
-  return new Promise(async res => {
-    request('https://online-accounts.herokuapp.com/accounts', function (error, response, body) {
+  return new Promise(res => {
+    request('https://online-accounts.herokuapp.com/accounts', async (error, response, body) => {
       let Taccounts = JSON.parse(body)
 
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
