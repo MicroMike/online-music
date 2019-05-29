@@ -251,7 +251,7 @@ io.on('connection', client => {
       checkClient = client
     }
 
-    client.on('play', () => {
+    client.on('play', async () => {
       if (!clients[client.uniqId]) { return clearTimeout(client.playTimeout) }
 
       await getAccounts()
