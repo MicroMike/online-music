@@ -75,8 +75,15 @@ const getAccounts = async () => {
       await getCheckAccounts()
       checkAccounts && checkAccounts.forEach(CA => Taccounts = Taccounts.filter(a => a !== CA))
 
-      accounts = Taccounts
-      res(true)
+      fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
+        if (err2) return console.log(err2);
+
+        dataDel = dataDel.split(',').filter(e => e)
+        Taccounts = Taccounts.filter(e => dataDel.indexOf(e) < 0)
+
+        accounts = Taccounts
+        res(true)
+      })
     })
   })
 }
