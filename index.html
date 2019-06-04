@@ -153,8 +153,8 @@
       const isOthers = document.querySelector('.others #players-' + id)
       const isNope = document.querySelector('body > #players-' + id)
 
-      const insideHtml = `<div style="width:${time}%;"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
-      const html = `<div id="players-${id}" ${freeze && `class="freeze" style="color:${warn ? 'orange' : 'red'};"`}>${insideHtml}</div>`
+      const insideHtml = `<div style="width:${time}%;color:${warn ? 'orange' : 'red'};"></div><span>${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
+      const html = `<div id="players-${id}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
       !ok && isDomOk && isDomOk.remove()
       !freeze && isDomF && isDomF.remove()
