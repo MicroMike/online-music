@@ -29,6 +29,7 @@ let file = process.env.FILE || 'napsterAccount.txt'
 let checking = false
 let plays = 0
 let nexts = 0
+let time = 0
 
 let imgs = {}
 let clients = {}
@@ -43,6 +44,7 @@ request('http://online-accounts.herokuapp.com/gain', function (error, response, 
   const r = JSON.parse(body)
   plays = r.plays
   nexts = r.nexts
+  time = r.time
 })
 
 const rand = (max, min) => {
@@ -121,10 +123,9 @@ const getAccount = env => {
 }
 
 let gain = 0
-let timeCount = 0
 setInterval(() => {
-  gain = plays * 0.004 / ++timeCount
-  request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts, function (error, response, body) { })
+  gain = plays * 0.004 / ++time
+  request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
 }, 1000 * 60)
 
 let displayLength = (log) => {
