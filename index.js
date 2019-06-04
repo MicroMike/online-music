@@ -167,6 +167,8 @@ io.on('connection', client => {
     if (next) { nexts++ }
     else { plays++ }
 
+    request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
+
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
