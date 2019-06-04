@@ -2,6 +2,15 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 const request = require('ajax-request');
+const mongoose = require('mongoose');
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI, (error) => {
+  if (error) {
+    console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
+    throw error;
+  }
+});
 
 function handler(req, res) {
   fs.readFile(__dirname + '/index.html',
