@@ -47,6 +47,12 @@ request('http://online-accounts.herokuapp.com/gain', function (error, response, 
   time = r.time
 })
 
+let gain = 0
+setInterval(() => {
+  gain = plays * 0.004 / ++time
+  request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
+}, 1000 * 60)
+
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
@@ -121,12 +127,6 @@ const getAccount = env => {
 
   return account
 }
-
-let gain = 0
-setInterval(() => {
-  gain = plays * 0.004 / ++time
-  request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
-}, 1000 * 60)
 
 let displayLength = (log) => {
   const values = Object.values(streams)
