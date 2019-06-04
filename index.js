@@ -2,15 +2,6 @@ var app = require('http').createServer(handler)
 var io = require('socket.io')(app);
 var fs = require('fs');
 const request = require('ajax-request');
-const mongoose = require('mongoose');
-
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, (error) => {
-  if (error) {
-    console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
-    throw error;
-  }
-});
 
 function handler(req, res) {
   fs.readFile(__dirname + '/index.html',
@@ -47,6 +38,12 @@ let streams = {}
 let webs = {}
 let checkClient
 let used = {}
+
+request('http://online-accounts.herokuapp.com/gain', function (error, response, body) {
+  const r = JSON.parse(body)
+  plays = r.plays
+  nexts = r.nexts
+})
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -127,6 +124,7 @@ let gain = 0
 let timeCount = 0
 setInterval(() => {
   gain = plays * 0.004 / ++timeCount
+  request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts, function (error, response, body) { })
 }, 1000 * 60)
 
 let displayLength = (log) => {
