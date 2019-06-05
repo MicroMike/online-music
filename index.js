@@ -193,8 +193,8 @@ io.on('connection', client => {
 
     client.on('playerInfos', datas => {
       if (!restart && !start) {
-        Object.values(streams).forEach(s => !clients[s.parentId] ? s.emit('forceOut') : false)
-        !clients[client.parentId] && client.emit('forceOut')
+        // Object.values(streams).forEach(s => !clients[s.parentId] ? s.emit('forceOut') : false)
+        // !clients[client.parentId] && client.emit('forceOut')
       }
 
       Object.values(webs).forEach(w => {
