@@ -72,8 +72,8 @@ const getAlbums = async () => {
 const getCheckAccounts = async () => {
   return new Promise(res => {
     request('https://online-accounts.herokuapp.com/checkAccounts', function (error, response, body) {
-      checkAccounts = JSON.parse(body)
-      res(true)
+      const CA = JSON.parse(body)
+      res(CA)
     })
   })
 }
@@ -85,9 +85,6 @@ const getAccounts = async () => {
 
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
       Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
-
-      await getCheckAccounts()
-      checkAccounts && checkAccounts.forEach(CA => Taccounts = Taccounts.filter(a => a !== CA))
 
       fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
         if (err2) return console.log(err2);
@@ -267,7 +264,7 @@ io.on('connection', client => {
     })
 
     if (check) {
-      await getCheckAccounts()
+      checkAccounts = await getCheckAccounts()
       checkClient = client
     }
 
@@ -342,11 +339,7 @@ io.on('connection', client => {
 
   client.on('Cdisconnect', code => {
     if (clients[client.uniqId]) { }
-    else if (streams[client.uniqId]) {
-      if (code === 5) {
-        checkAccounts.push(client.account)
-      }
-    }
+    else if (streams[client.uniqId]) { }
 
     delete clients[client.uniqId]
     delete streams[client.uniqId]
@@ -391,19 +384,17 @@ io.on('connection', client => {
       setTimeout(() => {
         restart = false
       }, 1000 * 60);
-      // Object.values(streams).forEach(s => checkoutS[s.uniqId] = s)
-      // Object.values(clients).forEach(c => checkoutC[c.uniqId] = c)
 
-      if (cid) {
-        fs.readFile('check.txt', 'utf8', async (err, data) => {
-          if (err) return console.log(err);
-          checkAccounts = data.split(',').filter(e => e)
+      // if (cid) {
+      //   fs.readFile('check.txt', 'utf8', async (err, data) => {
+      //     if (err) return console.log(err);
+      //     checkAccounts = data.split(',').filter(e => e)
 
-          checking = true
-          checkClient = clients[cid]
-        })
-      }
-      else {
+      //     checking = true
+      //     checkClient = clients[cid]
+      //   })
+      // }
+      if (!cid) {
         Object.values(clients).forEach(c => {
           clearTimeout(c.playTimeout)
           c.emit('restart')
