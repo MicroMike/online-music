@@ -293,7 +293,9 @@ io.on('connection', client => {
           accountToRun = getAccount(env)
         }
 
-        client.emit('run', accountToRun)
+        if (accountToRun) {
+          client.emit('run', accountToRun)
+        }
       }
       else if (!rand(5)) {
         Object.values(streams).filter(s => s.parentId === client.uniqId)[0].emit('out')
