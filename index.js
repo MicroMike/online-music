@@ -309,29 +309,21 @@ io.on('connection', client => {
       console.log('retreive', playerLength)
     })
 
-    // const waitForReboot = () => {
-    //   setTimeout(() => {
-    //     const S = Object.values(checkoutS).length
-    //     const C = Object.values(checkoutC).length
+    const tryStart = () => {
+      if (!Object.values(streams).length || !Object.values(streams).filter(s => !clients[s.parentId]).length) {
+        console.log('Connected', accountsValid ? accountsValid.length : 0)
+        client.emit('goPlay')
+      }
+      else {
+        setTimeout(() => {
+          tryStart()
+        }, 1000 * 5);
+      }
+    }
 
-    //     if (!S && !C) {
-    //       restart = false
-    //       console.log('Connected', accountsValid ? accountsValid.length : 0)
-    //       client.emit('goPlay')
-    //     }
-    //     else {
-    //       console.log(client.uniqId, Object.values(checkoutS).length, Object.values(checkoutC).length)
-    //       if (S && !C) { Object.values(checkoutS).forEach(s => s.emit('forceOut')) }
-    //       waitForReboot()
-    //     }
-    //   }, rand(1000 * 60));
-    // }
-
-    // waitForReboot()
     setTimeout(() => {
-      console.log('Connected', accountsValid ? accountsValid.length : 0)
-      client.emit('goPlay')
-    }, rand(1000 * 60));
+      tryStart()
+    }, 1000 * 5);
   })
 
   client.on('disconnect', () => {
