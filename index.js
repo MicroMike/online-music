@@ -283,22 +283,17 @@ io.on('connection', client => {
       // if ((start || restart) && !first) { return }
 
       const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
+      let accountToRun
 
       if (playerLength < max) {
-        if (checkClient && checkClient.uniqId === client.uniqId) {
-          const checkAccount = checkAccounts.length > 0 && checkAccounts.shift()
-
-          if (checkAccount) {
-            client.emit('runCheck', checkAccount)
-          }
+        if (check) {
+          accountToRun = checkAccounts.length > 0 && checkAccounts.shift()
         }
         else {
-          const account = getAccount(env)
-
-          if (account) {
-            client.emit('run', account)
-          }
+          accountToRun = getAccount(env)
         }
+
+        client.emit('run', accountToRun)
       }
       else if (!rand(5)) {
         Object.values(streams).filter(s => s.parentId === client.uniqId)[0].emit('out')
