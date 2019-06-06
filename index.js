@@ -137,7 +137,18 @@ const getAllData = () => ({
 
 io.on('connection', client => {
 
-  client.emit('activate', client.id)
+  const waitBeforeActivate = () => {
+    if (waitForRestart) {
+      setTimeout(() => {
+        waitBeforeActivate()
+      }, 1000 * 5);
+    }
+    else {
+      client.emit('activate', client.id)
+    }
+  }
+
+  waitBeforeActivate()
 
   client.on('log', log => {
     console.log(log)
@@ -301,7 +312,6 @@ io.on('connection', client => {
     }, 1000 * 5);
   })
 
-  let tempC
   client.on('disconnect', () => {
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
@@ -312,7 +322,6 @@ io.on('connection', client => {
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
-    tempC = tempC.filter(c => c.uniqId !== client.uniqId)
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
@@ -398,8 +407,8 @@ io.on('connection', client => {
               })
               out()
             }
-            else if (tempC.length) {
-              tempC.forEach(c => {
+            else if (Object.values(clients).length) {
+              Object.values(clients).forEach(c => {
                 c.emit('restart')
               })
               out()
