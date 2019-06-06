@@ -111,11 +111,6 @@ let displayLength = (log) => {
   console.log(log, values.length)
 }
 
-const stats = () => (Object.values(streams).reduce((acc, s) => {
-  acc[s.parentId] = acc[s.parentId] ? acc[s.parentId] + 1 : 1
-  return acc
-}, []))
-
 const getAllData = () => ({
   // clients: {
   //   ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
@@ -131,7 +126,7 @@ const getAllData = () => ({
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
-  clients: stats()
+  clients: Object.values(streams)
 })
 
 io.on('connection', client => {
