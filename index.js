@@ -368,7 +368,9 @@ io.on('connection', client => {
     })
 
     client.on('forceOut', () => {
-      Object.values(streams)[0] && Object.values(streams)[0].emit('forceOut')
+      setTimeout(() => {
+        Object.values(streams)[0] && Object.values(streams)[0].emit('forceOut')
+      }, 1000);
     })
 
     client.on('restart', cid => {
