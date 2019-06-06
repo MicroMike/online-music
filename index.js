@@ -111,12 +111,6 @@ let displayLength = (log) => {
   console.log(log, values.length)
 }
 
-const getClients = () => {
-  const c = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; console.log(arr, s); return arr }, [])
-  console.log(c)
-  return c
-}
-
 const getAllData = () => ({
   // clients: {
   //   ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
@@ -133,7 +127,7 @@ const getAllData = () => ({
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
-    ...getClients()
+    ...Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; console.log(arr, s); return arr }, [])
   }
 })
 
