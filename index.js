@@ -126,7 +126,7 @@ const getAllData = () => ({
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
-  clients: Object.values(streams).map(s => s.parentId).reduce((s, arr) => { console.log(s, arr); arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
+  clients: Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; console.log(arr, s); return arr }, [])
 })
 
 io.on('connection', client => {
