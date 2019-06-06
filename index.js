@@ -81,14 +81,16 @@ const getAccounts = async () => {
       Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
       accounts = Taccounts
-      res(true)
+      res(accounts)
     })
   })
 }
 
-(async () => await getAccounts())()
+// (async () => await getAccounts())()
 
-const getAccount = env => {
+const getAccount = async env => {
+  accounts = await getAccounts()
+
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
       accounts.sort(() => { return rand(2) })
@@ -100,14 +102,6 @@ const getAccount = env => {
   }
 
   let account = accounts.length ? accounts.shift() : false
-  account = account && !busy[account] && account
-
-  if (account) {
-    busy[account] = true
-    setTimeout(() => {
-      delete busy[account]
-    }, 1000 * 60);
-  }
 
   return account
 }
@@ -170,9 +164,11 @@ io.on('connection', client => {
     })
   })
 
-  client.on('runner', ({ clientId, account, id, player }) => {
+  client.on('runner', async ({ clientId, account, id, player, env }) => {
+    const runnerAccount = await getAccount(env)
+
     client.parentId = clientId
-    client.account = account
+    client.account = runnerAccount
     client.uniqId = id
     streams[id] = client
 
@@ -248,6 +244,8 @@ io.on('connection', client => {
         });
       });
     })
+
+    client.emit('streams', runnerAccount)
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
@@ -269,7 +267,7 @@ io.on('connection', client => {
     client.on('play', async () => {
       if (waitForRestart) { return }
 
-      await getAccounts()
+      // await getAccounts()
 
       client.playTimeout = setTimeout(() => {
         client.emit('goPlay')
@@ -324,7 +322,7 @@ io.on('connection', client => {
       w.emit('playerInfos', { account: client.account, id: client.uniqId, out: true })
     })
 
-    getAccounts()
+    // getAccounts()
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
