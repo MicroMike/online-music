@@ -22,6 +22,7 @@ setTimeout(() => {
   start = false
 }, 1000 * 60);
 
+let offCount = 0
 let waitForRestart
 
 let accounts
@@ -368,9 +369,7 @@ io.on('connection', client => {
     })
 
     client.on('forceOut', () => {
-      setTimeout(() => {
-        Object.values(streams)[0] && Object.values(streams)[0].emit('forceOut')
-      }, 1000);
+      Object.values(streams)[++offCount] && Object.values(streams)[offCount].emit('forceOut')
     })
 
     client.on('restart', cid => {
@@ -395,7 +394,7 @@ io.on('connection', client => {
         waitForRestart = true
         tempC = Object.values(clients)
 
-        Object.values(streams)[0] && Object.values(streams)[0].emit('forceOut')
+        Object.values(streams)[offCount] && Object.values(streams)[offCount].emit('forceOut')
 
         const out = () => {
           Object.values(clients).forEach(c => {
