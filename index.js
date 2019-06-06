@@ -22,6 +22,8 @@ setTimeout(() => {
   start = false
 }, 1000 * 60);
 
+let waitForRestart
+
 let accounts
 let busy = {}
 let checkAccounts
@@ -255,7 +257,7 @@ io.on('connection', client => {
     }
 
     client.on('play', async () => {
-      if (!clients[client.uniqId]) { return clearTimeout(client.playTimeout) }
+      if (waitForRestart) { return }
 
       await getAccounts()
 
@@ -382,17 +384,32 @@ io.on('connection', client => {
       //   })
       // }
       if (!cid) {
-        Object.values(clients).forEach(c => {
-          clearTimeout(c.playTimeout)
-        })
+        waitForRestart = true
 
-        Object.values(streams).forEach(s => {
-          s.emit('forceOut')
-        })
+        const out = () => {
+          Object.values(clients).forEach(c => {
+            clearTimeout(c.playTimeout)
+          })
 
-        Object.values(webs).forEach(w => {
-          w.emit('clean')
-        })
+          Object.values(streams).forEach(s => {
+            s.emit('forceOut')
+          })
+
+          Object.values(webs).forEach(w => {
+            w.emit('clean')
+          })
+
+          setTimeout(() => {
+            if (Object.values(streams).length) {
+              out()
+            }
+            else {
+              // waitForRestart = false
+            }
+          }, 1000 * 5);
+        }
+
+        out()
       }
     })
 
