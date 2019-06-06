@@ -22,7 +22,6 @@ setTimeout(() => {
   start = false
 }, 1000 * 60);
 
-let offCount = 0
 let waitForRestart
 
 let accounts
@@ -368,10 +367,6 @@ io.on('connection', client => {
       streams[id] && streams[id].emit('runScript', scriptText)
     })
 
-    client.on('forceOut', () => {
-      Object.values(streams)[++offCount] && Object.values(streams)[offCount].emit('forceOut')
-    })
-
     client.on('restart', cid => {
 
       restart = true
@@ -394,8 +389,6 @@ io.on('connection', client => {
         waitForRestart = true
         tempC = Object.values(clients)
 
-        Object.values(streams)[offCount] && Object.values(streams)[offCount].emit('forceOut')
-
         const out = () => {
           Object.values(clients).forEach(c => {
             clearTimeout(c.playTimeout)
@@ -406,16 +399,25 @@ io.on('connection', client => {
           })
 
           setTimeout(() => {
-            console.log('clients', Object.values(clients).length)
+            // console.log('clients', Object.values(clients).length)
             console.log('streams', Object.values(streams).length)
 
             if (Object.values(streams).length) {
+              Object.values(streams).forEach(s => {
+                s.emit('forceOut')
+              })
               out()
             }
+            // else if (Object.values(clients).length) {
+            //   Object.values(clients).forEach(c => {
+            //     c.emit('restart')
+            //   })
+            //   out()
+            // }
             else {
               waitForRestart = false
             }
-          }, 1000 * 5);
+          }, 1000 * 15);
         }
 
         out()
