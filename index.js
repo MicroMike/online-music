@@ -111,6 +111,11 @@ let displayLength = (log) => {
   console.log(log, values.length)
 }
 
+const stats = () => (Object.values(streams).reduce((acc, s) => {
+  acc[s.parentId] = acc[s.parentId] ? acc[s.parentId] + 1 : 1
+  return acc
+}, {}))
+
 const getAllData = () => ({
   // clients: {
   //   ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
@@ -127,9 +132,9 @@ const getAllData = () => ({
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
-    ...Object.values(clients).map(c => ({
-      id: c.uniqId,
-      L: Object.values(streams).filter(s => s.parentId === c.uniqId).length,
+    ...stats().map(c => ({
+      // id: c.uniqId,
+      L: c,
     }))
   }
 })
@@ -193,7 +198,7 @@ io.on('connection', client => {
       }
 
       Object.values(webs).forEach(w => {
-        Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
+        // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
         w.emit('playerInfos', { ...datas, id: client.uniqId })
       })
     })
