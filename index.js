@@ -76,15 +76,8 @@ const getAccounts = async () => {
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
       Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
-      fs.readFile('napsterAccountDel.txt', 'utf8', async (err2, dataDel) => {
-        if (err2) return console.log(err2);
-
-        dataDel = dataDel.split(',').filter(e => e)
-        Taccounts = Taccounts.filter(e => dataDel.indexOf(e) < 0)
-
-        accounts = Taccounts
-        res(true)
-      })
+      accounts = Taccounts
+      res(true)
     })
   })
 }
@@ -308,6 +301,7 @@ io.on('connection', client => {
     }, 1000 * 5);
   })
 
+  let tempC
   client.on('disconnect', () => {
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
@@ -318,6 +312,7 @@ io.on('connection', client => {
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
+    tempC = tempC.filter(c => c.uniqId !== client.uniqId)
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
@@ -382,6 +377,7 @@ io.on('connection', client => {
       // }
       if (!cid) {
         waitForRestart = true
+        tempC = Object.values(clients)
 
         const out = () => {
           Object.values(clients).forEach(c => {
@@ -402,8 +398,8 @@ io.on('connection', client => {
               })
               out()
             }
-            else if (Object.values(clients).length) {
-              Object.values(clients).forEach(c => {
+            else if (tempC.length) {
+              tempC.forEach(c => {
                 c.emit('restart')
               })
               out()
