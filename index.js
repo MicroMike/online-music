@@ -57,18 +57,6 @@ const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
 }
 
-let albums
-const getAlbums = async () => {
-  return new Promise(res => {
-    request('https://online-accounts.herokuapp.com/albums', function (error, response, body) {
-      albums = JSON.parse(body)
-      res(true)
-    })
-  })
-}
-
-(async () => await getAlbums())()
-
 const getCheckAccounts = async () => {
   return new Promise(res => {
     request('https://online-accounts.herokuapp.com/checkAccounts', function (error, response, body) {
@@ -249,8 +237,6 @@ io.on('connection', client => {
         });
       });
     })
-
-    client.emit('albums', albums[player])
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
@@ -329,9 +315,10 @@ io.on('connection', client => {
     getAccounts()
     delete webs[client.id]
     delete clients[client.uniqId]
-    // delete checkoutC[client.uniqId]
-    // delete checkoutS[client.uniqId]
     delete streams[client.uniqId]
+
+    console.log('clients', Object.values(clients).length)
+    console.log('streams', Object.values(streams).length)
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
@@ -397,7 +384,10 @@ io.on('connection', client => {
       if (!cid) {
         Object.values(clients).forEach(c => {
           clearTimeout(c.playTimeout)
-          c.emit('restart')
+        })
+
+        Object.values(streams).forEach(s => {
+          s.emit('forceOut')
         })
 
         Object.values(webs).forEach(w => {
