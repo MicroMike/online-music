@@ -292,7 +292,7 @@ io.on('connection', client => {
     })
 
     const tryStart = () => {
-      if (!Object.values(streams).length || !Object.values(streams).filter(s => !clients[s.parentId]).length) {
+      if (!waitForRestart) {
         console.log('Connected', accountsValid ? accountsValid.length : 0)
         client.emit('goPlay')
       }
