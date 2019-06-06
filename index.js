@@ -246,6 +246,7 @@ io.on('connection', client => {
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
+    console.log('accountsValid', accountsValid)
     client.playTimeout
     client.max = max
     client.uniqId = id
@@ -414,7 +415,7 @@ io.on('connection', client => {
               out()
             }
             else {
-              waitForRestart = false
+              // waitForRestart = false
             }
           }, 1000 * 15);
         }
