@@ -127,7 +127,7 @@ const getAllData = () => ({
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
-    ...Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; console.log(arr, s); return arr }, [])
+    ...Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
   }
 })
 
