@@ -416,7 +416,7 @@ io.on('connection', client => {
             else {
               waitForRestart = false
             }
-          }, 1000 * 5);
+          }, 1000 * 15);
         }
 
         out()
