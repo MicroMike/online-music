@@ -318,9 +318,6 @@ io.on('connection', client => {
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
-
-    console.log('clients', Object.values(clients).length)
-    console.log('streams', Object.values(streams).length)
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
@@ -400,6 +397,8 @@ io.on('connection', client => {
           })
 
           setTimeout(() => {
+            console.log('clients', Object.values(clients).length)
+            console.log('streams', Object.values(streams).length)
             if (Object.values(streams).length) {
               out()
             }
