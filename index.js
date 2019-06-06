@@ -403,17 +403,15 @@ io.on('connection', client => {
             console.log('streams', Object.values(streams).length)
 
             if (Object.values(streams).length) {
-              Object.values(streams).forEach(s => {
-                s.emit('forceOut')
-              })
+              Object.values(streams)[0].emit('forceOut')
               out()
             }
-            else if (Object.values(clients).length) {
-              Object.values(clients).forEach(c => {
-                c.emit('restart')
-              })
-              out()
-            }
+            // else if (Object.values(clients).length) {
+            //   Object.values(clients).forEach(c => {
+            //     c.emit('restart')
+            //   })
+            //   out()
+            // }
             else {
               waitForRestart = false
             }
