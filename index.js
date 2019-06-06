@@ -50,8 +50,12 @@ request('http://online-accounts.herokuapp.com/gain', function (error, response, 
 })
 
 let gain = 0
+let gain2 = 0
+let tempPlays = plays
 setInterval(() => {
   gain = plays * 0.004 / ++time
+  gain2 = (plays - tempPlays) * 0.004
+  tempPlays = plays
   request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
 }, 1000 * 60)
 
@@ -127,6 +131,7 @@ const getAllData = () => ({
   restart: restart || start,
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
+  gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
     ...Object.values(clients).map(c => ({
       id: c.uniqId,
