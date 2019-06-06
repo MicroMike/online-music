@@ -246,7 +246,7 @@ io.on('connection', client => {
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
-    console.log('accountsValid', accountsValid)
+    console.log('accountsValid', accountsValid.length)
     client.playTimeout
     client.max = max
     client.uniqId = id
