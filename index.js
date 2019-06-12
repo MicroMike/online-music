@@ -90,7 +90,7 @@ const getAccounts = async () => {
 
 const getAccount = async env => {
   if (env.CHECK) {
-    checkAccounts = checkAccounts.length ? checkAccounts : await getCheckAccounts()
+    checkAccounts = checkAccounts && checkAccounts.length ? checkAccounts : await getCheckAccounts()
     return checkAccounts.shift()
   }
   else {
