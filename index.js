@@ -89,7 +89,13 @@ const getAccounts = async () => {
 // (async () => await getAccounts())()
 
 const getAccount = async env => {
-  accounts = await getAccounts()
+  if (env.CHECK) {
+    checkAccounts = checkAccounts.length ? checkAccounts : await getCheckAccounts()
+    return checkAccounts.shift()
+  }
+  else {
+    accounts = await getAccounts()
+  }
 
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
@@ -101,14 +107,17 @@ const getAccount = async env => {
     accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
   }
 
-  let account = accounts.length ? accounts.shift() : false
-
-  return account
+  return accounts.length ? accounts.shift() : false
 }
 
 let displayLength = (log) => {
   const values = Object.values(streams)
   console.log(log, values.length)
+}
+
+const getNumbers = () => {
+  const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
+  return numbers
 }
 
 const getAllData = () => ({
@@ -127,7 +136,7 @@ const getAllData = () => ({
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
-    ...Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
+    ...getNumbers()
   }
 })
 
