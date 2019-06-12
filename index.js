@@ -90,8 +90,9 @@ const getAccounts = async () => {
 
 const getAccount = async env => {
   if (env.CHECK) {
-    checkAccounts = checkAccounts && checkAccounts.length ? checkAccounts : await getCheckAccounts()
-    return checkAccounts.shift()
+    let Taccounts = await getCheckAccounts()
+    Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+    return Taccounts && Taccounts.length && Taccounts.shift()
   }
   else {
     accounts = await getAccounts()
