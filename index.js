@@ -252,7 +252,7 @@ io.on('connection', client => {
       });
     })
 
-    client.emit('streams', runnerAccount)
+    runnerAccount && client.emit('streams', runnerAccount)
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
