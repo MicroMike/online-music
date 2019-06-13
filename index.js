@@ -25,18 +25,14 @@ setTimeout(() => {
 let waitForRestart
 
 let accounts
-let busy = {}
 let checkAccounts
-let file = process.env.FILE || 'napsterAccount.txt'
-let checking = false
 let plays = 0
 let nexts = 0
 let time = 0
+let resetTime
 
 let imgs = {}
 let clients = {}
-let checkoutC = {}
-let checkoutS = {}
 let streams = {}
 let webs = {}
 let checkClient
@@ -194,10 +190,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      if (!restart && !start) {
-        // Object.values(streams).forEach(s => !clients[s.parentId] ? s.emit('forceOut') : false)
-        // !clients[client.parentId] && client.emit('forceOut')
-      }
+      client.parentId < resetTime && client.emit('forceOut')
 
       Object.values(webs).forEach(w => {
         // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
@@ -381,6 +374,7 @@ io.on('connection', client => {
 
       restart = true
       checking = false
+      resetTime = Date.now()
 
       setTimeout(() => {
         restart = false
