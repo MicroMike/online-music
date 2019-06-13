@@ -29,7 +29,7 @@ let checkAccounts
 let plays = 0
 let nexts = 0
 let time = 0
-let resetTime
+let resetTime = 0
 
 let imgs = {}
 let clients = {}
@@ -190,8 +190,8 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      console.log(client.parentId, resetTime)
-      // client.parentId < resetTime && client.emit('forceOut')
+      // console.log(client.parentId, resetTime)
+      client.parentId < resetTime && client.emit('forceOut')
 
       Object.values(webs).forEach(w => {
         // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
