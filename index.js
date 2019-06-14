@@ -214,7 +214,7 @@ io.on('connection', client => {
     client.on('retryOk', () => {
       delete imgs[client.account]
       Object.values(webs).forEach(w => {
-        w.emit('endStream', client.account)
+        w.emit('endStream', client.uniqId)
       })
     })
 
