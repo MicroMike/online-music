@@ -166,8 +166,8 @@ io.on('connection', client => {
     })
   })
 
-  client.on('runner', async ({ clientId, account, id, player, env }) => {
-    const runnerAccount = await getAccount(env)
+  client.on('runner', async ({ clientId, account, id, env }) => {
+    const runnerAccount = account || await getAccount(env)
 
     client.parentId = clientId
     client.account = runnerAccount
@@ -240,7 +240,7 @@ io.on('connection', client => {
       });
     })
 
-    client.emit('streams', runnerAccount)
+    !account && client.emit('streams', runnerAccount)
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
