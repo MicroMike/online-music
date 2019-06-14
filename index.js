@@ -198,21 +198,21 @@ io.on('connection', client => {
     })
 
     client.on('screen', data => {
-      imgs[client.account] = data
+      imgs[runnerAccount] = data
       Object.values(webs).forEach(c => {
         c.emit('stream', data)
       })
     })
 
     client.on('stream', data => {
-      data.log = imgs[client.account] && imgs[client.account].log
+      data.log = imgs[runnerAccount] && imgs[runnerAccount].log
       Object.values(webs).forEach(w => {
         w.emit('stream', data)
       })
     })
 
     client.on('retryOk', () => {
-      delete imgs[client.account]
+      delete imgs[runnerAccount]
       Object.values(webs).forEach(w => {
         w.emit('endStream', client.uniqId)
       })
@@ -438,7 +438,9 @@ io.on('connection', client => {
         streams[clientId].emit('streamOff')
       }
       catch (e) {
-        delete imgs[streams[clientId].account]
+        if (streams[clientId]) {
+          delete imgs[streams[clientId].account]
+        }
         client.emit('endStream', clientId)
       }
     })
