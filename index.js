@@ -37,6 +37,7 @@ let streams = {}
 let webs = {}
 let checkClient
 let used = {}
+let errs = []
 
 request('http://online-accounts.herokuapp.com/gain', function (error, response, body) {
   const r = JSON.parse(body)
@@ -110,6 +111,11 @@ const getNumbers = () => {
   return numbers
 }
 
+const getErrs = () => {
+  const numbers = errs.reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
+  return numbers
+}
+
 const getAllData = () => ({
   // clients: {
   //   ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
@@ -126,7 +132,10 @@ const getAllData = () => ({
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: {
     ...getNumbers()
-  }
+  },
+  errs: {
+    ...getErrs()
+  },
 })
 
 io.on('connection', client => {
@@ -173,6 +182,11 @@ io.on('connection', client => {
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
+    })
+
+    client.on('outLog', e => {
+      const err = e.split(' ')[0]
+      errs.push(err)
     })
 
     // client.on('out', cid => {
