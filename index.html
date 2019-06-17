@@ -91,10 +91,9 @@
       delete data.clients
       delete data.errs
 
-      console.log(errs)
-
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
+      document.querySelector('#errs').innerHTML = ''
 
       Object.keys(clients).forEach((k, i) => {
         const val = clients[k]
@@ -102,10 +101,10 @@
         document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
       })
 
-      // Object.keys(errs).forEach((k, i) => {
-      //   const val = errs[k]
-      //   document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
-      // })
+      Object.keys(errs).forEach((k, i) => {
+        const val = errs[k]
+        document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
+      })
 
       // <button onClick="stop('${d.id}')">S</button>
 
