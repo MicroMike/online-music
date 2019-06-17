@@ -85,7 +85,10 @@
 
     socket.on('allData', data => {
       const clients = data.clients
+      const errs = data.errs
       delete data.clients
+
+      console.log(errs)
 
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
