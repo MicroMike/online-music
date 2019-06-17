@@ -85,14 +85,7 @@ const getAccounts = async () => {
 // (async () => await getAccounts())()
 
 const getAccount = async env => {
-  if (env.CHECK) {
-    let Taccounts = await getCheckAccounts()
-    Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-    return Taccounts && Taccounts.length && Taccounts.shift()
-  }
-  else {
-    accounts = await getAccounts()
-  }
+  accounts = await getAccounts()
 
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
@@ -241,7 +234,7 @@ io.on('connection', client => {
       });
     })
 
-    !account && client.emit('streams', runnerAccount)
+    !env.CHECK && !account && client.emit('streams', runnerAccount)
   })
 
   client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
