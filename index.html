@@ -94,14 +94,17 @@
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
 
-      Object.values(clients).forEach((L, i) => {
+      Object.keys(clients).forEach((k, i) => {
+        const val = clients[k]
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
-        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${L}</span>`)
+        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
       })
 
-      errs.forEach((L, i) => {
-        document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${i} => ${L}</span>`)
+      Object.keys(errs).forEach((k, i) => {
+        const val = clients[k]
+        document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
       })
+
       // <button onClick="stop('${d.id}')">S</button>
 
       Object.keys(data).forEach(k => {

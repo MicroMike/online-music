@@ -107,12 +107,12 @@ let displayLength = (log) => {
 }
 
 const getNumbers = () => {
-  const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
+  const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
   return numbers
 }
 
 const getErrs = () => {
-  const numbers = errs.reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, [])
+  const numbers = errs.reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
   return numbers
 }
 
@@ -130,12 +130,8 @@ const getAllData = () => ({
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
-  clients: {
-    ...getNumbers()
-  },
-  errs: [
-    ...getErrs()
-  ],
+  clients: getNumbers(),
+  errs: getErrs(),
 })
 
 io.on('connection', client => {
