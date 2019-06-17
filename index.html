@@ -89,13 +89,12 @@
       const clients = data.clients
       const errs = data.errs
       delete data.clients
-
-      console.log(errs)
+      delete data.errs
 
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
 
-      clients.forEach((L, i) => {
+      Object.values(clients).forEach((L, i) => {
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
         document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${L}</span>`)
       })
