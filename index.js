@@ -166,10 +166,11 @@ io.on('connection', client => {
     })
   })
 
-  client.on('runner', async ({ clientId, account, id, env }) => {
+  client.on('runner', async ({ clientId, time, account, id, env }) => {
     const runnerAccount = account || await getAccount(env)
 
     client.parentId = clientId
+    client.time = time
     client.account = runnerAccount
     client.uniqId = id
     streams[id] = client
@@ -189,7 +190,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      resetTime && client.parentId < resetTime && client.emit('forceOut')
+      resetTime && client.time < resetTime && client.emit('forceOut')
 
       Object.values(webs).forEach(w => {
         // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
