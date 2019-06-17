@@ -153,6 +153,13 @@ io.on('connection', client => {
     console.log(log)
   })
 
+  client.on('clearErrs', log => {
+    errs = []
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+    })
+  })
+
   client.on('plays', next => {
     if (next) { nexts++ }
     else { plays++ }

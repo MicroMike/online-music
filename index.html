@@ -41,6 +41,10 @@
       socket.emit('screenshot', id)
     }
 
+    const clearErrs = id => {
+      socket.emit('clearErrs')
+    }
+
     const getData = () => {
       socket.emit('getAllData')
     }
@@ -212,6 +216,7 @@
   <div id="data"></div>
   <button onClick="restart()">RESTART</button>
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
+  <button onClick="clearErrs()">CLEAR ERRORS</button>
   <button onClick="getData()">GET DATA</button>
   <div id="del"></div>
   <div id="count"></div>
