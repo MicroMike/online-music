@@ -130,12 +130,12 @@ const getAllData = () => ({
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
-  clients: {
+  clients: [
     ...getNumbers()
-  },
-  errs: {
+  ],
+  errs: [
     ...getErrs()
-  },
+  ],
 })
 
 io.on('connection', client => {
