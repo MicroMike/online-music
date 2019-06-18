@@ -439,7 +439,9 @@ io.on('connection', client => {
         streams[clientId].emit('streamOn')
       }
       catch (e) {
-        delete imgs[streams[clientId].account]
+        if (streams[clientId]) {
+          delete imgs[streams[clientId].account]
+        }
         client.emit('endStream', clientId)
       }
     })
