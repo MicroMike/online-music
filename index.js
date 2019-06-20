@@ -54,6 +54,7 @@ setInterval(() => {
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
   request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
+  accounts = await getAccounts()
 }, 1000 * 60)
 
 const rand = (max, min) => {
@@ -83,11 +84,9 @@ const getAccounts = async () => {
   })
 }
 
-// (async () => await getAccounts())()
+(async () => await getAccounts())()
 
 const getAccount = async env => {
-  accounts = await getAccounts()
-
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
       accounts.sort(() => { return rand(2) })
