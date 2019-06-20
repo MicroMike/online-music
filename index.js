@@ -49,7 +49,7 @@ request('http://online-accounts.herokuapp.com/gain', function (error, response, 
 let gain = 0
 let gain2 = 0
 let tempPlays = plays
-setInterval(() => {
+setInterval(async () => {
   gain = plays * 0.004 / ++time
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
