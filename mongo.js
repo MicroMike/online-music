@@ -2006,10 +2006,8 @@ const copy = [
     "check": false,
     "del": false,
     "__v": 0
-  }
-
-
-{
+  },
+  {
     "_id": {
       "$oid": "5cf8f103550d230017e8d880"
     },
