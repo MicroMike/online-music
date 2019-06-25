@@ -26,7 +26,7 @@ setTimeout(() => {
 let waitForRestart
 
 let accounts
-let checkAccounts
+let checkAccounts = null
 let plays = 0
 let nexts = 0
 let time = 0
@@ -159,7 +159,8 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
-    const runnerAccount = (env.CHECK && await getCheckAccounts()) || account || await getAccount(env)
+    checkAccounts = checkAccounts || await getCheckAccounts()
+    const runnerAccount = (env.CHECK && checkAccounts.shift()) || account || await getAccount(env)
 
     client.parentId = clientId
     client.time = time
