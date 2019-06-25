@@ -6,6 +6,7 @@ const {
 const app = require('http').createServer(handler)
 const io = require('socket.io')(app);
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, (error) => {

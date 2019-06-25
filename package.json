@@ -22,7 +22,7 @@
   "dependencies": {
     "ajax-request": "^1.2.3",
     "express": "^4.16.4",
-    "mongoose": "^5.5.12",
+    "mongoose": "^5.6.1",
     "socket.io": "^2.2.0"
   }
 }
