@@ -162,6 +162,11 @@ io.on('connection', client => {
     checkAccounts = checkAccounts === null ? await getCheckAccounts() : checkAccounts
     const runnerAccount = env.CHECK ? checkAccounts.shift() : account || await getAccount(env)
 
+    if (!runnerAccount) {
+      client.emit('forceOut')
+      return
+    }
+
     client.parentId = clientId
     client.time = time
     client.account = runnerAccount
