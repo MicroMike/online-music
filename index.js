@@ -300,6 +300,8 @@ io.on('connection', client => {
       checking = false
       resetTime = Date.now()
 
+      await getAccounts()
+
       setTimeout(() => {
         restart = false
       }, 1000 * 60);
