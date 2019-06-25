@@ -186,7 +186,6 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      console.log(data)
       resetTime && client.time < resetTime && client.emit('forceOut')
 
       Object.values(webs).forEach(w => {
