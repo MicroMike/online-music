@@ -54,8 +54,8 @@ module.exports = {
     })
   },
   actions: (req, callback) => {
-    const action = req.url.split('?')[0]
-    const params = req.url.split('?')[1]
+    const action = req.split('?')[0]
+    const params = req.split('?')[1]
 
     switch (action) {
       case 'reset':
