@@ -119,7 +119,6 @@ module.exports = {
   },
   handler: (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.writeHead(200);
 
     const url = req.url.split('?')[0]
     const params = req.url.split('?')[1]
@@ -153,6 +152,7 @@ module.exports = {
           const r = new MAccount(a);
           r.save()
         })
+        res.end(JSON.stringify({ copy }))
         break
 
       case '/error': {
