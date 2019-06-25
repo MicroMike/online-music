@@ -159,8 +159,8 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
-    checkAccounts = checkAccounts || await getCheckAccounts()
-    const runnerAccount = (env.CHECK && checkAccounts.shift()) || account || await getAccount(env)
+    checkAccounts = checkAccounts === null ? await getCheckAccounts() : checkAccounts
+    const runnerAccount = env.CHECK ? checkAccounts.shift() : account || await getAccount(env)
 
     client.parentId = clientId
     client.time = time
