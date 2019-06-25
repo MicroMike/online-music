@@ -23,7 +23,7 @@ const SSong = new mongoose.Schema({
 const MSong = mongoose.model('Song', SSong, 'songs');
 
 module.exports = {
-  getAccounts: async () => {
+  getAccounts: async (reset) => {
     return new Promise(res => {
       MAccount.find(reset ? {} : { check: false, del: false, pause: { $ne: true } }, function (err, Ra) {
         if (err) return console.error(err);

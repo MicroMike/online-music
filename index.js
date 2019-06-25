@@ -40,7 +40,7 @@ let used = {}
 let errs = []
 
 actions('gain', body => {
-  const r = JSON.parse(body)
+  const r = body
   plays = r.plays
   nexts = r.nexts
   time = r.time
