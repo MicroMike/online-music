@@ -1097,10 +1097,8 @@ const copy = [
     "check": false,
     "del": false,
     "pause": true
-  }
-
-
-{
+  },
+  {
     "_id": {
       "$oid": "5cf63d9de155800017d5a77f"
     },
