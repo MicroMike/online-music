@@ -159,8 +159,11 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
-    checkAccounts = checkAccounts === null ? await getCheckAccounts() : checkAccounts
-    const runnerAccount = env.CHECK ? checkAccounts.shift() : account || await getAccount(env)
+    if (env.CHECK && env.FIRST) {
+      checkAccounts = await getCheckAccounts()
+    }
+
+    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : account || await getAccount(env)
 
     if (!runnerAccount) {
       client.emit('forceOut')
