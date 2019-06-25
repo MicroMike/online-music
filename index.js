@@ -1,4 +1,5 @@
 const {
+  getCheckAccounts,
   getAllAccounts,
   actions,
   handler
@@ -158,7 +159,7 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
-    const runnerAccount = account || await getAccount(env)
+    const runnerAccount = (env.CHECK && await getCheckAccounts()) || account || await getAccount(env)
 
     client.parentId = clientId
     client.time = time
@@ -237,7 +238,7 @@ io.on('connection', client => {
       });
     })
 
-    !env.CHECK && !account && client.emit('streams', runnerAccount)
+    !account && client.emit('streams', runnerAccount)
   })
 
   client.on('disconnect', () => {
