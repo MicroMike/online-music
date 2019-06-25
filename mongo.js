@@ -118,10 +118,12 @@ module.exports = {
     }
   },
   handler: (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-
     const url = req.url.split('?')[0]
     const params = req.url.split('?')[1]
+
+    if (url !== '/') {
+      res.setHeader('Content-Type', 'application/json');
+    }
 
     switch (url) {
       case '/addAccount': {
