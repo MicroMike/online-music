@@ -23,6 +23,16 @@ const SSong = new mongoose.Schema({
 });
 const MSong = mongoose.model('Song', SSong, 'songs');
 
+const getCheckAccounts = async () => {
+  return new Promise(res => {
+    MAccount.find({ check: true }, function (err, Ra) {
+      if (err) return console.error(err);
+      const Taccounts = Ra.map(a => a.account)
+      res(Taccounts)
+    })
+  })
+}
+
 module.exports = {
   getAllAccounts: async (reset) => {
     return new Promise(res => {
@@ -40,15 +50,7 @@ module.exports = {
       })
     })
   },
-  getCheckAccounts: async () => {
-    return new Promise(res => {
-      MAccount.find({ check: true }, function (err, Ra) {
-        if (err) return console.error(err);
-        const Taccounts = Ra.map(a => a.account)
-        res(Taccounts)
-      })
-    })
-  },
+  getCheckAccounts,
   actions: (req, callback) => {
     const action = req.split('?')[0]
     const params = req.split('?')[1]
