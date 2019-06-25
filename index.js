@@ -1,5 +1,5 @@
 const {
-  getAccounts,
+  getAllAccounts,
   actions,
   handler
 } = require('./mongo')
@@ -46,6 +46,13 @@ actions('gain', body => {
   time = r.time
 })
 
+const getAccounts = async () => {
+  const Taccounts = await getAllAccounts()
+  Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+  Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+  accounts = Taccounts
+}
+
 let gain = 0
 let gain2 = 0
 let tempPlays = plays
@@ -54,7 +61,7 @@ setInterval(async () => {
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
   actions('gain?' + plays + '/' + nexts + '/' + time)
-  accounts = await getAccounts()
+  await getAccounts()
 }, 1000 * 60)
 
 const rand = (max, min) => {

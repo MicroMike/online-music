@@ -23,7 +23,7 @@ const SSong = new mongoose.Schema({
 const MSong = mongoose.model('Song', SSong, 'songs');
 
 module.exports = {
-  getAccounts: async (reset) => {
+  getAllAccounts: async (reset) => {
     return new Promise(res => {
       MAccount.find(reset ? {} : { check: false, del: false, pause: { $ne: true } }, function (err, Ra) {
         if (err) return console.error(err);
@@ -35,12 +35,7 @@ module.exports = {
           }
           return a.account
         })
-
-        Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-        Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
-
-        accounts = Taccounts
-        res(accounts)
+        res(Taccounts)
       })
     })
   },
