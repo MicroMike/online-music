@@ -23,12 +23,12 @@ const SSong = new mongoose.Schema({
 });
 const MSong = mongoose.model('Song', SSong, 'songs');
 
-const getCheckAccounts = async () => {
+const getCheckAccounts = async (callback) => {
   return new Promise(res => {
     MAccount.find({ check: true }, function (err, Ra) {
       if (err) return console.error(err);
       const Taccounts = Ra.map(a => a.account)
-      res(Taccounts)
+      callback ? callback(Taccounts) : res(Taccounts)
     })
   })
 }
