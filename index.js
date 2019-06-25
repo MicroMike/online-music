@@ -186,6 +186,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
+      console.log(data)
       resetTime && client.time < resetTime && client.emit('forceOut')
 
       Object.values(webs).forEach(w => {
@@ -294,7 +295,7 @@ io.on('connection', client => {
       streams[id] && streams[id].emit('runScript', scriptText)
     })
 
-    client.on('restart', cid => {
+    client.on('restart', async cid => {
 
       restart = true
       checking = false
