@@ -22,177 +22,177 @@ const SSong = new mongoose.Schema({
 });
 const MSong = mongoose.model('Song', SSong, 'songs');
 
-export const getAccounts = async () => {
-  return new Promise(res => {
-    MAccount.find(reset ? {} : { check: false, del: false, pause: { $ne: true } }, function (err, Ra) {
-      if (err) return console.error(err);
-      const Taccounts = Ra.map(a => {
-        if (reset) {
-          a.check = false
-          a.del = false
-          a.save()
-        }
-        return a.account
+module.exports = {
+  getAccounts: async () => {
+    return new Promise(res => {
+      MAccount.find(reset ? {} : { check: false, del: false, pause: { $ne: true } }, function (err, Ra) {
+        if (err) return console.error(err);
+        const Taccounts = Ra.map(a => {
+          if (reset) {
+            a.check = false
+            a.del = false
+            a.save()
+          }
+          return a.account
+        })
+
+        Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+        Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+
+        accounts = Taccounts
+        res(accounts)
       })
-
-      Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-      Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
-
-      accounts = Taccounts
-      res(accounts)
     })
-  })
-}
-
-export const getCheckAccounts = async () => {
-  return new Promise(res => {
-    MAccount.find({ check: true }, function (err, Ra) {
-      if (err) return console.error(err);
-      const Taccounts = Ra.map(a => a.account)
-      res(Taccounts)
+  },
+  getCheckAccounts: async () => {
+    return new Promise(res => {
+      MAccount.find({ check: true }, function (err, Ra) {
+        if (err) return console.error(err);
+        const Taccounts = Ra.map(a => a.account)
+        res(Taccounts)
+      })
     })
-  })
-}
+  },
+  actions: (req, callback) => {
+    const action = req.url.split('?')[0]
+    const params = req.url.split('?')[1]
 
-export const actions = (req, callback) => {
-  const action = req.url.split('?')[0]
-  const params = req.url.split('?')[1]
+    switch (action) {
+      case 'reset':
+        getAccounts(a => callback && callback(a), true)
+        break
 
-  switch (action) {
-    case 'reset':
-      getAccounts(a => callback && callback(a), true)
-      break
+      case 'listen':
+        params && MSong.findOne({ song: params }, (err, Ra) => {
+          if (!Ra) {
+            const r = new MSong({ song: params, plays: 1 })
+            r.save((err, g) => callback && callback(g))
+          }
+          else {
+            Ra.plays = Ra.plays + 1
+            Ra.save((err, a) => callback && callback(a))
+          }
+        })
+        break
 
-    case 'listen':
-      params && MSong.findOne({ song: params }, (err, Ra) => {
-        if (!Ra) {
-          const r = new MSong({ song: params, plays: 1 })
-          r.save((err, g) => callback && callback(g))
+      case 'gain':
+        if (params) {
+          const p = params.split('/')
+          p[0] && p[1] && MGain.findOne((err, Rg) => {
+            if (err) return console.error(err);
+
+            if (!Rg) {
+              const r = new MGain({ plays: 0, nexts: 0, time: 0 })
+              r.save((err, g) => callback && callback(g))
+            }
+            else {
+              Rg.plays = Number(p[0])
+              Rg.nexts = Number(p[1])
+              Rg.time = Number(p[2])
+              Rg.save((err, g) => callback && callback(g))
+            }
+          })
         }
         else {
-          Ra.plays = Ra.plays + 1
-          Ra.save((err, a) => callback && callback(a))
+          MGain.findOne(function (err, Rg) {
+            if (err) return console.error(err);
+
+            if (!Rg) {
+              const r = new MGain({ plays: 0, nexts: 0, time: 0 })
+              r.save((err, g) => callback && callback(g))
+            }
+            else {
+              callback && callback(Rg)
+            }
+          })
         }
-      })
-      break
+        break
 
-    case 'gain':
-      if (params) {
-        const p = params.split('/')
-        p[0] && p[1] && MGain.findOne((err, Rg) => {
-          if (err) return console.error(err);
-
-          if (!Rg) {
-            const r = new MGain({ plays: 0, nexts: 0, time: 0 })
-            r.save((err, g) => callback && callback(g))
-          }
-          else {
-            Rg.plays = Number(p[0])
-            Rg.nexts = Number(p[1])
-            Rg.time = Number(p[2])
-            Rg.save((err, g) => callback && callback(g))
-          }
+      case 'spotifyPause': {
+        MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
+          Ra.forEach(r => {
+            r.pause = true
+            r.save()
+          })
         })
       }
-      else {
-        MGain.findOne(function (err, Rg) {
-          if (err) return console.error(err);
 
-          if (!Rg) {
-            const r = new MGain({ plays: 0, nexts: 0, time: 0 })
-            r.save((err, g) => callback && callback(g))
-          }
-          else {
-            callback && callback(Rg)
-          }
+      default:
+        break
+    }
+  },
+  handler: (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.writeHead(200);
+
+    const url = req.url.split('?')[0]
+    const params = req.url.split('?')[1]
+
+    switch (url) {
+      case '/addAccount': {
+        const p = params && params.split('/')
+        let accounts = {}
+        p && p.forEach(a => {
+          a && MAccount.findOne({ account: a }, (err, Ra) => {
+            if (Ra) {
+              accounts[a] = false
+            }
+            else {
+              accounts[a] = true
+              const r = new MAccount({ account: a, check: false, del: false });
+              r.save((err, a) => { console.log(a) })
+            }
+          })
         })
+        res.end(JSON.stringify({ accounts: accounts }));
+        break
       }
-      break
 
-    case 'spotifyPause': {
-      MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
-        Ra.forEach(r => {
-          r.pause = true
+      case '/checkAccounts':
+        getCheckAccounts(a => res.end(JSON.stringify(a)))
+        break
+
+      case '/copy':
+        copy.map(a => {
+          const r = new MAccount(a);
           r.save()
         })
-      })
-    }
+        break
 
-    default:
-      break
-  }
-}
-
-export const handler = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.writeHead(200);
-
-  const url = req.url.split('?')[0]
-  const params = req.url.split('?')[1]
-
-  switch (url) {
-    case '/addAccount': {
-      const p = params && params.split('/')
-      let accounts = {}
-      p && p.forEach(a => {
-        a && MAccount.findOne({ account: a }, (err, Ra) => {
-          if (Ra) {
-            accounts[a] = false
-          }
-          else {
-            accounts[a] = true
-            const r = new MAccount({ account: a, check: false, del: false });
-            r.save((err, a) => { console.log(a) })
-          }
+      case '/error': {
+        const p = params && params.split('/')
+        p[0] && p[1] && MAccount.findOne({ account: p[1] }, (err, Ra) => {
+          if (err) return console.error(err);
+          Ra[p[0]] = true
+          Ra.save((err, a) => { res.end(JSON.stringify(a)) })
         })
-      })
-      res.end(JSON.stringify({ accounts: accounts }));
-      break
+        res.end(JSON.stringify({ index: true }));
+        break
+      }
+
+      case '/checkOk':
+        params && MAccount.findOne({ account: params }, (err, Ra) => {
+          Ra.check = false
+          Ra.save((err, a) => { res.end(JSON.stringify(a)) })
+        })
+        break
+
+      default:
+        fs.readFile(__dirname + '/index.html',
+          function (err, data) {
+            if (err) {
+              res.writeHead(500);
+              return res.end('Error loading index.html');
+            }
+
+            res.writeHead(200);
+            res.end(data);
+          });
+        break
     }
-
-    case '/checkAccounts':
-      getCheckAccounts(a => res.end(JSON.stringify(a)))
-      break
-
-    case '/copy':
-      copy.map(a => {
-        const r = new MAccount(a);
-        r.save()
-      })
-      break
-
-    case '/error': {
-      const p = params && params.split('/')
-      p[0] && p[1] && MAccount.findOne({ account: p[1] }, (err, Ra) => {
-        if (err) return console.error(err);
-        Ra[p[0]] = true
-        Ra.save((err, a) => { res.end(JSON.stringify(a)) })
-      })
-      res.end(JSON.stringify({ index: true }));
-      break
-    }
-
-    case '/checkOk':
-      params && MAccount.findOne({ account: params }, (err, Ra) => {
-        Ra.check = false
-        Ra.save((err, a) => { res.end(JSON.stringify(a)) })
-      })
-      break
-
-    default:
-      fs.readFile(__dirname + '/index.html',
-        function (err, data) {
-          if (err) {
-            res.writeHead(500);
-            return res.end('Error loading index.html');
-          }
-
-          res.writeHead(200);
-          res.end(data);
-        });
-      break
   }
 }
+
 const copy = [
   {
     "_id": {
