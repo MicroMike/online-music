@@ -47,7 +47,7 @@ actions('gain', body => {
 })
 
 const getAccounts = async () => {
-  const Taccounts = await getAllAccounts()
+  let Taccounts = await getAllAccounts()
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
   accounts = Taccounts
