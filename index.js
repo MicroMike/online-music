@@ -1,20 +1,19 @@
-var app = require('http').createServer(handler)
-var io = require('socket.io')(app);
-var fs = require('fs');
-const request = require('ajax-request');
+const {
+  getAccounts,
+  actions,
+  handler
+} = require('./mongo')
+const app = require('http').createServer(handler)
+const io = require('socket.io')(app);
+const fs = require('fs');
 
-function handler(req, res) {
-  fs.readFile(__dirname + '/index.html',
-    function (err, data) {
-      if (err) {
-        res.writeHead(500);
-        return res.end('Error loading index.html');
-      }
-
-      res.writeHead(200);
-      res.end(data);
-    });
-}
+// MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI, (error) => {
+  if (error) {
+    console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
+    throw error;
+  }
+});
 
 let restart = false
 let start = true
@@ -39,7 +38,7 @@ let checkClient
 let used = {}
 let errs = []
 
-request('http://online-accounts.herokuapp.com/gain', function (error, response, body) {
+actions('gain', body => {
   const r = JSON.parse(body)
   plays = r.plays
   nexts = r.nexts
@@ -53,35 +52,12 @@ setInterval(async () => {
   gain = plays * 0.004 / ++time
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
-  request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
+  actions('gain?' + plays + '/' + nexts + '/' + time)
   accounts = await getAccounts()
 }, 1000 * 60)
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
-}
-
-const getCheckAccounts = async () => {
-  return new Promise(res => {
-    request('https://online-accounts.herokuapp.com/checkAccounts', function (error, response, body) {
-      const CA = JSON.parse(body)
-      res(CA)
-    })
-  })
-}
-
-const getAccounts = async () => {
-  return new Promise(res => {
-    request('https://online-accounts.herokuapp.com/accounts', async (error, response, body) => {
-      let Taccounts = JSON.parse(body)
-
-      Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-      Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
-
-      accounts = Taccounts
-      res(accounts)
-    })
-  })
 }
 
 (async () => await getAccounts())()
@@ -159,11 +135,14 @@ io.on('connection', client => {
     })
   })
 
-  client.on('plays', next => {
+  client.on('plays', ({ next, currentAlbum }) => {
     if (next) { nexts++ }
-    else { plays++ }
+    else {
+      plays++
+    }
 
-    request('http://online-accounts.herokuapp.com/gain?' + plays + '/' + nexts + '/' + time, function (error, response, body) { })
+    actions('listen?' + currentAlbum)
+    actions('gain?' + plays + '/' + nexts + '/' + time)
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
@@ -251,74 +230,6 @@ io.on('connection', client => {
     })
 
     !env.CHECK && !account && client.emit('streams', runnerAccount)
-  })
-
-  client.on('ok', async ({ accountsValid, del, max, env, first, id, check }) => {
-    console.log('accountsValid', accountsValid.length)
-    client.playTimeout
-    client.max = max
-    client.uniqId = id
-    clients[id] = client
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-    })
-
-    if (check) {
-      checkAccounts = await getCheckAccounts()
-      checkClient = client
-    }
-
-    client.on('play', async () => {
-      if (waitForRestart) { return }
-
-      // await getAccounts()
-
-      client.playTimeout = setTimeout(() => {
-        client.emit('goPlay')
-      }, check ? 1000 * 30 : 1000 * 30 + rand(1000 * 90));
-
-      // if ((start || restart) && !first) { return }
-
-      const playerLength = Object.values(streams).filter(s => s.parentId === client.uniqId).length
-      let accountToRun
-
-      if (playerLength < max) {
-        if (check) {
-          accountToRun = checkAccounts.length > 0 && checkAccounts.shift()
-        }
-        else {
-          accountToRun = getAccount(env)
-        }
-
-        if (accountToRun) {
-          client.emit('run', accountToRun)
-        }
-      }
-      else if (!rand(5)) {
-        Object.values(streams).filter(s => s.parentId === client.uniqId)[0].emit('out')
-      }
-    })
-
-    client.on('retrieve', playerLength => {
-      console.log('retreive', playerLength)
-    })
-
-    const tryStart = () => {
-      if (!waitForRestart) {
-        console.log('Connected', accountsValid ? accountsValid.length : 0)
-        client.emit('goPlay')
-      }
-      else {
-        setTimeout(() => {
-          tryStart()
-        }, 1000 * 5);
-      }
-    }
-
-    setTimeout(() => {
-      tryStart()
-    }, 1000 * 5);
   })
 
   client.on('disconnect', () => {
@@ -485,5 +396,9 @@ io.on('connection', client => {
     })
   })
 });
+
+// io.on('connection', client => {
+//   client.emit('activate', client.id)
+// })
 
 app.listen(process.env.PORT || 3000);
