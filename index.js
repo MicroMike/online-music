@@ -72,6 +72,11 @@ const rand = (max, min) => {
 (async () => await getAccounts())()
 
 const getAccount = async env => {
+  let Taccounts = accounts
+  Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+  Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+  accounts = Taccounts
+
   if (env.RAND) {
     for (let i = 0; i < accounts.length; i++) {
       accounts.sort(() => { return rand(2) })
