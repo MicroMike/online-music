@@ -83,10 +83,10 @@ const getAccount = async env => {
 
   if (env.TYPE) {
     const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
-    return typeAccounts[rand(typeAccounts.length)]
+    return typeAccounts[0]
   }
 
-  return accounts[rand(accounts.length)]
+  return accounts[0]
 }
 
 let displayLength = (log) => {
@@ -318,7 +318,7 @@ io.on('connection', client => {
         waitForRestart = true
         resetTime = Date.now()
 
-        setTimeout(() => {
+        setTimeout(async () => {
           restart = false
           await getAccounts()
         }, 1000 * 60);
