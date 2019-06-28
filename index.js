@@ -311,28 +311,20 @@ io.on('connection', client => {
     })
 
     client.on('restart', async cid => {
-
-      restart = true
-      checking = false
-      resetTime = Date.now()
-
-      await getAccounts()
-
-      setTimeout(() => {
-        restart = false
-      }, 1000 * 60);
-
-      // if (cid) {
-      //   fs.readFile('check.txt', 'utf8', async (err, data) => {
-      //     if (err) return console.log(err);
-      //     checkAccounts = data.split(',').filter(e => e)
-
-      //     checking = true
-      //     checkClient = clients[cid]
-      //   })
-      // }
+      if (cid) {
+        Object.values(streams).forEach(s => s.parentId === cid ? s.emit('forceOut') : false)
+      }
       if (!cid) {
+        restart = true
+        checking = false
         waitForRestart = true
+        resetTime = Date.now()
+
+        setTimeout(() => {
+          restart = false
+          await getAccounts()
+        }, 1000 * 60);
+
         tempC = Object.values(clients)
 
         const out = () => {
