@@ -34,16 +34,27 @@ const getCheckAccounts = async (callback) => {
 }
 
 module.exports = {
-  getAllAccounts: async (reset) => {
+  getAllAccounts: async (type) => {
     return new Promise(res => {
-      MAccount.find(reset ? {} : { check: false, del: false, pause: { $ne: true } }, function (err, Ra) {
+
+      const findParams = { check: false, del: false, pause: { $ne: true } }
+      if (type) { findParams.account = { "$regex": `^${type}` } }
+
+      MAccount.find(findParams, function (err, Ra) {
+        if (err) return console.error(err);
+        const Taccounts = Ra.map(a => a.account)
+        res(Taccounts)
+      })
+    })
+  },
+  reset: async () => {
+    return new Promise(res => {
+      MAccount.find({}, function (err, Ra) {
         if (err) return console.error(err);
         const Taccounts = Ra.map(a => {
-          if (reset) {
-            a.check = false
-            a.del = false
-            a.save()
-          }
+          a.check = false
+          a.del = false
+          a.save()
           return a.account
         })
         res(Taccounts)

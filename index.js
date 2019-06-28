@@ -84,7 +84,8 @@ const getAccount = async env => {
   }
 
   if (env.TYPE) {
-    accounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+    const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+    return typeAccounts[rand(typeAccounts.length)]
   }
 
   return accounts.length ? accounts.shift() : false
