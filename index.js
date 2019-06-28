@@ -78,9 +78,7 @@ const getAccount = async env => {
   accounts = Taccounts
 
   if (env.RAND) {
-    for (let i = 0; i < accounts.length; i++) {
-      accounts.sort(() => { return rand(2) })
-    }
+    return Taccounts[rand(Taccounts.length)]
   }
 
   if (env.TYPE) {
@@ -88,7 +86,7 @@ const getAccount = async env => {
     return typeAccounts[rand(typeAccounts.length)]
   }
 
-  return accounts.length ? accounts.shift() : false
+  return accounts[rand(accounts.length)]
 }
 
 let displayLength = (log) => {
