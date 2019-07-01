@@ -96,7 +96,7 @@ module.exports = {
             if (err) return console.error(err);
 
             if (!Rg) {
-              const r = new MGain({ plays: 0, nexts: 0, time: 0 })
+              const r = new MGain({ plays: 0, nexts: 0, time: 0, month })
               r.save((err, g) => callback && callback(g))
             }
             else {
@@ -112,7 +112,7 @@ module.exports = {
             if (err) return console.error(err);
 
             if (!Rg) {
-              const r = new MGain({ plays: 0, nexts: 0, time: 0 })
+              const r = new MGain({ plays: 0, nexts: 0, time: 0, month })
               r.save((err, g) => callback && callback(g))
             }
             else {
