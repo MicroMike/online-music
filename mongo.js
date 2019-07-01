@@ -107,7 +107,7 @@ module.exports = {
           })
         }
         else {
-          MGain.findOne(function (err, Rg) {
+          MGain.findOne({ month }, function (err, Rg) {
             if (err) return console.error(err);
 
             if (!Rg) {
