@@ -14,6 +14,7 @@ const SGain = new mongoose.Schema({
   plays: Number,
   nexts: Number,
   time: Number,
+  month: Number,
 });
 const MGain = mongoose.model('Gain', SGain, 'gain');
 
