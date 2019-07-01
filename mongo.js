@@ -86,9 +86,10 @@ module.exports = {
         break
 
       case 'gain':
+        const date = new Date()
+        const month = date.getMonth() + 1
+
         if (params) {
-          const date = new Date()
-          const month = date.getMonth() + 1
           const p = params.split('/')
 
           p[0] && p[1] && MGain.findOne({ month }, (err, Rg) => {
