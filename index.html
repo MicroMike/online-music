@@ -205,7 +205,9 @@
     }
 
     socket.on('playerInfos', streams => {
-      document.querySelector('#accounts').innerHTML = ''
+      document.querySelector('.players').innerHTML = ''
+      document.querySelector('.freezedPlayers').innerHTML = ''
+      document.querySelector('.others').innerHTML = ''
       streams.forEach(s => s && displayPlays(s))
     })
   </script>
@@ -221,7 +223,7 @@
   <button onClick="getData()">GET DATA</button>
   <div id="del"></div>
   <div id="count"></div>
-  <div style="display: flex;" id="accounts">
+  <div style="display: flex;">
     <div class="players"></div>
     <div class="freezedPlayers"></div>
     <div class="others"></div>
