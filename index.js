@@ -62,7 +62,7 @@ setInterval(async () => {
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
   actions('gain?' + plays + '/' + nexts + '/' + time)
-  Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
+  // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
   await getAccounts()
 }, 1000 * 60)
 
