@@ -259,11 +259,6 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-      w.emit('playerInfos', { account: client.account, id: client.uniqId, out: true })
-    })
-
     // getAccounts()
     delete webs[client.id]
     delete clients[client.uniqId]
@@ -271,6 +266,11 @@ io.on('connection', client => {
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
+
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+    })
   })
 
   client.on('Cdisconnect', code => {
