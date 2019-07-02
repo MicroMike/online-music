@@ -167,38 +167,38 @@
       let { account, time, streamId, freeze, other, out, ok, nope, warn } = p
       time = time || 0
 
-      const isDomF = document.querySelector('.freezedPlayers #players-' + streamId)
-      const isDomOk = document.querySelector('.players #players-' + streamId)
-      const isOthers = document.querySelector('.others #players-' + streamId)
-      const isNope = document.querySelector('body > #players-' + streamId)
+      // const isDomF = document.querySelector('.freezedPlayers #players-' + streamId)
+      // const isDomOk = document.querySelector('.players #players-' + streamId)
+      // const isOthers = document.querySelector('.others #players-' + streamId)
+      // const isNope = document.querySelector('body > #players-' + streamId)
 
       const insideHtml = `<div style="width:${time}%;"></div><span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span><button onClick="screenshot('${streamId}')"></button>`
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
-      !ok && isDomOk && isDomOk.remove()
-      !freeze && isDomF && isDomF.remove()
-      !other && isOthers && isOthers.remove()
-      !nope && isNope && isNope.remove()
+      // !ok && isDomOk && isDomOk.remove()
+      // !freeze && isDomF && isDomF.remove()
+      // !other && isOthers && isOthers.remove()
+      // !nope && isNope && isNope.remove()
 
-      const dom = document.querySelector('#players-' + streamId)
-      if (out) { return dom && dom.remove() }
+      // const dom = document.querySelector('#players-' + streamId)
+      // if (out) { return dom && dom.remove() }
 
-      if (dom) {
-        const currentTime = document.querySelector('#players-' + streamId + ' div').style.width.replace('%', '')
-        if (time > currentTime) {
-          document.querySelector('#players-' + streamId + ' span').innerText = `${account} : ${time}`
-          document.querySelector('#players-' + streamId + ' div').style.width = time + '%'
-        }
-        else {
-          dom.innerHTML = insideHtml
-        }
-      }
-      else {
-        other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
-        ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
-        freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
-        nope && document.querySelector('body').insertAdjacentHTML('afterBegin', html)
-      }
+      // if (dom) {
+      //   const currentTime = document.querySelector('#players-' + streamId + ' div').style.width.replace('%', '')
+      //   if (time > currentTime) {
+      //     document.querySelector('#players-' + streamId + ' span').innerText = `${account} : ${time}`
+      //     document.querySelector('#players-' + streamId + ' div').style.width = time + '%'
+      //   }
+      //   else {
+      //     dom.innerHTML = insideHtml
+      //   }
+      // }
+      // else {
+      other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
+      ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+      freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
+      nope && document.querySelector('body').insertAdjacentHTML('afterBegin', html)
+      // }
 
       const count = document.querySelectorAll('[id^=players-]').length
       document.querySelector('#count').innerText = count
