@@ -202,7 +202,9 @@ io.on('connection', client => {
     client.on('playerInfos', datas => {
       resetTime && client.time < resetTime && client.emit('forceOut')
 
-      streams[datas.streamId].infos = datas
+      if (streams[datas.streamId]) {
+        streams[datas.streamId].infos = datas
+      }
 
       Object.values(webs).forEach(w => {
         // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
