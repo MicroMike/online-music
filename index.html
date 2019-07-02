@@ -205,7 +205,7 @@
     }
 
     socket.on('playerInfos', streams => {
-      streams.forEach(s => displayPlays(s))
+      streams.forEach(s => s && displayPlays(s))
     })
   </script>
 </head>
