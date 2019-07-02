@@ -164,30 +164,30 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, id, freeze, other, out, ok, nope, warn } = p
+      let { account, time, uniqId, freeze, other, out, ok, nope, warn } = p
       time = time || 0
 
-      const isDomF = document.querySelector('.freezedPlayers #players-' + id)
-      const isDomOk = document.querySelector('.players #players-' + id)
-      const isOthers = document.querySelector('.others #players-' + id)
-      const isNope = document.querySelector('body > #players-' + id)
+      const isDomF = document.querySelector('.freezedPlayers #players-' + uniqId)
+      const isDomOk = document.querySelector('.players #players-' + uniqId)
+      const isOthers = document.querySelector('.others #players-' + uniqId)
+      const isNope = document.querySelector('body > #players-' + uniqId)
 
-      const insideHtml = `<div style="width:${time}%;"></div><span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span><button onClick="screenshot('${id}')"></button>`
-      const html = `<div id="players-${id}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
+      const insideHtml = `<div style="width:${time}%;"></div><span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span><button onClick="screenshot('${uniqId}')"></button>`
+      const html = `<div id="players-${uniqId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
       !ok && isDomOk && isDomOk.remove()
       !freeze && isDomF && isDomF.remove()
       !other && isOthers && isOthers.remove()
       !nope && isNope && isNope.remove()
 
-      const dom = document.querySelector('#players-' + id)
+      const dom = document.querySelector('#players-' + uniqId)
       if (out) { return dom && dom.remove() }
 
       if (dom) {
-        const currentTime = document.querySelector('#players-' + id + ' div').style.width.replace('%', '')
+        const currentTime = document.querySelector('#players-' + uniqId + ' div').style.width.replace('%', '')
         if (time > currentTime) {
-          document.querySelector('#players-' + id + ' span').innerText = `${account} : ${time}`
-          document.querySelector('#players-' + id + ' div').style.width = time + '%'
+          document.querySelector('#players-' + uniqId + ' span').innerText = `${account} : ${time}`
+          document.querySelector('#players-' + uniqId + ' div').style.width = time + '%'
         }
         else {
           dom.innerHTML = insideHtml
@@ -204,8 +204,8 @@
       document.querySelector('#count').innerText = count
     }
 
-    socket.on('playerInfos', p => {
-      displayPlays(p)
+    socket.on('playerInfos', streams => {
+      streams.forEach(s => displayPlays(s))
     })
   </script>
 </head>
