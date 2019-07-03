@@ -405,7 +405,7 @@ io.on('connection', client => {
       imgs = {}
     })
 
-    client.on('updateAccounts', () => {
+    client.on('updateAccounts', async () => {
       await getAccounts()
     })
 
