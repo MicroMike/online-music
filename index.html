@@ -37,6 +37,10 @@
   <script type="text/javascript">
     var socket = io();
 
+    const updateAccounts = id => {
+      socket.emit('updateAccounts')
+    }
+
     const screenshot = id => {
       socket.emit('screenshot', id)
     }
@@ -221,6 +225,7 @@
   <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
   <button onClick="clearErrs()">CLEAR ERRORS</button>
   <button onClick="getData()">GET DATA</button>
+  <button onClick="updateAccounts()">UPDATE ACCOUNTS</button>
   <div id="del"></div>
   <div id="count"></div>
   <div style="display: flex;">

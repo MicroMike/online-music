@@ -63,7 +63,6 @@ setInterval(async () => {
   tempPlays = plays
   actions('gain?' + plays + '/' + nexts + '/' + time)
   // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
-  await getAccounts()
 }, 1000 * 60)
 
 const rand = (max, min) => {
@@ -72,22 +71,20 @@ const rand = (max, min) => {
 
 (async () => await getAccounts())()
 
-const getAccount = async env => {
+const getAccount = env => {
   let Taccounts = accounts
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
-  accounts = Taccounts
-
-  if (env.RAND) {
-    return Taccounts[rand(Taccounts.length)]
-  }
 
   if (env.TYPE) {
     const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
     return typeAccounts[0]
   }
 
-  return accounts[0]
+  const index = env.RAND ? rand(Taccounts.length) : 0
+  const account = Taccounts[index]
+  accounts = Taccounts.filter(a => a !== account)
+  return account
 }
 
 let displayLength = (log) => {
@@ -168,7 +165,7 @@ io.on('connection', client => {
       checkAccounts = await getCheckAccounts()
     }
 
-    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : account || await getAccount(env)
+    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : account || getAccount(env)
 
     if (!runnerAccount) {
       client.emit('forceOut')
@@ -406,6 +403,10 @@ io.on('connection', client => {
 
     client.on('clearScreen', () => {
       imgs = {}
+    })
+
+    client.on('updateAccounts', () => {
+      await getAccounts()
     })
 
     client.on('screenshot', id => {
