@@ -273,7 +273,11 @@ io.on('connection', client => {
 
   client.on('Cdisconnect', code => {
     if (clients[client.uniqId]) { }
-    else if (streams[client.uniqId]) { }
+    else if (streams[client.uniqId]) {
+      if (accounts.indexOf(client.account) < 0) {
+        accounts.push(client.account)
+      }
+    }
 
     delete clients[client.uniqId]
     delete streams[client.uniqId]
