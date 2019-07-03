@@ -63,6 +63,7 @@ setInterval(async () => {
   tempPlays = plays
   actions('gain?' + plays + '/' + nexts + '/' + time)
   // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
+  await getAccounts()
 }, 1000 * 60)
 
 const rand = (max, min) => {
