@@ -60,7 +60,6 @@ const getAccounts = async () => {
 }
 
 let gain = 0
-
 setInterval(async () => {
   gain = plays * 0.004 / ++time
   actions('gain?' + plays + '/' + nexts + '/' + time)
