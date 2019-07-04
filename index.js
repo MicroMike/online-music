@@ -53,6 +53,7 @@ const getAccounts = async () => {
   playerCount = Taccounts.reduce((arr, a) => {
     return arr[a.split(':')[0]] = arr[a.split(':')[0]] ? arr[a.split(':')[0]] + 1 : 1
   }, {})
+  console.log(playerCount)
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
   accounts = Taccounts
