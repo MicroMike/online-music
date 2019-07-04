@@ -193,7 +193,7 @@ io.on('connection', client => {
     })
 
     client.on('outLog', e => {
-      const err = client.uniqId + ' ' + e.split(' ')[0]
+      const err = client.parentId + ' ' + e.split(' ')[0]
       errs.push(err)
     })
 
