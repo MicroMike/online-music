@@ -122,15 +122,6 @@ module.exports = {
         }
         break
 
-      case 'spotifyPause': {
-        MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
-          Ra.forEach(r => {
-            r.pause = true
-            r.save()
-          })
-        })
-      }
-
       default:
         break
     }
@@ -192,6 +183,24 @@ module.exports = {
           Ra.save((err, a) => { res.end(JSON.stringify(a)) })
         })
         break
+
+      case '/spotifyPause': {
+        MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
+          Ra.forEach(r => {
+            r.pause = true
+            r.save()
+          })
+        })
+      }
+
+      case '/spotifyOk': {
+        MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
+          Ra.forEach(r => {
+            r.pause = false
+            r.save()
+          })
+        })
+      }
 
       default:
         fs.readFile(__dirname + '/index.html',
