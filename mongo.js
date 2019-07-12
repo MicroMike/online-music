@@ -184,8 +184,8 @@ module.exports = {
         })
         break
 
-      case '/spotifyPause': {
-        MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
+      case '/pause': {
+        MAccount.find({ "account": { "$regex": "^" + params, "$options": "i" } }, (err, Ra) => {
           Ra.forEach(r => {
             r.pause = true
             r.save()
@@ -193,8 +193,8 @@ module.exports = {
         })
       }
 
-      case '/spotifyOk': {
-        MAccount.find({ "account": { "$regex": "^spotify", "$options": "i" } }, (err, Ra) => {
+      case '/unpause': {
+        MAccount.find({ "account": { "$regex": "^" + params, "$options": "i" } }, (err, Ra) => {
           Ra.forEach(r => {
             r.pause = false
             r.save()
