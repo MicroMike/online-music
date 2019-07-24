@@ -35,6 +35,7 @@ let resetTime = 0
 let imgs = {}
 let clients = {}
 let streams = {}
+let locks = {}
 let webs = {}
 let checkClient
 let used = {}
@@ -139,6 +140,14 @@ io.on('connection', client => {
       client.emit('activate', client.id)
     }
   }
+
+  client.on('lockScreen', data => {
+    client.uniqId = data.streamId
+    locks[data.streamId] = client
+    Object.values(webs).forEach(c => {
+      c.emit('stream', data)
+    })
+  })
 
   waitBeforeActivate()
 
@@ -268,6 +277,7 @@ io.on('connection', client => {
     delete webs[client.id]
     delete clients[client.uniqId]
     delete streams[client.uniqId]
+    delete locks[client.uniqId]
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
@@ -278,7 +288,7 @@ io.on('connection', client => {
     })
   })
 
-  client.on('Cdisconnect', code => {
+  client.on('Cdisconnect', () => {
     if (clients[client.uniqId]) { }
     else if (streams[client.uniqId]) {
     }
@@ -320,6 +330,7 @@ io.on('connection', client => {
 
     client.on('runScript', ({ id, scriptText }) => {
       streams[id] && streams[id].emit('runScript', scriptText)
+      locks[id] && locks[id].emit('runScript', scriptText)
     })
 
     client.on('restart', async cid => {
