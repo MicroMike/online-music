@@ -130,7 +130,7 @@ module.exports = {
     const url = req.url.split('?')[0]
     const params = req.url.split('?')[1]
 
-    if (url !== '/') {
+    if (url !== '/' && url !== '/chrome') {
       res.setHeader('Content-Type', 'application/json');
     }
 
@@ -200,6 +200,20 @@ module.exports = {
             r.save()
           })
         })
+      }
+
+      case '/chrome': {
+        fs.readFile(__dirname + '/chrome.html',
+          function (err, data) {
+            if (err) {
+              res.writeHead(500);
+              return res.end('Error loading index.html');
+            }
+
+            res.writeHead(200);
+            res.end(data);
+          });
+        break
       }
 
       default:
