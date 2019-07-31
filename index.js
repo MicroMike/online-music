@@ -365,7 +365,7 @@ io.on('connection', client => {
 
             if (Object.values(streams).length) {
               Object.values(streams).forEach(s => {
-                s.emit('forceOut')
+                s.emit('outReset')
               })
               out()
             }
