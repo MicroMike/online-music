@@ -137,6 +137,9 @@ io.on('connection', client => {
       }, 1000 * 5);
     }
     else {
+      Object.values(webs).forEach(w => {
+        w.emit('clean')
+      })
       client.emit('activate', client.id)
     }
   }
