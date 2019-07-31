@@ -115,6 +115,7 @@ const getAllData = () => ({
   // },
   accounts: accounts && accounts.length,
   streams: Object.values(streams).length,
+  playing: Object.values(streams).filter(s => s.infos).length,
   used: Object.values(used).length,
   webs: Object.values(webs).length,
   checkLeft: checkAccounts && checkAccounts.length,
