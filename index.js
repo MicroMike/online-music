@@ -141,6 +141,9 @@ io.on('connection', client => {
     }
   }
 
+  // waitBeforeActivate()
+  client.emit('activate', client.id)
+
   client.on('lockScreen', data => {
     client.uniqId = data.streamId
     locks[data.streamId] = client
@@ -148,8 +151,6 @@ io.on('connection', client => {
       c.emit('stream', data)
     })
   })
-
-  waitBeforeActivate()
 
   client.on('log', log => {
     console.log(log)
@@ -340,7 +341,7 @@ io.on('connection', client => {
       if (!cid) {
         restart = true
         checking = false
-        waitForRestart = true
+        // waitForRestart = true
         resetTime = Date.now()
 
         setTimeout(async () => {
@@ -358,10 +359,14 @@ io.on('connection', client => {
           Object.values(webs).forEach(w => {
             w.emit('clean')
           })
-          
+
           Object.values(streams).forEach(s => {
             s.emit('outReset')
           })
+
+          // setTimeout(() => {
+          //   waitForRestart = false
+          // }, 1000 * 30);
 
           // setTimeout(() => {
           //   // console.log('clients', Object.values(clients).length)
