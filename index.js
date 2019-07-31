@@ -358,27 +358,31 @@ io.on('connection', client => {
           Object.values(webs).forEach(w => {
             w.emit('clean')
           })
+          
+          Object.values(streams).forEach(s => {
+            s.emit('outReset')
+          })
 
-          setTimeout(() => {
-            // console.log('clients', Object.values(clients).length)
-            console.log('streams', Object.values(streams).length)
+          // setTimeout(() => {
+          //   // console.log('clients', Object.values(clients).length)
+          //   console.log('streams', Object.values(streams).length)
 
-            if (Object.values(streams).length) {
-              Object.values(streams).forEach(s => {
-                s.emit('outReset')
-              })
-              out()
-            }
-            // else if (Object.values(clients).length) {
-            //   Object.values(clients).forEach(c => {
-            //     c.emit('restart')
-            //   })
-            //   out()
-            // }
-            else {
-              waitForRestart = false
-            }
-          }, 1000 * 15);
+          //   if (Object.values(streams).length) {
+          //     Object.values(streams).forEach(s => {
+          //       s.emit('outReset')
+          //     })
+          //     out()
+          //   }
+          //   // else if (Object.values(clients).length) {
+          //   //   Object.values(clients).forEach(c => {
+          //   //     c.emit('restart')
+          //   //   })
+          //   //   out()
+          //   // }
+          //   else {
+          //     waitForRestart = false
+          //   }
+          // }, 1000 * 15);
         }
 
         out()
