@@ -141,8 +141,8 @@ io.on('connection', client => {
     }
   }
 
-  // waitBeforeActivate()
-  client.emit('activate', client.id)
+  waitBeforeActivate()
+  // client.emit('activate', client.id)
 
   client.on('lockScreen', data => {
     client.uniqId = data.streamId
@@ -341,7 +341,7 @@ io.on('connection', client => {
       if (!cid) {
         restart = true
         checking = false
-        // waitForRestart = true
+        waitForRestart = true
         resetTime = Date.now()
 
         setTimeout(async () => {
@@ -368,26 +368,26 @@ io.on('connection', client => {
           //   waitForRestart = false
           // }, 1000 * 30);
 
-          // setTimeout(() => {
-          //   // console.log('clients', Object.values(clients).length)
-          //   console.log('streams', Object.values(streams).length)
+          setTimeout(() => {
+            // console.log('clients', Object.values(clients).length)
+            console.log('streams', Object.values(streams).length)
 
-          //   if (Object.values(streams).length) {
-          //     Object.values(streams).forEach(s => {
-          //       s.emit('outReset')
-          //     })
-          //     out()
-          //   }
-          //   // else if (Object.values(clients).length) {
-          //   //   Object.values(clients).forEach(c => {
-          //   //     c.emit('restart')
-          //   //   })
-          //   //   out()
-          //   // }
-          //   else {
-          //     waitForRestart = false
-          //   }
-          // }, 1000 * 15);
+            if (Object.values(streams).length) {
+              Object.values(streams).forEach(s => {
+                s.emit('outReset')
+              })
+              out()
+            }
+            // else if (Object.values(clients).length) {
+            //   Object.values(clients).forEach(c => {
+            //     c.emit('restart')
+            //   })
+            //   out()
+            // }
+            else {
+              waitForRestart = false
+            }
+          }, 1000 * 15);
         }
 
         out()
