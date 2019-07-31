@@ -270,6 +270,8 @@ io.on('connection', client => {
       });
     })
 
+    console.log(account, runnerAccount)
+
     !account && client.emit('streams', runnerAccount)
   })
 
