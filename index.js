@@ -133,13 +133,13 @@ io.on('connection', client => {
   const waitBeforeActivate = () => {
     if (waitForRestart) {
       setTimeout(() => {
+        Object.values(webs).forEach(w => {
+          w.emit('clean')
+        })
         waitBeforeActivate()
       }, 1000 * 5);
     }
     else {
-      Object.values(webs).forEach(w => {
-        w.emit('clean')
-      })
       client.emit('activate', client.id)
     }
   }
