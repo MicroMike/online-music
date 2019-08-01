@@ -369,30 +369,30 @@ io.on('connection', client => {
             s.emit('outReset')
           })
 
-          // setTimeout(() => {
-          //   waitForRestart = false
-          // }, 1000 * 30);
-
           setTimeout(() => {
-            // console.log('clients', Object.values(clients).length)
-            console.log('streams', Object.values(streams).length)
+            waitForRestart = false
+          }, 1000 * 60);
 
-            if (Object.values(streams).length) {
-              Object.values(streams).forEach(s => {
-                s.emit('outReset')
-              })
-              out()
-            }
-            // else if (Object.values(clients).length) {
-            //   Object.values(clients).forEach(c => {
-            //     c.emit('restart')
-            //   })
-            //   out()
-            // }
-            else {
-              waitForRestart = false
-            }
-          }, 1000 * 15);
+          // setTimeout(() => {
+          //   // console.log('clients', Object.values(clients).length)
+          //   console.log('streams', Object.values(streams).length)
+
+          //   if (Object.values(streams).length) {
+          //     Object.values(streams).forEach(s => {
+          //       s.emit('outReset')
+          //     })
+          //     out()
+          //   }
+          //   // else if (Object.values(clients).length) {
+          //   //   Object.values(clients).forEach(c => {
+          //   //     c.emit('restart')
+          //   //   })
+          //   //   out()
+          //   // }
+          //   else {
+          //     waitForRestart = false
+          //   }
+          // }, 1000 * 15);
         }
 
         out()
