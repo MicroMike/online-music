@@ -367,7 +367,7 @@ io.on('connection', client => {
             s.emit('outReset')
           })
 
-          setTimeout(() => {
+          setTimeout(async () => {
             waitForRestart = false
             await getAccounts()
           }, 1000 * 60);
