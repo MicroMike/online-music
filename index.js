@@ -41,10 +41,12 @@ let errs = []
 let playerCount
 
 actions('gain', body => {
-  const r = body
-  plays = r.plays
-  nexts = r.nexts
-  time = r.time
+  const r = body.g
+  if (!body.new) {
+    plays = r.plays
+    nexts = r.nexts
+    time = r.time
+  }
 })
 
 const getAccounts = async () => {
@@ -65,7 +67,13 @@ setInterval(async () => {
   gain = plays * 0.004 / ++time
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
-  actions('gain?' + plays + '/' + nexts + '/' + time)
+  actions('gain?' + plays + '/' + nexts + '/' + time, body => {
+    if (body.new) {
+      plays = 0
+      nexts = 0
+      time = 0
+    }
+  })
   // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
   await getAccounts()
 }, 1000 * 60)

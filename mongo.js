@@ -97,13 +97,13 @@ module.exports = {
 
             if (!Rg) {
               const r = new MGain({ plays: 0, nexts: 0, time: 0, month })
-              r.save((err, g) => callback && callback(g))
+              r.save((err, g) => callback && callback({ new: true, g }))
             }
             else {
               Rg.plays = Number(p[0])
               Rg.nexts = Number(p[1])
               Rg.time = Number(p[2])
-              Rg.save((err, g) => callback && callback(g))
+              Rg.save((err, g) => callback && callback({ g }))
             }
           })
         }
@@ -113,10 +113,10 @@ module.exports = {
 
             if (!Rg) {
               const r = new MGain({ plays: 0, nexts: 0, time: 0, month })
-              r.save((err, g) => callback && callback(g))
+              r.save((err, g) => callback && callback({ new: true, g }))
             }
             else {
-              callback && callback(Rg)
+              callback && callback({ g: Rg })
             }
           })
         }
