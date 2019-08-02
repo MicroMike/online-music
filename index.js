@@ -79,7 +79,7 @@ const rand = (max, min) => {
 let aCount = 0
 const getAccount = env => {
   return new Promise(r => {
-    setTimeout(async () => {
+    setTimeout(() => {
       let Taccounts = accounts
       Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
       Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
