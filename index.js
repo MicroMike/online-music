@@ -77,7 +77,7 @@ const rand = (max, min) => {
 (async () => await getAccounts())()
 
 let aCount = 0
-const getAccount = env => {
+const getAccount = async env => {
   return new Promise(r => {
     setTimeout(() => {
       let Taccounts = accounts
@@ -191,7 +191,7 @@ io.on('connection', client => {
       checkAccounts = await getCheckAccounts()
     }
 
-    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : account || getAccount(env)
+    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : account || await getAccount(env)
 
     if (!runnerAccount) {
       client.emit('forceOut')
