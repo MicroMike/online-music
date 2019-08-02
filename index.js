@@ -17,8 +17,6 @@ mongoose.connect(process.env.MONGODB_URI, (error) => {
   }
 });
 
-let restart = false
-let start = true
 setTimeout(() => {
   start = false
 }, 1000 * 60);
@@ -78,20 +76,27 @@ const rand = (max, min) => {
 
 (async () => await getAccounts())()
 
+let aCount = 0
 const getAccount = env => {
-  let Taccounts = accounts
-  Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-  Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+  return new Promise(r => {
+    setTimeout(() => {
+      let Taccounts = accounts
+      Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+      Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
-  if (env.TYPE) {
-    const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
-    return typeAccounts[0]
-  }
+      if (env.TYPE) {
+        const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+        return typeAccounts[0]
+      }
 
-  const index = env.RAND ? rand(Taccounts.length) : 0
-  const account = Taccounts[index]
-  accounts = Taccounts.filter(a => a !== account)
-  return account
+      const index = env.RAND ? rand(Taccounts.length) : 0
+      const account = Taccounts[index]
+      accounts = Taccounts.filter(a => a !== account)
+
+      aCount--
+      r(account)
+    }, 500 * (++aCount));
+  })
 }
 
 let displayLength = (log) => {
@@ -120,7 +125,6 @@ const getAllData = () => ({
   webs: Object.values(webs).length,
   checkLeft: checkAccounts && checkAccounts.length,
   nopeStreams: Object.values(streams).filter(s => s.parentId < resetTime).length,
-  restart: restart || start,
   ...playerCount,
   plays: plays * 0.004 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24).split('.')[0] + '€/jour ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
@@ -344,15 +348,9 @@ io.on('connection', client => {
         Object.values(streams).forEach(s => s.parentId === cid ? s.emit('forceOut') : false)
       }
       if (!cid) {
-        restart = true
         checking = false
         waitForRestart = true
         resetTime = Date.now()
-
-        setTimeout(async () => {
-          restart = false
-          await getAccounts()
-        }, 1000 * 60);
 
         tempC = Object.values(clients)
 
@@ -371,6 +369,7 @@ io.on('connection', client => {
 
           setTimeout(() => {
             waitForRestart = false
+            await getAccounts()
           }, 1000 * 60);
 
           // setTimeout(() => {
