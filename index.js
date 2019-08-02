@@ -95,7 +95,7 @@ const getAccount = async env => {
 
       aCount--
       r(account)
-    }, 500 * (++aCount));
+    }, 1000 * (++aCount));
   })
 }
 
