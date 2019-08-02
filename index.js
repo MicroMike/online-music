@@ -62,7 +62,7 @@ let gain = 0
 let gain2 = 0
 let tempPlays = plays
 setInterval(async () => {
-  gain = plays * 0.004 / ++timeed
+  gain = plays * 0.004 / ++time
   gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
   actions('gain?' + plays + '/' + nexts + '/' + time)
