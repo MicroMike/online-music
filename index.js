@@ -148,7 +148,6 @@ io.on('connection', client => {
       setTimeout(() => {
         Object.values(webs).forEach(w => {
           w.emit('clean')
-          w.emit('clearErrs')
         })
         waitBeforeActivate()
       }, 1000 * 5);
