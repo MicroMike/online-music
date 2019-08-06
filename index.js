@@ -220,7 +220,7 @@ io.on('connection', client => {
     })
 
     client.on('outLog', e => {
-      const err = client.parentId + ' ' + e.split(' ')[0]
+      const err = client.parentId + ' ' + e
       errs.push(err)
     })
 
