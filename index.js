@@ -178,6 +178,8 @@ io.on('connection', client => {
       plays++
     }
 
+    client.countPlays = client.countPlays + 1
+
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
       if (body.new) {
@@ -208,6 +210,7 @@ io.on('connection', client => {
     client.time = time
     client.account = runnerAccount
     client.uniqId = id
+    client.countPlays = 0
     streams[id] = client
 
     // accounts = accounts.filter(a => a !== account)
@@ -233,7 +236,10 @@ io.on('connection', client => {
       resetTime && client.time < resetTime && client.emit('forceOut')
 
       if (streams[datas.streamId]) {
-        streams[datas.streamId].infos = datas
+        streams[datas.streamId].infos = {
+          ...datas,
+          countPlays: client.countPlays
+        }
       }
 
       Object.values(webs).forEach(w => {
