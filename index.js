@@ -173,22 +173,6 @@ io.on('connection', client => {
   })
 
   client.on('plays', ({ next, currentAlbum, streamId }) => {
-    if (next) { nexts++ }
-    else {
-      plays++
-    }
-
-    client.count++
-
-    actions('listen?' + currentAlbum)
-    actions('gain?' + plays + '/' + nexts + '/' + time, body => {
-      if (body.new) {
-        plays = 0
-        nexts = 0
-        time = 0
-      }
-    })
-
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
@@ -236,11 +220,26 @@ io.on('connection', client => {
       resetTime && client.time < resetTime && client.emit('forceOut')
 
       if (streams[datas.streamId]) {
-        streams[datas.streamId].infos = { ...datas, count: client.count }
+        streams[datas.streamId].infos = datas
       }
+
+      if (datas.countPlays) {
+        if (datas.next) { nexts++ }
+        else { plays++ }
+      }
+
+      actions('listen?' + currentAlbum)
+      actions('gain?' + plays + '/' + nexts + '/' + time, body => {
+        if (body.new) {
+          plays = 0
+          nexts = 0
+          time = 0
+        }
+      })
 
       Object.values(webs).forEach(w => {
         // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
+        w.emit('allData', getAllData())
         w.emit('playerInfos', Object.values(streams).map(s => s.infos))
       })
     })
