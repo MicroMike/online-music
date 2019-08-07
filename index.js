@@ -65,18 +65,11 @@ let gain2 = 0
 let tempPlays = plays
 setInterval(async () => {
   gain = plays * 0.004 / ++time
-  gain2 = (plays - tempPlays) * 0.004
+  gain2 = (plays - tempPlays) * 0.004 / 2
   tempPlays = plays
-  actions('gain?' + plays + '/' + nexts + '/' + time, body => {
-    if (body.new) {
-      plays = 0
-      nexts = 0
-      time = 0
-    }
-  })
   // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
   await getAccounts()
-}, 1000 * 60)
+}, 1000 * 60 * 2)
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
@@ -186,7 +179,13 @@ io.on('connection', client => {
     }
 
     actions('listen?' + currentAlbum)
-    actions('gain?' + plays + '/' + nexts + '/' + time)
+    actions('gain?' + plays + '/' + nexts + '/' + time, body => {
+      if (body.new) {
+        plays = 0
+        nexts = 0
+        time = 0
+      }
+    })
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
