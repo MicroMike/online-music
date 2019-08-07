@@ -10,8 +10,8 @@
       display: flex;
     }
 
-    #errs > span,
-    #servers > span {
+    #errs>span,
+    #servers>span {
       flex: 0;
       border-right: 1px solid black;
       padding: 5px;
@@ -169,7 +169,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, streamId, freeze, other, out, ok, nope, warn } = p
+      let { account, time, streamId, freeze, other, out, ok, nope, warn, count } = p
       time = time || 0
 
       // const isDomF = document.querySelector('.freezedPlayers #players-' + streamId)
@@ -177,7 +177,7 @@
       // const isOthers = document.querySelector('.others #players-' + streamId)
       // const isNope = document.querySelector('body > #players-' + streamId)
 
-      const insideHtml = `<div style="width:${time}%;"></div><span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span><button onClick="screenshot('${streamId}')"></button>`
+      const insideHtml = `<div style="width:${time}%;"></div><span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span> (${count}) <button onClick="screenshot('${streamId}')"></button>`
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
       // !ok && isDomOk && isDomOk.remove()
@@ -205,8 +205,8 @@
       nope && document.querySelector('body').insertAdjacentHTML('afterBegin', html)
       // }
 
-      const count = document.querySelectorAll('[id^=players-]').length
-      document.querySelector('#count').innerText = count
+      const countNb = document.querySelectorAll('[id^=players-]').length
+      document.querySelector('#count').innerText = countNb
     }
 
     socket.on('playerInfos', streams => {
