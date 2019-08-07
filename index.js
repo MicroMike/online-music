@@ -228,7 +228,7 @@ io.on('connection', client => {
         else { plays++ }
       }
 
-      actions('listen?' + currentAlbum)
+      actions('listen?' + datas.currentAlbum)
       actions('gain?' + plays + '/' + nexts + '/' + time, body => {
         if (body.new) {
           plays = 0
