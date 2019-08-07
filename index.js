@@ -180,15 +180,17 @@ io.on('connection', client => {
 
     client.count++
 
-    streams[streamId].infos = {
-      ...streams[streamId].infos,
-      count: client.count
-    }
+    if (streams[streamId]) {
+      streams[streamId].infos = {
+        ...streams[streamId].infos,
+        count: client.count
+      }
 
-    Object.values(webs).forEach(w => {
-      // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    })
+      Object.values(webs).forEach(w => {
+        // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
+        w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+      })
+    }
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
