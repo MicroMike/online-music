@@ -148,7 +148,9 @@ io.on('connection', client => {
       }, 1000 * 5);
     }
     else {
-      client.emit('activate', client.id)
+      setTimeout(() => {
+        client.emit('activate', { id: client.id, time: Date.now() })
+      }, rand(1000 * 60 * 5));
     }
   }
 
@@ -201,6 +203,8 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
+    resetTime && time < resetTime && client.emit('timeout')
+
     if (env.CHECK && env.FIRST) {
       checkAccounts = await getCheckAccounts()
     }
@@ -239,7 +243,7 @@ io.on('connection', client => {
     // })
 
     client.on('playerInfos', datas => {
-      resetTime && client.time < resetTime && client.emit('forceOut')
+      resetTime && client.time < resetTime && client.emit('timeout')
 
       if (streams[datas.streamId]) {
         streams[datas.streamId].infos = {
