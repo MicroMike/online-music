@@ -130,7 +130,7 @@ module.exports = {
     const url = req.url.split('?')[0]
     const params = req.url.split('?')[1]
 
-    if (!/chrome|napster/.test(url)) {
+    if (/chrome|napster/.test(url)) {
       res.setHeader('Content-Type', 'application/json');
     }
 
