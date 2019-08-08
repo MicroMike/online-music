@@ -142,6 +142,8 @@ io.on('connection', client => {
         Object.values(webs).forEach(w => {
           w.emit('clean')
         })
+        imgs = {}
+        errs = []
         waitBeforeActivate()
       }, 1000 * 5);
     }
