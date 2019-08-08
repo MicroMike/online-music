@@ -181,7 +181,9 @@ io.on('connection', client => {
     }
 
     client.countPlays = client.countPlays + 1
-    client.infos.countPlays = client.countPlays
+    if (client.infos) {
+      client.infos.countPlays = client.countPlays
+    }
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
