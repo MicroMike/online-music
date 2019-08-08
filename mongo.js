@@ -129,7 +129,7 @@ module.exports = {
   handler: (req, res) => {
     const url = req.url.split('?')[0]
     const params = req.url.split('?')[1]
-
+console.log(url)
     if (url === '/') {
       res.setHeader('Content-Type', 'application/json');
     }
