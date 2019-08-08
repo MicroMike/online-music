@@ -181,6 +181,7 @@ io.on('connection', client => {
     }
 
     client.countPlays = client.countPlays + 1
+    client.infos.countPlays = client.countPlays
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
@@ -193,6 +194,7 @@ io.on('connection', client => {
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
     })
   })
 
