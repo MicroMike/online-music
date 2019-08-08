@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+  <script src="https://github.com/Napster/napster.js/blob/master/napster.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const params = new URLSearchParams(location.search)
+      const access_token = params.get('access_token')
+      const refresh_token = params.get('refresh_token')
+
+      Napster.init({
+        consumerKey: 'MDAzNTM2MTItZmE1Mi00ZjlhLTkyMzQtNGRiY2UyZTgxYjFi', // application key of your application
+        isHTML5Compatible: true, // (boolean) true if browser supports HTML5 player
+        player: 'root',
+      })
+
+      Napster.member.set({
+        accessToken,
+        refreshToken,
+      })
+
+      Napster.player.on('ready', function (e) {
+        Napster.player.auth();
+      })
+    })
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+</html>
