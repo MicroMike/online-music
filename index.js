@@ -362,7 +362,7 @@ io.on('connection', client => {
       if (!cid) {
         checking = false
         waitForRestart = true
-        resetTime = Date.now()
+        resetTime = Math.floor(Date.now() / 1000) + 60
 
         tempC = Object.values(clients)
 
