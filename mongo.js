@@ -202,6 +202,15 @@ module.exports = {
         })
       }
 
+      case '/uncheck': {
+        MAccount.find({ check: true }, (err, Ra) => {
+          Ra.forEach(r => {
+            r.check = false
+            r.save()
+          })
+        })
+      }
+
       case '/chrome': {
         fs.readFile(__dirname + '/chrome.html',
           function (err, data) {
