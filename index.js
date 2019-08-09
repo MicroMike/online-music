@@ -173,10 +173,8 @@ io.on('connection', client => {
   })
 
   client.on('plays', ({ next, currentAlbum }) => {
+    plays++
     if (next) { nexts++ }
-    else {
-      plays++
-    }
 
     client.countPlays = client.countPlays + 1
 
