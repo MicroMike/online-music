@@ -65,11 +65,11 @@ let gain2 = 0
 let tempPlays = plays
 setInterval(async () => {
   gain = plays * 0.004 / ++time
-  gain2 = (plays - tempPlays) * 0.004 / 2
+  gain2 = (plays - tempPlays) * 0.004
   tempPlays = plays
   // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
   await getAccounts()
-}, 1000 * 60 * 2)
+}, 1000 * 60)
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
