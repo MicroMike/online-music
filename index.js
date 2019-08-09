@@ -182,7 +182,6 @@ io.on('connection', client => {
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
-      console.log(body)
       if (body.new) {
         plays = 0
         nexts = 0
