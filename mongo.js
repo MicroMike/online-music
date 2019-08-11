@@ -26,7 +26,7 @@ const MSong = mongoose.model('Song', SSong, 'songs');
 
 const getCheckAccounts = async (callback) => {
   return new Promise(res => {
-    MAccount.find({ check: true }, function (err, Ra) {
+    MAccount.find({ check: true, del: false }, function (err, Ra) {
       if (err) return console.error(err);
       const Taccounts = Ra.map(a => a.account)
       callback ? callback(Taccounts) : res(Taccounts)
