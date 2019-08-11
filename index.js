@@ -351,7 +351,7 @@ io.on('connection', client => {
       if (!cid) {
         resetTime = Date.now()
         imgs = {}
-        errs = {}
+        errs = []
       }
     })
 
