@@ -353,6 +353,11 @@ io.on('connection', client => {
       locks[id] && locks[id].emit('runScript', scriptText)
     })
 
+    client.on('runCode', ({ id, scriptText }) => {
+      streams[id] && streams[id].emit('runCode', scriptText)
+      locks[id] && locks[id].emit('runCode', scriptText)
+    })
+
     client.on('restart', async cid => {
       if (cid) {
         Object.values(streams).forEach(s => s.parentId === cid ? s.emit('forceOut') : false)

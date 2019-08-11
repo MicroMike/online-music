@@ -138,6 +138,11 @@
       socket.emit('runScript', { id: btn.className, scriptText })
     }
 
+    const runCode = btn => {
+      const scriptText = document.querySelector('#script' + btn.className).value
+      socket.emit('runCode', { id: btn.className, scriptText })
+    }
+
     socket.on('clearStream', (delList) => {
       document.querySelector('#del').innerHTML = delList
     })
@@ -156,6 +161,7 @@
             <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
             <textarea id="script${streamId}"></textarea>
             <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">Run script</button>
+            <button id="btnCode${streamId}" class="${streamId}" onclick="runCode(this)">code</button>
           </div>`
         : `<div>
             <h2>${log} :</h2>
