@@ -135,23 +135,7 @@ const getAllData = () => ({
 })
 
 io.on('connection', client => {
-
-  const waitBeforeActivate = () => {
-    if (waitForRestart) {
-      setTimeout(() => {
-        Object.values(webs).forEach(w => {
-          w.emit('clean')
-        })
-        waitBeforeActivate()
-      }, 1000 * 5);
-    }
-    else {
-      client.emit('activate', client.id)
-    }
-  }
-
-  waitBeforeActivate()
-  // client.emit('activate', client.id)
+  client.emit('activate', client.id)
 
   client.on('lockScreen', data => {
     client.uniqId = data.streamId
@@ -193,6 +177,8 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
+    resetTime && time < resetTime && client.emit('forceOut')
+
     if (env.CHECK && env.FIRST) {
       checkAccounts = await getCheckAccounts()
     }
@@ -363,53 +349,9 @@ io.on('connection', client => {
         Object.values(streams).forEach(s => s.parentId === cid ? s.emit('forceOut') : false)
       }
       if (!cid) {
-        checking = false
-        waitForRestart = true
         resetTime = Date.now()
-
-        tempC = Object.values(clients)
-
-        const out = () => {
-          Object.values(clients).forEach(c => {
-            clearTimeout(c.playTimeout)
-          })
-
-          Object.values(webs).forEach(w => {
-            w.emit('clean')
-          })
-
-          Object.values(streams).forEach(s => {
-            s.emit('outReset')
-          })
-
-          setTimeout(async () => {
-            waitForRestart = false
-            await getAccounts()
-          }, 1000 * 60);
-
-          // setTimeout(() => {
-          //   // console.log('clients', Object.values(clients).length)
-          //   console.log('streams', Object.values(streams).length)
-
-          //   if (Object.values(streams).length) {
-          //     Object.values(streams).forEach(s => {
-          //       s.emit('outReset')
-          //     })
-          //     out()
-          //   }
-          //   // else if (Object.values(clients).length) {
-          //   //   Object.values(clients).forEach(c => {
-          //   //     c.emit('restart')
-          //   //   })
-          //   //   out()
-          //   // }
-          //   else {
-          //     waitForRestart = false
-          //   }
-          // }, 1000 * 15);
-        }
-
-        out()
+        imgs = {}
+        errs = {}
       }
     })
 
