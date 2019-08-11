@@ -200,7 +200,7 @@
         document.querySelector(`scriptCode${streamId}`) && document.querySelector(`scriptCode${streamId}`).remove()
       }
 
-      !isCode && document.querySelector('codes').insertAdjacentHTML('beforeEnd', inputCode)
+      !isCode && document.querySelector('.codes').insertAdjacentHTML('beforeEnd', inputCode)
 
       const countNb = document.querySelectorAll('[id^=players-]').length
       document.querySelector('#count').innerText = countNb
