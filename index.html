@@ -92,6 +92,7 @@
       document.querySelector('.players').innerHTML = ''
       document.querySelector('.freezedPlayers').innerHTML = ''
       document.querySelector('.others').innerHTML = ''
+      document.querySelector('.codes').innerHTML = ''
     })
 
     socket.on('allData', data => {
@@ -194,7 +195,6 @@
       ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
       other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
       freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
-      nope && document.querySelector('body').insertAdjacentHTML('afterBegin', html)
 
       if (ok || other || freeze || nope) {
         document.querySelector(`scriptCode${streamId}`) && document.querySelector(`scriptCode${streamId}`).remove()
