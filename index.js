@@ -177,7 +177,7 @@ io.on('connection', client => {
   })
 
   client.on('runner', async ({ clientId, time, account, id, env }) => {
-    resetTime && time < resetTime && client.emit('forceOut')
+    !check && resetTime && time < resetTime && client.emit('forceOut')
 
     if (env.CHECK && env.FIRST) {
       checkAccounts = await getCheckAccounts()
