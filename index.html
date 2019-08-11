@@ -177,7 +177,7 @@
       let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays, code } = p
       time = time || 0
 
-      const isCode = document.querySelector(`.codes scriptCode${streamId}`)
+      const isCode = document.querySelector(`.codes #scriptCode${streamId}`)
 
       const inputCode = `<div>${account}
         <textarea id="scriptCode${streamId}"></textarea>
