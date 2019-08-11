@@ -188,7 +188,7 @@
       const insideHtml = `
       <div style="width:${time}%;"></div>
       <span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span> (${countPlays || ''})
-      <button onClick="screenshot('${streamId}')"></button>
+      <button onClick="screenshot('${streamId}')">V</button>
       `
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
