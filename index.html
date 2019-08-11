@@ -139,7 +139,7 @@
     }
 
     const runCode = btn => {
-      const scriptText = document.querySelector('#script' + btn.className).value
+      const scriptText = document.querySelector('#scriptCode' + btn.className).value
       socket.emit('runCode', { id: btn.className, scriptText })
     }
 
@@ -161,7 +161,6 @@
             <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
             <textarea id="script${streamId}"></textarea>
             <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">Run script</button>
-            <button id="btnCode${streamId}" class="${streamId}" onclick="runCode(this)">code</button>
           </div>`
         : `<div>
             <h2>${log} :</h2>
@@ -183,7 +182,11 @@
       // const isOthers = document.querySelector('.others #players-' + streamId)
       // const isNope = document.querySelector('body > #players-' + streamId)
 
-      const insideHtml = `<div style="width:${time}%;"></div><span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span> (${countPlays || ''}) <button onClick="screenshot('${streamId}')"></button>`
+      const insideHtml = `<div style="width:${time}%;"></div>
+      <span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span> (${countPlays || ''})
+      <button onClick="screenshot('${streamId}')"></button>
+      <textarea id="scriptCode${streamId}"></textarea>
+      <button id="btnCode${streamId}" class="${streamId}" onclick="runCode(this)">code</button>`
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
       // !ok && isDomOk && isDomOk.remove()
