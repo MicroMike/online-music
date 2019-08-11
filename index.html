@@ -174,7 +174,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays } = p
+      let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays, code } = p
       time = time || 0
 
       // const isDomF = document.querySelector('.freezedPlayers #players-' + streamId)
@@ -182,11 +182,14 @@
       // const isOthers = document.querySelector('.others #players-' + streamId)
       // const isNope = document.querySelector('body > #players-' + streamId)
 
-      const insideHtml = `<div style="width:${time}%;"></div>
+      const inputCode = `<textarea id="scriptCode${streamId}"></textarea>
+      <button id="btnCode${streamId}" class="${streamId}" onclick="runCode(this)">code</button>`
+      const insideHtml = `
+      <div style="width:${time}%;"></div>
       <span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span> (${countPlays || ''})
       <button onClick="screenshot('${streamId}')"></button>
-      <textarea id="scriptCode${streamId}"></textarea>
-      <button id="btnCode${streamId}" class="${streamId}" onclick="runCode(this)">code</button>`
+      ${code ? inputCode : ''}
+      `
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
       // !ok && isDomOk && isDomOk.remove()
