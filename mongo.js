@@ -184,6 +184,12 @@ module.exports = {
         })
         break
 
+      case '/clear':
+        MAccount.deleteMany({ del: true }, (err, Ra) => {
+          res.end(JSON.stringify(Ra))
+        })
+        break
+
       case '/pause': {
         MAccount.find({ "account": { "$regex": "^" + params, "$options": "i" } }, (err, Ra) => {
           Ra.forEach(r => {
