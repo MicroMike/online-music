@@ -202,7 +202,7 @@
 
       code && !isCode && document.querySelector('.codes').insertAdjacentHTML('beforeEnd', inputCode)
 
-      for (let className of ['.players', '.freezedPlayers', '.others']) {
+      for (let className of ['#players', '#freezedPlayers', '#others']) {
         const countNb = document.querySelectorAll(className + ' [id^=players-]').length
         document.querySelector(className + ' .count').innerText = countNb
       }
@@ -229,15 +229,15 @@
   <div id="del"></div>
   <div class="count"></div>
   <div style="display: flex;">
-    <div>
+    <div id="players">
       <div class="count"></div>
       <div class="players"></div>
     </div>
-    <div>
+    <div id="freezedPlayers">
       <div class="count"></div>
       <div class="freezedPlayers"></div>
     </div>
-    <div>
+    <div id="others">
       <div class="count"></div>
       <div class="others"></div>
     </div>
