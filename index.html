@@ -202,8 +202,10 @@
 
       code && !isCode && document.querySelector('.codes').insertAdjacentHTML('beforeEnd', inputCode)
 
-      const countNb = document.querySelectorAll('[id^=players-]').length
-      document.querySelector('#count').innerText = countNb
+      for (let className of ['.players', '.freezedPlayers', '.others']) {
+        const countNb = document.querySelectorAll(className + ' [id^=players-]').length
+        document.querySelector(className + ' .count').innerText = countNb
+      }
     }
 
     socket.on('playerInfos', streams => {
@@ -225,12 +227,23 @@
   <button onClick="getData()">GET DATA</button>
   <button onClick="updateAccounts()">UPDATE ACCOUNTS</button>
   <div id="del"></div>
-  <div id="count"></div>
+  <div class="count"></div>
   <div style="display: flex;">
-    <div class="players"></div>
-    <div class="freezedPlayers"></div>
-    <div class="others"></div>
-    <div class="codes"></div>
+    <div>
+      <div class="count"></div>
+      <div class="players"></div>
+    </div>
+    <div>
+      <div class="count"></div>
+      <div class="freezedPlayers"></div>
+    </div>
+    <div>
+      <div class="count"></div>
+      <div class="others"></div>
+    </div>
+    <div>
+      <div class="codes"></div>
+    </div>
   </div>
   <div class="screenshot"></div>
 </body>
