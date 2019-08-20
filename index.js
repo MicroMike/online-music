@@ -346,7 +346,14 @@ io.on('connection', client => {
 
     client.on('restart', async cid => {
       if (cid) {
-        Object.values(streams).forEach(s => s.parentId === cid ? s.emit('forceOut') : false)
+        Object.values(streams).forEach(s => {
+          if (s.connected) {
+            s.parentId === cid ? s.emit('forceOut') : false
+          }
+          else {
+            delete streams[s.uniqId]
+          }
+        })
       }
       if (!cid) {
         resetTime = Date.now()
