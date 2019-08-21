@@ -194,7 +194,7 @@ io.on('connection', client => {
       checkAccounts = await getCheckAccounts()
     }
 
-    const runnerAccount = account || (env.CHECK ? checkAccounts && checkAccounts.shift() : account || await getAccount(env))
+    const runnerAccount = account || (env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env))
 
     if (!runnerAccount) {
       client.emit('forceOut')
