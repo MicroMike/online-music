@@ -70,18 +70,19 @@ setInterval(async () => {
   await getAccounts()
 }, 1000 * 60)
 
+const timer = 3
 setInterval(async () => {
   const calcul = plays - tempCalc
   tempCalc = plays
   const minutes = 2
 
-  if (tempPlays.length === 6 * minutes) {
+  if (tempPlays.length === 60 / timer * minutes) {
     tempPlays.shift()
   }
   tempPlays.push(calcul)
 
   gain2 = tempPlays.reduce((a, b) => a + b, 0) * 0.004 * 0.9 / minutes
-}, 1000 * 10)
+}, 1000 * timer)
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
