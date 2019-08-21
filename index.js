@@ -70,7 +70,7 @@ setInterval(async () => {
   await getAccounts()
 }, 1000 * 60)
 
-const timer = 3
+const timer = 5
 setInterval(async () => {
   const calcul = plays - tempCalc
   tempCalc = plays
