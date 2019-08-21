@@ -66,19 +66,21 @@ let tempPlays = []
 let tempCalc = plays
 
 setInterval(async () => {
-  gain = plays * 0.004 / ++time
+  gain = plays * 0.004 * 0.9 / ++time
+  await getAccounts()
+}, 1000 * 60)
 
+setInterval(async () => {
   const calcul = plays - tempCalc
   tempCalc = plays
-  
-  if (tempPlays.length === 5) {
+
+  if (tempPlays.length === 6) {
     tempPlays.shift()
   }
   tempPlays.push(calcul)
 
-  gain2 = tempPlays && tempPlays.reduce((a, b) => a + b, 0) / tempPlays.length * 0.004
-  await getAccounts()
-}, 1000 * 60)
+  gain2 = tempPlays.reduce((a, b) => a + b, 0) / tempPlays.length * 0.004 * 0.9
+}, 1000 * 10)
 
 const rand = (max, min) => {
   return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
