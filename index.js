@@ -79,7 +79,7 @@ setInterval(async () => {
   }
   tempPlays.push(calcul)
 
-  gain2 = tempPlays.reduce((a, b) => a + b, 0) / tempPlays.length * 0.004 * 0.9
+  gain2 = tempPlays.reduce((a, b) => a + b, 0) * 0.004 * 0.9
 }, 1000 * 10)
 
 const rand = (max, min) => {
