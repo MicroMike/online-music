@@ -74,7 +74,7 @@ setInterval(async () => {
   const calcul = plays - tempCalc
   tempCalc = plays
 
-  if (tempPlays.length === 6) {
+  if (tempPlays.length === 12) {
     tempPlays.shift()
   }
   tempPlays.push(calcul)
