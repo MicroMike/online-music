@@ -194,7 +194,7 @@ io.on('connection', client => {
       checkAccounts = await getCheckAccounts()
     }
 
-    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : account || await getAccount(env)
+    const runnerAccount = account || (env.CHECK ? checkAccounts && checkAccounts.shift() : account || await getAccount(env))
 
     if (!runnerAccount) {
       client.emit('forceOut')
@@ -286,7 +286,8 @@ io.on('connection', client => {
       });
     })
 
-    !account && client.emit('streams', runnerAccount)
+    if (account) { client.emit('resume') }
+    else { client.emit('streams', runnerAccount) }
   })
 
   client.on('disconnect', () => {
