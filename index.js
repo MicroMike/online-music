@@ -62,12 +62,21 @@ const getAccounts = async () => {
 
 let gain = 0
 let gain2 = 0
-let tempPlays = plays
+let tempPlays = []
+let tempCalc = plays
+
 setInterval(async () => {
   gain = plays * 0.004 / ++time
-  gain2 = (plays - tempPlays) * 0.004
-  tempPlays = plays
-  // Object.values(streams).forEach(s => s.infos && s.infos.time === 'WAIT_PAGE' ? s.emit('forceOut') : false)
+
+  const calcul = plays - tempCalc
+  tempCalc = plays
+  
+  if (tempPlays.length === 5) {
+    tempPlays.shift()
+  }
+  tempPlays.push(calcul)
+
+  gain2 = tempPlays && tempPlays.reduce((a, b) => a + b, 0) / tempPlays.length * 0.004
   await getAccounts()
 }, 1000 * 60)
 
