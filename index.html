@@ -193,7 +193,7 @@
       <div style="width:${time}%;"></div>
       <span style="color:${(warn && 'orange') || (freeze && 'red')};">${parentId} - ${account} : ${time}</span> (${countPlays || ''})
       <button onClick="screenshot('${streamId}')">V</button>
-      <button onClick="kill('${streamId}')">V</button>
+      <button onClick="kill('${streamId}')">K</button>
       `
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
