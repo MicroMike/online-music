@@ -235,6 +235,7 @@ io.on('connection', client => {
       if (streams[datas.streamId]) {
         streams[datas.streamId].infos = {
           ...datas,
+          parentId: client.parentId,
           countPlays: client.countPlays
         }
       }
@@ -373,6 +374,14 @@ io.on('connection', client => {
         resetTime = Date.now()
         imgs = {}
         errs = []
+      }
+    })
+
+    client.on('kill', async cid => {
+      const s = streams[cid]
+      if (s) {
+        if (s.connected) { s.emit('forceOut') }
+        else { delete streams[s.uniqId] }
       }
     })
 

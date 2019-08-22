@@ -61,6 +61,10 @@
       socket.emit('restart', id)
     }
 
+    const kill = (id = null) => {
+      socket.emit('kill', id)
+    }
+
     const stop = (id = null) => {
       socket.emit('stop', id)
     }
@@ -175,7 +179,7 @@
     })
 
     const displayPlays = (p) => {
-      let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays, code } = p
+      let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays, code, parentId } = p
       time = time || 0
 
       const isCode = document.querySelector(`.codes #scriptCode${streamId}`)
@@ -187,8 +191,9 @@
 
       const insideHtml = `
       <div style="width:${time}%;"></div>
-      <span style="color:${(warn && 'orange') || (freeze && 'red')};">${account} : ${time}</span> (${countPlays || ''})
+      <span style="color:${(warn && 'orange') || (freeze && 'red')};">${parentId} - ${account} : ${time}</span> (${countPlays || ''})
       <button onClick="screenshot('${streamId}')">V</button>
+      <button onClick="kill('${streamId}')">V</button>
       `
       const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
