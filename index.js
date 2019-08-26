@@ -293,7 +293,7 @@ io.on('connection', client => {
     else {
       setTimeout(() => {
         if (client.connected) { client.emit('streams', runnerAccount) }
-      }, env.CHECK || !env.WAIT ? 0 : rand(1000 * 60 * 5));
+      }, env.CHECK || !env.WAIT ? 0 : rand(1000 * 60 * 10));
     }
   })
 
