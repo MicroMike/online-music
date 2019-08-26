@@ -290,7 +290,11 @@ io.on('connection', client => {
     })
 
     if (account) { client.emit('resume') }
-    else { client.emit('streams', runnerAccount) }
+    else {
+      setTimeout(() => {
+        if (client.connected) { client.emit('streams', runnerAccount) }
+      }, env.CHECK || !env.WAIT ? 0 : rand(1000 * 60 * 5));
+    }
   })
 
   client.on('disconnect', () => {
