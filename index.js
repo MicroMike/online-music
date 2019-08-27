@@ -171,7 +171,7 @@ io.on('connection', client => {
     loopInter = setInterval(() => {
       const running = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
       if (!running) { client.emit('run') }
-      else { console.log(running) }
+      else { console.log(id, running) }
     }, 1000 * 10)
   })
 
