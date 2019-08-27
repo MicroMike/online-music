@@ -388,7 +388,7 @@ io.on('connection', client => {
           })
 
           if (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
-            setTimeout(() => {
+            setTimeout(async () => {
               await clean()
             }, 1000 * 5);
           }
