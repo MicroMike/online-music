@@ -291,7 +291,7 @@ io.on('connection', client => {
 
     if (account) { client.emit('resume') }
     else {
-      setTimeout(() => {
+      client.timeout = setTimeout(() => {
         if (client.connected) { client.emit('streams', runnerAccount) }
       }, env.CHECK || !env.WAIT ? 0 : rand(1000 * 60 * 10));
     }
@@ -306,6 +306,7 @@ io.on('connection', client => {
     // delete imgs[client.uniqId]
 
     client.removeAllListeners()
+    client.timeout && clearTimeout(client.timeout)
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
