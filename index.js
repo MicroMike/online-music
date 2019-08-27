@@ -381,7 +381,10 @@ io.on('connection', client => {
 
         while (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
           Object.values(streams).forEach(s => {
-            if (s.time < resetTime) { s.emit('forceOut') }
+            if (s.time < resetTime) {
+              if (s.connected) { s.emit('forceOut') }
+              else { delete streams[s.uniqId] }
+            }
           })
         }
       }
