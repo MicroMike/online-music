@@ -320,7 +320,6 @@ io.on('connection', client => {
 
     client.removeAllListeners()
     client.timeout && clearTimeout(client.timeout)
-    clearInterval(loopInter)
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
