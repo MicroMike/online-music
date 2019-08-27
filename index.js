@@ -371,6 +371,7 @@ io.on('connection', client => {
             s.parentId === cid ? s.emit('forceOut') : false
           }
           else {
+            client.timeout && clearTimeout(client.timeout)
             delete streams[s.uniqId]
           }
         })
@@ -385,7 +386,10 @@ io.on('connection', client => {
             console.log(s.time, resetTime)
             if (s.time < resetTime) {
               if (s.connected) { s.emit('forceOut') }
-              else { delete streams[s.uniqId] }
+              else {
+                client.timeout && clearTimeout(client.timeout)
+                delete streams[s.uniqId]
+              }
             }
           })
 
