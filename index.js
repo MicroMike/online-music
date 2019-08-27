@@ -378,6 +378,12 @@ io.on('connection', client => {
         resetTime = Date.now()
         imgs = {}
         errs = []
+
+        while (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
+          Object.values(streams).forEach(s => {
+            if (s.time < resetTime) { s.emit('forceOut') }
+          })
+        }
       }
     })
 
