@@ -381,13 +381,13 @@ io.on('connection', client => {
 
         const clean = async () => {
           Object.values(streams).forEach(s => {
+            console.log(s.time, resetTime)
             if (s.time < resetTime) {
               if (s.connected) { s.emit('forceOut') }
               else { delete streams[s.uniqId] }
             }
           })
 
-          console.log(s.time, resetTime)
 
           if (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
             setTimeout(async () => {
