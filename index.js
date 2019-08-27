@@ -32,7 +32,6 @@ let resetTime = 0
 
 let imgs = {}
 let clients = {}
-let parents = {}
 let streams = {}
 let locks = {}
 let webs = {}
@@ -166,7 +165,6 @@ io.on('connection', client => {
 
   client.on('parent', ({ connected, id }) => {
     if (!connected) {
-      parents[id] = client
       client.emit('run')
     }
 
@@ -245,11 +243,6 @@ io.on('connection', client => {
 
     client.on('playerInfos', datas => {
       resetTime && client.time < resetTime && client.emit('forceOut')
-
-      // if (datas.time === 'CONNECT') {
-      //   try { parents[client.parentId].emit('run') }
-      //   catch (e) { }
-      // }
 
       if (streams[datas.streamId]) {
         streams[datas.streamId].infos = {
