@@ -40,6 +40,7 @@ let checkClient
 let used = {}
 let errs = []
 let playerCount
+let loopInter
 
 actions('gain', body => {
   const r = body.g
@@ -169,8 +170,8 @@ io.on('connection', client => {
       client.emit('run')
     }
 
-    setInterval(() => {
-      const running = Object.values(streams).filter(s => s.infos && s.infos.time.match(/RUN|WAIT_PAGE/))
+    loopInter = setInterval(() => {
+      const running = Object.values(streams).filter(s => s.infos && s.infos.time && s.infos.time.match(/RUN|WAIT_PAGE/))
       if (running && running.length === 0) { client.emit('run') }
     }, 1000 * 5)
   })
@@ -325,6 +326,7 @@ io.on('connection', client => {
 
     client.removeAllListeners()
     client.timeout && clearTimeout(client.timeout)
+    clearInterval(loopInter)
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
