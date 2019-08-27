@@ -414,7 +414,7 @@ io.on('connection', client => {
           }
         }
 
-        await clean()
+        // await clean()
       }
     })
 
