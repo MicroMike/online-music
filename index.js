@@ -170,8 +170,8 @@ io.on('connection', client => {
     }
 
     setInterval(() => {
-      const running = Object(streams).values.filter(s => s.infos && s.infos.time.match(/RUN|WAIT_PAGE/))
-      if (running.length === 0) { client.emit('run') }
+      const running = Object(streams) && Object(streams).values.filter(s => s.infos && s.infos.time.match(/RUN|WAIT_PAGE/))
+      if (running && running.length === 0) { client.emit('run') }
     }, 1000 * 5)
   })
 
