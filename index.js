@@ -168,6 +168,11 @@ io.on('connection', client => {
       parents[id] = client
       client.emit('run')
     }
+
+    setInterval(() => {
+      const running = Object(streams).value.filter(s => s.infos.time.match(/RUN|WAIT_PAGE/))
+      if (running.length === 0) { client.emit('run') }
+    }, 1000 * 5)
   })
 
   client.on('clearErrs', log => {
@@ -240,10 +245,10 @@ io.on('connection', client => {
     client.on('playerInfos', datas => {
       resetTime && client.time < resetTime && client.emit('forceOut')
 
-      if (datas.time === 'CONNECT') {
-        try { parents[client.parentId].emit('run') }
-        catch (e) { }
-      }
+      // if (datas.time === 'CONNECT') {
+      //   try { parents[client.parentId].emit('run') }
+      //   catch (e) { }
+      // }
 
       if (streams[datas.streamId]) {
         streams[datas.streamId].infos = {
