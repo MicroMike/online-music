@@ -240,7 +240,7 @@ io.on('connection', client => {
     client.on('playerInfos', datas => {
       resetTime && client.time < resetTime && client.emit('forceOut')
 
-      if (datas.time === 'RUN') {
+      if (datas.time === 'CONNECT') {
         try { parents[client.parentId].emit('run') }
         catch (e) { }
       }
