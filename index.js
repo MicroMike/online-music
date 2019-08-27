@@ -379,14 +379,22 @@ io.on('connection', client => {
         imgs = {}
         errs = []
 
-        while (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
+        const clean = async () => {
           Object.values(streams).forEach(s => {
             if (s.time < resetTime) {
               if (s.connected) { s.emit('forceOut') }
               else { delete streams[s.uniqId] }
             }
           })
+
+          if (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
+            setTimeout(() => {
+              await clean()
+            }, 1000 * 5);
+          }
         }
+
+        await clean()
       }
     })
 
