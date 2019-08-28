@@ -164,14 +164,13 @@ io.on('connection', client => {
   })
 
   client.on('parent', ({ connected, id }) => {
-    if (!connected) {
-      client.emit('run')
-    }
+    if (!connected) { client.emit('run') }
 
     loopInter = setInterval(() => {
-      const running = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
-      if (!running) { client.emit('run') }
-    }, 1000 * 30)
+      const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
+      const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
+      if (!RUN_WAIT_PAGE || CONNECT === 1) { client.emit('run') }
+    }, 1000 * 10)
   })
 
   client.on('clearErrs', log => {
