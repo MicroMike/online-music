@@ -167,7 +167,7 @@ io.on('connection', client => {
     if (!connected) { client.emit('run') }
 
     loopInter = setInterval(() => {
-      if (!client.connected) { return clearInterval(loopInter) }
+      // if (!client.connected) { return clearInterval(loopInter) }
 
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
       const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
