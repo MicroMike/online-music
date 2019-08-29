@@ -341,7 +341,7 @@ io.on('connection', client => {
       const parentId = streams[streamId].parentId
       const parent = parents[parentId]
 
-      parent && parent.emit('runScript', { streamId, scriptText })
+      parent && parent.emit('runScript', { id: streamId, scriptText })
     })
 
     client.on('kill', async streamId => {
