@@ -256,7 +256,7 @@ io.on('connection', client => {
     delete parents[client.uniqId]
     errs[client.uniqId] = []
 
-    Object(streams).values.forEach(s => {
+    Object.values(streams).forEach(s => {
       if (s.parentId === client.uniqId) { delete streams[s.id] }
     })
 
