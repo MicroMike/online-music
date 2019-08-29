@@ -45,10 +45,6 @@
       socket.emit('screenshot', id)
     }
 
-    const clearErrs = id => {
-      socket.emit('clearErrs')
-    }
-
     const getData = () => {
       socket.emit('getAllData')
     }
@@ -58,6 +54,12 @@
     }
 
     const restart = (id = null) => {
+      document.querySelector('#errs').innerHTML = ''
+      document.querySelector('.screenshot').innerHTML = ''
+      document.querySelector('.players').innerHTML = ''
+      document.querySelector('.freezedPlayers').innerHTML = ''
+      document.querySelector('.others').innerHTML = ''
+      document.querySelector('.codes').innerHTML = ''
       socket.emit('restart', id)
     }
 
@@ -78,6 +80,11 @@
       socket.emit('clearScreen')
     }
 
+    const clearErrs = id => {
+      document.querySelector('#errs').innerHTML = ''
+      socket.emit('clearErrs')
+    }
+
     const check = () => {
       socket.emit('check')
     }
@@ -88,15 +95,6 @@
 
     socket.on('activate', () => {
       socket.emit('web')
-    })
-
-    socket.on('clean', () => {
-      document.querySelector('#errs').innerHTML = ''
-      document.querySelector('.screenshot').innerHTML = ''
-      document.querySelector('.players').innerHTML = ''
-      document.querySelector('.freezedPlayers').innerHTML = ''
-      document.querySelector('.others').innerHTML = ''
-      document.querySelector('.codes').innerHTML = ''
     })
 
     socket.on('allData', data => {
@@ -115,11 +113,13 @@
         document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${k} => ${val}<button id="R_${k}" onclick="restart('${k}')">R</button></span>`)
       })
 
-      Object.keys(errs).forEach((k, i) => {
-        const val = errs[k]
-        document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
-      })
-
+      for (let key in errs) {
+        const errors = errs[key]
+        for (let error in errors) {
+          const nbError = errors[error]
+          document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${key} ${error} => ${nbError}</span>`)
+        }
+      }
       // <button onClick="stop('${d.id}')">S</button>
 
       Object.keys(data).forEach(k => {
@@ -140,7 +140,7 @@
 
     const runScript = btn => {
       const scriptText = document.querySelector('#script' + btn.className).value
-      socket.emit('runScript', { id: btn.className, scriptText })
+      socket.emit('runScript', { streamId: btn.className, scriptText })
     }
 
     const runCode = btn => {
@@ -156,7 +156,7 @@
       document.querySelector('#del').innerHTML = delList
     })
 
-    socket.on('stream', ({ streamOn, streamId, log, img }) => {
+    socket.on('stream', ({ streamOn, streamId, img, log }) => {
       const isDom = document.querySelector('#class' + streamId)
       const streamBtn = streamOn ? 'streamOff' : 'streamOn'
       const html = img
