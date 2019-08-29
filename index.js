@@ -162,7 +162,7 @@ io.on('connection', client => {
     parents[parentId] = client
   })
 
-  client.on('getAccount', async ({ streamId, parentId }) => {
+  client.on('getAccount', async ({ streamId, parentId, env }) => {
     if (env.CHECK && env.FIRST) { checkAccounts = await getCheckAccounts() }
 
     const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env)
