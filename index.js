@@ -264,7 +264,7 @@ io.on('connection', client => {
   client.on('Cdisconnect', streamId => {
     const stream = streams[streamId]
 
-    if (stream.account && accounts.indexOf(stream.account) < 0) {
+    if (stream && stream.account && accounts.indexOf(stream.account) < 0) {
       accounts.push(stream.account)
     }
 
