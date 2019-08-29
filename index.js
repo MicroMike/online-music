@@ -140,6 +140,13 @@ const getAllData = () => ({
 io.on('connection', client => {
   client.emit('activate', client.id)
 
+  client.on('outLog', e => {
+    if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
+
+    if (!errs[client.uniqId][e]) { errs[client.uniqId][e] = 0 }
+    else { errs[client.uniqId][e] = errs[client.uniqId][e] + 1 }
+  })
+
   client.on('log', log => {
     console.log(log)
   })
@@ -175,72 +182,65 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
     })
 
+    client.on('used', account => {
+      used[account] = account
+      setTimeout(() => { delete used[account] }, 1000 * 60 * 10);
+    });
+
+    client.on('retryOk', ({ account, streamId }) => {
+      delete imgs[account]
+
+      Object.values(webs).forEach(w => {
+        w.emit('endStream', streamId)
+      })
+
+      client.emit('retryOk', streamId)
+    })
+
+    client.on('screen', data => {
+      imgs[data.account] = data
+      Object.values(webs).forEach(c => {
+        c.emit('stream', data)
+      })
+    })
+
+    client.on('plays', ({ streamId, next, currentAlbum }) => {
+      plays++
+      if (next) { nexts++ }
+
+      streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
+
+      actions('listen?' + currentAlbum)
+      actions('gain?' + plays + '/' + nexts + '/' + time, body => {
+        if (body.new) {
+          plays = 0
+          nexts = 0
+          time = 0
+        }
+      })
+
+      Object.values(webs).forEach(w => {
+        w.emit('allData', getAllData())
+      })
+    })
+
+    client.on('playerInfos', datas => {
+      const stream = streams[datas.streamId]
+
+      if (stream) {
+        streams[datas.streamId].infos = {
+          ...datas,
+          countPlays: stream.countPlays
+        }
+      }
+
+      Object.values(webs).forEach(w => {
+        // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
+        w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+      })
+    })
+
     client.emit('account', { runnerAccount, streamId })
-  })
-
-  client.on('outLog', e => {
-    if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
-
-    if (!errs[client.uniqId][e]) { errs[client.uniqId][e] = 0 }
-    else { errs[client.uniqId][e] = errs[client.uniqId][e] + 1 }
-  })
-
-  client.on('used', account => {
-    used[account] = account
-    setTimeout(() => { delete used[account] }, 1000 * 60 * 10);
-  });
-
-  client.on('retryOk', ({ account, streamId }) => {
-    delete imgs[account]
-
-    Object.values(webs).forEach(w => {
-      w.emit('endStream', streamId)
-    })
-
-    client.emit('retryOk', streamId)
-  })
-
-  client.on('screen', data => {
-    imgs[data.account] = data
-    Object.values(webs).forEach(c => {
-      c.emit('stream', data)
-    })
-  })
-
-  client.on('plays', ({ streamId, next, currentAlbum }) => {
-    plays++
-    if (next) { nexts++ }
-
-    streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
-
-    actions('listen?' + currentAlbum)
-    actions('gain?' + plays + '/' + nexts + '/' + time, body => {
-      if (body.new) {
-        plays = 0
-        nexts = 0
-        time = 0
-      }
-    })
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-    })
-  })
-
-  client.on('playerInfos', datas => {
-    const stream = streams[datas.streamId]
-
-    if (stream) {
-      streams[datas.streamId].infos = {
-        ...datas,
-        countPlays: stream.countPlays
-      }
-    }
-
-    Object.values(webs).forEach(w => {
-      // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    })
   })
 
   client.on('disconnect', () => {
