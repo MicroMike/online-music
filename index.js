@@ -28,7 +28,6 @@ let checkAccounts = null
 let plays = 0
 let nexts = 0
 let time = 0
-let resetTime = 0
 
 let imgs = {}
 let clients = {}
@@ -130,7 +129,6 @@ const getAllData = () => ({
   used: Object.values(used).length,
   webs: Object.values(webs).length,
   checkLeft: checkAccounts && checkAccounts.length,
-  nopeStreams: Object.values(streams).filter(s => s.parentId < resetTime).length,
   ...playerCount,
   plays: plays * 0.004 * 0.9 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24).split('.')[0] + '€/jour ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
@@ -165,23 +163,19 @@ io.on('connection', client => {
   })
 
   client.on('getAccount', async ({ streamId, parentId }) => {
-    const time = Date.now()
-
-    if (!env.CHECK && resetTime && time < resetTime) { return }
-
     if (env.CHECK && env.FIRST) { checkAccounts = await getCheckAccounts() }
 
     const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env)
 
     if (!runnerAccount) { return }
 
-    streams[streamId] = { account, id: streamId, parentId, time }
+    streams[streamId] = { account, id: streamId, parentId }
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
 
-    client.emit('account', { runnerAccount, streamId, time })
+    client.emit('account', { runnerAccount, streamId })
   })
 
   client.on('outLog', e => {
@@ -235,8 +229,6 @@ io.on('connection', client => {
 
   client.on('playerInfos', datas => {
     const stream = streams[datas.streamId]
-
-    resetTime && stream.time < resetTime && client.emit('forceOut', streamId)
 
     if (stream) {
       streams[datas.streamId].infos = {
