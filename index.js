@@ -169,7 +169,7 @@ io.on('connection', client => {
 
     if (!runnerAccount) { return }
 
-    streams[streamId] = { account, id: streamId, parentId }
+    streams[streamId] = { account: runnerAccount, id: streamId, parentId }
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
