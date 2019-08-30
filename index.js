@@ -207,11 +207,11 @@ io.on('connection', client => {
     })
   })
 
-  client.on('plays', ({ streamId, next, currentAlbum, time }) => {
+  client.on('plays', ({ streamId, next, currentAlbum, matchTime }) => {
     plays++
     if (next) { nexts++ }
 
-    console.log(streams[streamId].account, currentAlbum, time)
+    console.log(streams[streamId].account, currentAlbum, matchTime)
 
     streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
 
