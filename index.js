@@ -201,7 +201,6 @@ io.on('connection', client => {
   })
 
   client.on('screen', data => {
-    console.log(data)
     imgs[data.account] = data
     Object.values(webs).forEach(c => {
       c.emit('stream', data)
