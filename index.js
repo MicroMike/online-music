@@ -201,7 +201,7 @@ io.on('connection', client => {
   })
 
   client.on('screen', data => {
-    console.log(data.img)
+    console.log(data)
     imgs[data.account] = data
     Object.values(webs).forEach(c => {
       c.emit('stream', data)
@@ -305,7 +305,7 @@ io.on('connection', client => {
         if (streams[streamId]) {
           delete imgs[streams[streamId].account]
         }
-        client.emit('endStream', clientId)
+        client.emit('endStream', streamId)
       }
     })
 
@@ -320,7 +320,7 @@ io.on('connection', client => {
         if (streams[streamId]) {
           delete imgs[streams[streamId].account]
         }
-        client.emit('endStream', clientId)
+        client.emit('endStream', streamId)
       }
     })
 
