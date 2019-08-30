@@ -211,9 +211,9 @@ io.on('connection', client => {
     plays++
     if (next) { nexts++ }
 
-    console.log(streams[streamId].account, currentAlbum, matchTime)
-
-    streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
+    if (streams[streamId]) {
+      streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
+    }
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
