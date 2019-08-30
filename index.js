@@ -298,13 +298,16 @@ io.on('connection', client => {
 
     client.on('streamOn', streamId => {
       try {
-        streams[streamId].emit('streamOn')
+        const parentId = streams[streamId].parentId
+        const parent = parents[parentId]
+
+        parent && parent.emit('streamOn', streamId)
       }
       catch (e) {
-        if (streams[streamId]) {
-          delete imgs[streams[streamId].account]
-        }
-        client.emit('endStream', streamId)
+        const parentId = streams[streamId].parentId
+        const parent = parents[parentId]
+
+        parent && parent.emit('endStream', streamId)
       }
     })
 
@@ -319,7 +322,11 @@ io.on('connection', client => {
         if (streams[streamId]) {
           delete imgs[streams[streamId].account]
         }
-        client.emit('endStream', streamId)
+
+        const parentId = streams[streamId].parentId
+        const parent = parents[parentId]
+
+        parent && parent.emit('endStream', streamId)
       }
     })
 
