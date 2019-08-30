@@ -28,11 +28,11 @@ let checkAccounts = null
 let plays = 0
 let nexts = 0
 let time = 0
-let resetTime = 0
 
 let imgs = {}
 let clients = {}
 let streams = {}
+let parents = {}
 let locks = {}
 let webs = {}
 let checkClient
@@ -104,28 +104,18 @@ const getAccount = async env => {
         return typeAccounts[0]
       }
 
-      const index = env.RAND ? rand(Taccounts.length) : 0
+      const index = !env.CHECK ? rand(Taccounts.length) : 0
       const account = Taccounts[index]
       accounts = Taccounts.filter(a => a !== account)
 
       aCount--
       r(account)
-    }, 1000 * (++aCount));
+    }, 1000 * 2 * (++aCount));
   })
-}
-
-let displayLength = (log) => {
-  const values = Object.values(streams)
-  console.log(log, values.length)
 }
 
 const getNumbers = () => {
   const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
-  return numbers
-}
-
-const getErrs = () => {
-  const numbers = errs.reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
   return numbers
 }
 
@@ -139,55 +129,91 @@ const getAllData = () => ({
   used: Object.values(used).length,
   webs: Object.values(webs).length,
   checkLeft: checkAccounts && checkAccounts.length,
-  nopeStreams: Object.values(streams).filter(s => s.parentId < resetTime).length,
   ...playerCount,
   plays: plays * 0.004 * 0.9 + '€ (' + plays + ' / ' + nexts + ') ' + String(nexts / plays * 100).split('.')[0] + '%',
   gain: gain + '€/min ' + String(gain * 60 * 24).split('.')[0] + '€/jour ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24).split('.')[0] + '€/jour ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: getNumbers(),
-  errs: getErrs(),
+  errs,
 })
 
 io.on('connection', client => {
   client.emit('activate', client.id)
 
-  client.on('lockScreen', data => {
-    client.uniqId = data.streamId
-    locks[data.streamId] = client
-    Object.values(webs).forEach(c => {
-      c.emit('stream', data)
-    })
+  client.on('outLog', e => {
+    if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
+
+    if (!errs[client.uniqId][e]) { errs[client.uniqId][e] = 0 }
+    else { errs[client.uniqId][e] = errs[client.uniqId][e] + 1 }
   })
 
   client.on('log', log => {
     console.log(log)
   })
 
-  client.on('parent', ({ connected, id }) => {
-    if (!connected) { client.emit('run') }
+  client.on('parent', ({ parentId, s }) => {
+    streams = {
+      ...streams,
+      ...s
+    }
 
     loopInter = setInterval(() => {
-      // if (!client.connected) { return clearInterval(loopInter) }
+      const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
+      // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
-      const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
-      const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
+      if (!RUN_WAIT_PAGE) { client.emit('run') }
+    }, 1000 * 10)
 
-      if (!RUN_WAIT_PAGE || CONNECT === 1) { client.emit('run') }
-    }, 1000 * 15)
+    client.uniqId = parentId
+    client.loopInter = loopInter
+    parents[parentId] = client
   })
 
-  client.on('clearErrs', log => {
-    errs = []
+  client.on('getAccount', async ({ streamId, parentId, env }) => {
+    if (env.CHECK && env.FIRST) { checkAccounts = await getCheckAccounts() }
+
+    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env)
+
+    if (!runnerAccount) { return }
+
+    streams[streamId] = { account: runnerAccount, id: streamId, parentId }
+
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
     })
+
+    client.emit('account', { runnerAccount, streamId })
   })
 
-  client.on('plays', ({ next, currentAlbum }) => {
+  client.on('used', account => {
+    used[account] = account
+    setTimeout(() => { delete used[account] }, 1000 * 60 * 10);
+  });
+
+  client.on('retryOk', ({ account, streamId }) => {
+    delete imgs[account]
+
+    Object.values(webs).forEach(w => {
+      w.emit('endStream', streamId)
+    })
+
+    client.emit('retryOk', streamId)
+  })
+
+  client.on('screen', data => {
+    imgs[data.account] = data
+    Object.values(webs).forEach(c => {
+      c.emit('stream', data)
+    })
+  })
+
+  client.on('plays', ({ streamId, next, currentAlbum, matchTime }) => {
     plays++
     if (next) { nexts++ }
 
-    client.countPlays = client.countPlays + 1
+    if (streams[streamId]) {
+      streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
+    }
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
@@ -203,124 +229,33 @@ io.on('connection', client => {
     })
   })
 
-  client.on('runner', async ({ clientId, time, account, id, env }) => {
-    !env.CHECK && resetTime && time < resetTime && client.emit('forceOut')
+  client.on('playerInfos', datas => {
+    const stream = streams[datas.streamId]
 
-    if (env.CHECK && env.FIRST) {
-      checkAccounts = await getCheckAccounts()
+    if (stream) {
+      streams[datas.streamId].infos = {
+        ...datas,
+        countPlays: stream.countPlays
+      }
     }
-
-    const runnerAccount = account || (env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env))
-
-    if (!runnerAccount) {
-      client.emit('forceOut')
-      return
-    }
-
-    client.parentId = clientId
-    client.time = time
-    client.account = runnerAccount
-    client.uniqId = id
-    client.countPlays = 0
-    streams[id] = client
-
-    // accounts = accounts.filter(a => a !== account)
-    // displayLength('Add')
 
     Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
+      // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
     })
-
-    client.on('outLog', e => {
-      const err = client.parentId + ' ' + e
-      errs.push(err)
-    })
-
-    // client.on('out', cid => {
-    //   const playerLength = Object.values(streams).filter(s => s.parentId === cid).length
-    //   const ok = !clients[cid] || playerLength >= clients[cid].max
-    //   console.log('out: ' + playerLength + ' ' + ok)
-    //   client.emit('outOk', ok)
-    // })
-
-    client.on('playerInfos', datas => {
-      resetTime && client.time < resetTime && client.emit('forceOut')
-
-      if (streams[datas.streamId]) {
-        streams[datas.streamId].infos = {
-          ...datas,
-          parentId: client.parentId,
-          countPlays: client.countPlays
-        }
-      }
-
-      Object.values(webs).forEach(w => {
-        // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
-        w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-      })
-    })
-
-    client.on('screen', data => {
-      imgs[runnerAccount] = data
-      Object.values(webs).forEach(c => {
-        c.emit('stream', data)
-      })
-    })
-
-    client.on('stream', data => {
-      data.log = imgs[runnerAccount] && imgs[runnerAccount].log
-      Object.values(webs).forEach(w => {
-        w.emit('stream', data)
-      })
-    })
-
-    client.on('retryOk', () => {
-      delete imgs[runnerAccount]
-      Object.values(webs).forEach(w => {
-        w.emit('endStream', client.uniqId)
-      })
-    })
-
-    client.on('loop', ({ errorMsg, account }) => {
-      if (errorMsg === 'used') {
-        // displayLength(errorMsg + ' ' + account)
-        used[account] = account
-        setTimeout(() => { delete used[account] }, 1000 * 60 * 10);
-      }
-    });
-
-    client.on('delete', account => {
-      // displayLength('Del ' + account)
-      // accounts = accounts.filter(a => a !== account)
-
-      fs.readFile('napsterAccountDel.txt', 'utf8', function (err, data) {
-        if (err) return console.log(err);
-        data = data.split(',').filter(e => e)
-        if (data.indexOf(account) < 0) { data.push(account) }
-        fs.writeFile('napsterAccountDel.txt', data.length === 1 ? data[0] : data.join(','), function (err) {
-          if (err) return console.log(err);
-        });
-      });
-    })
-
-    if (account) { client.emit('resume') }
-    else {
-      client.timeout = setTimeout(() => {
-        if (client.connected) { client.emit('streams', runnerAccount) }
-      }, env.CHECK || !env.WAIT ? 0 : rand(1000 * 60 * 10));
-    }
   })
 
   client.on('disconnect', () => {
-    // getAccounts()
     delete webs[client.id]
-    delete clients[client.uniqId]
-    delete streams[client.uniqId]
-    delete locks[client.uniqId]
-    // delete imgs[client.uniqId]
+    delete parents[client.uniqId]
+    errs[client.uniqId] = []
+
+    Object.values(streams).forEach(s => {
+      if (s.parentId === client.uniqId) { delete streams[s.id] }
+    })
 
     client.removeAllListeners()
-    client.timeout && clearTimeout(client.timeout)
+    clearInterval(client.loopInter)
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
@@ -328,19 +263,21 @@ io.on('connection', client => {
     })
   })
 
-  client.on('Cdisconnect', () => {
-    if (clients[client.uniqId]) { }
-    else if (streams[client.uniqId]) {
+  client.on('Cdisconnect', streamId => {
+    const stream = streams[streamId]
+
+    if (stream && stream.account && accounts.indexOf(stream.account) < 0) {
+      accounts.push(stream.account)
     }
 
-    if (client.account && accounts.indexOf(client.account) < 0) {
-      accounts.push(client.account)
-    }
+    delete streams[streamId]
 
-    delete clients[client.uniqId]
-    delete streams[client.uniqId]
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+    })
 
-    client.disconnect()
+    client.emit('forceOut', streamId)
   })
 
   client.on('web', () => {
@@ -352,140 +289,81 @@ io.on('connection', client => {
       })
     })
 
+    client.on('screenshot', streamId => {
+      const parentId = streams[streamId].parentId
+      const parent = parents[parentId]
+
+      parent && parent.emit('screenshot', streamId)
+    })
+
+    client.on('streamOn', streamId => {
+      try {
+        streams[streamId].emit('streamOn')
+      }
+      catch (e) {
+        if (streams[streamId]) {
+          delete imgs[streams[streamId].account]
+        }
+        client.emit('endStream', clientId)
+      }
+    })
+
+    client.on('streamOff', streamId => {
+      try {
+        const parentId = streams[streamId].parentId
+        const parent = parents[parentId]
+
+        parent && parent.emit('streamOff', streamId)
+      }
+      catch (e) {
+        if (streams[streamId]) {
+          delete imgs[streams[streamId].account]
+        }
+        client.emit('endStream', clientId)
+      }
+    })
+
     client.on('getAllData', () => {
       client.emit('allData', getAllData())
-    })
-
-    client.on('clearData', () => {
-      if (!Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).length) {
-        Object.values(streams).filter(s => !clients[s.parentId]).forEach(c => c.emit('forceOut'))
-        // Object.values(clients).filter(c => Object.values(streams).find(s => s.parentId === c.uniqId) === undefined).forEach(c => c.disconnect())
-      }
-    })
-
-    fs.readFile('napsterAccountDel.txt', 'utf8', async (err, delList) => {
-      if (err) return console.log(err);
-      client.emit('delList', delList)
-    })
-
-    client.on('runScript', ({ id, scriptText }) => {
-      streams[id] && streams[id].emit('runScript', scriptText)
-      locks[id] && locks[id].emit('runScript', scriptText)
-    })
-
-    client.on('runCode', ({ id, scriptText }) => {
-      streams[id] && streams[id].emit('runCode', scriptText)
-      locks[id] && locks[id].emit('runCode', scriptText)
-    })
-
-    client.on('restart', async cid => {
-      if (cid) {
-        Object.values(streams).forEach(s => {
-          if (s.connected) {
-            s.parentId === cid ? s.emit('forceOut') : false
-          }
-          else {
-            client.timeout && clearTimeout(client.timeout)
-            delete streams[s.uniqId]
-          }
-        })
-      }
-      if (!cid) {
-        resetTime = Date.now()
-        imgs = {}
-        errs = []
-
-        const clean = async () => {
-          Object.values(streams).forEach(s => {
-            console.log(s.time, resetTime)
-            if (s.time < resetTime) {
-              if (s.connected) { s.emit('forceOut') }
-              else {
-                client.timeout && clearTimeout(client.timeout)
-                delete streams[s.uniqId]
-              }
-            }
-          })
-
-
-          if (Object.values(streams).filter(s => s.time < resetTime).length > 0) {
-            setTimeout(async () => {
-              await clean()
-            }, 1000 * 5);
-          }
-        }
-
-        // await clean()
-      }
-    })
-
-    client.on('kill', async cid => {
-      const s = streams[cid]
-      if (s) {
-        if (s.connected) { s.emit('forceOut') }
-        else { delete streams[s.uniqId] }
-      }
-    })
-
-    client.on('streamOn', clientId => {
-      try {
-        streams[clientId].emit('streamOn')
-      }
-      catch (e) {
-        if (streams[clientId]) {
-          delete imgs[streams[clientId].account]
-        }
-        client.emit('endStream', clientId)
-      }
-    })
-
-    client.on('streamOff', clientId => {
-      try {
-        streams[clientId].emit('streamOff')
-      }
-      catch (e) {
-        if (streams[clientId]) {
-          delete imgs[streams[clientId].account]
-        }
-        client.emit('endStream', clientId)
-      }
-    })
-
-    client.on('check', () => {
-      fs.readFile('check.txt', 'utf8', async (err, data) => {
-        if (err) return console.log(err);
-        checkAccounts = data.split(',').filter(e => e)
-
-        checking = true
-        checkClient.emit('restart')
-      })
-    })
-
-    client.on('endCheck', () => {
-      checking = false
-      checkClient.emit('restart')
     })
 
     client.on('clearScreen', () => {
       imgs = {}
     })
 
+    client.on('clearErrs', () => {
+      errs = []
+    })
+
     client.on('updateAccounts', async () => {
       await getAccounts()
     })
 
-    client.on('screenshot', id => {
-      streams[id] && streams[id].emit('screenshot')
+    client.on('runScript', ({ streamId, scriptText }) => {
+      const parentId = streams[streamId].parentId
+      const parent = parents[parentId]
+
+      parent && parent.emit('runScript', { id: streamId, scriptText })
     })
 
-    client.on('spotifyPause', () => {
-      accounts = accounts.filter(a => a.split(':')[0] !== 'spotify')
+    client.on('kill', async streamId => {
+      const parentId = streams[streamId].parentId
+      const parent = parents[parentId]
+
+      parent && parent.emit('forceOut', streamId)
+    })
+
+    client.on('restart', async cid => {
+      if (cid) {
+        parents[cid].emit('Cdisconnect')
+      }
+      else {
+        Object.values(parents).forEach(p => {
+          p.emit('Cdisconnect')
+        })
+      }
     })
   })
 });
-
-// io.on('connection', client => {
-//   client.emit('activate', client.id)
-// })
 
 app.listen(process.env.PORT || 3000);
