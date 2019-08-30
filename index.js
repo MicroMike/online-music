@@ -204,10 +204,12 @@ io.on('connection', client => {
       })
     })
 
-    client.on('plays', ({ streamId, next, currentAlbum }) => {
+    client.on('plays', ({ streamId, next, currentAlbum, time }) => {
       plays++
       if (next) { nexts++ }
-      console.log(streams[streamId].account, currentAlbum, plays)
+
+      console.log(streams[streamId].account, currentAlbum, time)
+
       streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
 
       actions('listen?' + currentAlbum)
