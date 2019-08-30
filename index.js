@@ -356,7 +356,7 @@ io.on('connection', client => {
         parents[cid].emit('Cdisconnect')
       }
       else {
-        parents.forEach(p => {
+        Object.values(parents).forEach(p => {
           p.emit('Cdisconnect')
         })
       }
