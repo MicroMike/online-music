@@ -356,11 +356,11 @@ io.on('connection', client => {
 
     client.on('restart', async cid => {
       if (cid) {
-        parents[cid].disconnect()
+        parents[cid].emit('Cdisconnect')
       }
       else {
         Object.values(parents).forEach(p => {
-          p.disconnect()
+          p.emit('Cdisconnect')
         })
       }
     })
