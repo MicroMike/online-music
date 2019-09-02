@@ -296,8 +296,6 @@ io.on('connection', client => {
       w.emit('allData', getAllData())
       w.emit('playerInfos', Object.values(streams).map(s => s.infos))
     })
-
-    client.emit('forceOut', streamId)
   })
 
   client.on('web', () => {
