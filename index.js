@@ -375,6 +375,10 @@ io.on('connection', client => {
     client.on('restart', async cid => {
       if (cid) {
         parents[cid] && parents[cid].emit('Cdisconnect')
+
+        Object.values(streams).forEach(s => {
+          if (s.parentId === cid) { delete streams[s.id] }
+        })
       }
       else {
         Object.values(parents).forEach(p => {
