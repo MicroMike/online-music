@@ -153,6 +153,10 @@ io.on('connection', client => {
 
   client.on('streamInfos', s => {
     Object.assign(streams, s)
+
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+    })
   })
 
   client.on('parent', ({ parentId }) => {
