@@ -137,7 +137,12 @@ const getAllData = () => ({
   errs,
 })
 
+let total
 io.on('connection', client => {
+  total++
+
+  console.log(total)
+
   client.emit('activate', client.id)
 
   client.on('outLog', e => {
@@ -256,6 +261,8 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
+    total--
+
     delete webs[client.id]
     delete parents[client.uniqId]
     errs[client.uniqId] = []
