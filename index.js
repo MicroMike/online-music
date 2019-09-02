@@ -140,8 +140,7 @@ const getAllData = () => ({
 let total = 0
 io.on('connection', client => {
   total++
-
-  console.log(total)
+  console.log('connection', total)
 
   client.emit('activate', client.id)
 
@@ -262,6 +261,7 @@ io.on('connection', client => {
 
   client.on('disconnect', () => {
     total--
+    console.log('disconnect', total)
 
     delete webs[client.id]
     delete parents[client.uniqId]
