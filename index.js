@@ -39,7 +39,6 @@ let checkClient
 let used = {}
 let errs = []
 let playerCount
-let loopInter
 
 actions('gain', body => {
   const r = body.g
@@ -171,7 +170,7 @@ io.on('connection', client => {
   client.on('parent', ({ parentId, connected, s }) => {
     if (connected) { Object.assign(streams, s) }
 
-    loopInter = setInterval(() => {
+    client.loopInter = setInterval(() => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE|CONNECT/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
@@ -179,7 +178,6 @@ io.on('connection', client => {
     }, 1000 * 10)
 
     client.uniqId = parentId
-    client.loopInter = loopInter
     parents[parentId] = client
   })
 
@@ -263,16 +261,21 @@ io.on('connection', client => {
     total--
     console.log('disconnect', total)
 
-    delete webs[client.id]
-    delete parents[client.uniqId]
-    errs[client.uniqId] = []
+    if (client.uniqId) {
+      delete parents[client.uniqId]
+      errs[client.uniqId] = []
 
-    Object.values(streams).forEach(s => {
-      if (s.parentId === client.uniqId) { delete streams[s.id] }
-    })
+      Object.values(streams).forEach(s => {
+        if (s.parentId === client.uniqId) { delete streams[s.id] }
+      })
+
+      clearInterval(client.loopInter)
+    }
+    else {
+      delete webs[client.id]
+    }
 
     client.removeAllListeners()
-    clearInterval(client.loopInter)
 
     Object.values(webs).forEach(w => {
       w.emit('allData', getAllData())
