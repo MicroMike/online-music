@@ -151,6 +151,10 @@ io.on('connection', client => {
     console.log(log)
   })
 
+  client.on('streamInfos', s => {
+    Object.assign(streams, s)
+  })
+
   client.on('parent', ({ parentId }) => {
     loopInter = setInterval(() => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE|CONNECT/)).length
