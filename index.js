@@ -151,12 +151,17 @@ io.on('connection', client => {
     console.log(log)
   })
 
+  let delayStream = 0
   client.on('streamInfos', s => {
-    Object.assign(streams, s)
+    setTimeout(() => {
+      Object.assign(streams, s)
 
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-    })
+      Object.values(webs).forEach(w => {
+        w.emit('allData', getAllData())
+      })
+
+      delayStream--
+    }, 1000 * ++delayStream);
   })
 
   client.on('parent', ({ parentId }) => {
