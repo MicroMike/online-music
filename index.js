@@ -381,6 +381,7 @@ io.on('connection', client => {
         })
       }
       else {
+        streams = {}
         Object.values(parents).forEach(p => {
           p.emit('Cdisconnect')
         })
