@@ -137,7 +137,7 @@ const getAllData = () => ({
   errs,
 })
 
-let total
+let total = 0
 io.on('connection', client => {
   total++
 
