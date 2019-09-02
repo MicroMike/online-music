@@ -160,7 +160,7 @@ io.on('connection', client => {
       Object.assign(streams, s)
 
       Object.values(webs).forEach(w => {
-        w.emit('allData', getAllData())
+        w.emit('playerInfos', Object.values(streams).map(s => s.infos))
       })
 
       delayStream--
