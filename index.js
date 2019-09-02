@@ -151,7 +151,13 @@ io.on('connection', client => {
     console.log(log)
   })
 
-  client.on('parent', ({ parentId, s }) => {
+  client.on('parent', ({ parentId, s, connected }) => {
+    if (!connected) {
+      Object.values(streams).forEach(s => {
+        if (s.parentId === parentId) { delete streams[s.id] }
+      })
+    }
+
     streams = {
       ...streams,
       ...s
