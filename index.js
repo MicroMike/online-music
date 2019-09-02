@@ -164,7 +164,9 @@ io.on('connection', client => {
     }, 1000 * ++delayStream);
   })
 
-  client.on('parent', ({ parentId }) => {
+  client.on('parent', ({ parentId, connected, s }) => {
+    if (connected) { Object.assign(streams, s) }
+
     loopInter = setInterval(() => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE|CONNECT/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
