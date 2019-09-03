@@ -109,7 +109,7 @@
       document.querySelector('#serverPlays').innerHTML = ''
       document.querySelector('#errs').innerHTML = ''
 
-      for (let k of serverPlays.keys().sort()) {
+      for (let k of Array.from(serverPlays.keys()).sort()) {
         const val = serverPlays[k]
         document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
       }
