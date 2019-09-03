@@ -140,7 +140,7 @@ const Ddisconnect = (c) => {
   if (c.uniqId) {
     c.out = true
     clearInterval(c.loopInter)
-    client.emit('Cdisconnect')
+    c.emit('Cdisconnect')
 
     console.log('Ddisconnect')
     delete parents[c.uniqId]
