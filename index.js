@@ -91,27 +91,21 @@ const rand = (max, min) => {
 
 (async () => await getAccounts())()
 
-let aCount = 0
-const getAccount = async env => {
-  return new Promise(r => {
-    setTimeout(() => {
-      let Taccounts = accounts
-      Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-      Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+const getAccount = env => {
+  let Taccounts = accounts
+  Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+  Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
-      if (env.TYPE) {
-        const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
-        return typeAccounts[0]
-      }
+  if (env.TYPE) {
+    const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+    return typeAccounts[0]
+  }
 
-      const index = !env.TYPE ? rand(Taccounts.length) : 0
-      const account = Taccounts[index]
-      accounts = Taccounts.filter(a => a !== account)
+  const index = !env.TYPE ? rand(Taccounts.length) : 0
+  const account = Taccounts[index]
+  accounts = Taccounts.filter(a => a !== account)
 
-      aCount--
-      r(account)
-    }, 1000 * 2 * (++aCount));
-  })
+  return account
 }
 
 const getNumbers = () => {
@@ -219,7 +213,7 @@ io.on('connection', client => {
   })
 
   client.on('getAccount', async ({ streamId, parentId, env }) => {
-    const runnerAccount = env.CHECK ? checkAccounts.shift() : await getAccount(env)
+    const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
 
     if (!runnerAccount) {
       client.emit('account', { fail: true })
