@@ -118,7 +118,7 @@ const getAccount = env => {
 
 const getNumbers = (id) => {
   const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
-  return id ? numbers[id] : numbers
+  return id ? (numbers[id] || 0) : numbers
 }
 
 const getAllData = () => ({
@@ -211,7 +211,7 @@ io.on('connection', client => {
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
       console.log(getNumbers(parentId), max)
-      if (!RUN_WAIT_PAGE && (!getNumbers(parentId) || getNumbers(parentId) < Number(max))) { client.emit('run') }
+      if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) { client.emit('run') }
     }, 1000 * 10)
   })
 
