@@ -116,9 +116,9 @@ const getAccount = env => {
   return account
 }
 
-const getNumbers = () => {
+const getNumbers = (id) => {
   const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
-  return numbers
+  return id ? numbers[id] : numbers
 }
 
 const getAllData = () => ({
@@ -195,7 +195,7 @@ io.on('connection', client => {
     })
   })
 
-  client.on('parent', async ({ parentId, connected, s, env }) => {
+  client.on('parent', async ({ parentId, connected, s, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
 
@@ -210,7 +210,7 @@ io.on('connection', client => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
-      if (!RUN_WAIT_PAGE) { client.emit('run') }
+      if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) { client.emit('run') }
     }, 1000 * 10)
   })
 
