@@ -131,35 +131,36 @@ const getAllData = () => ({
   errs,
 })
 
+const Ddisconnect = (c) => {
+  if (c.uniqId) {
+    console.log('Ddisconnect')
+    delete parents[c.uniqId]
+    errs[c.uniqId] = []
+
+    Object.values(streams).forEach(s => {
+      if (s.parentId === c.uniqId) { delete streams[s.id] }
+    })
+
+    clearInterval(c.loopInter)
+  }
+  else {
+    delete webs[c.id]
+  }
+
+  c.removeAllListeners()
+
+  Object.values(webs).forEach(w => {
+    w.emit('allData', getAllData())
+    w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+  })
+}
+
 io.on('connection', client => {
   client.emit('activate', client.id)
 
-  const Ddisconnect = () => {
-    if (client.uniqId) {
-      console.log('Ddisconnect')
-      delete parents[client.uniqId]
-      errs[client.uniqId] = []
-
-      Object.values(streams).forEach(s => {
-        if (s.parentId === client.uniqId) { delete streams[s.id] }
-      })
-
-      clearInterval(client.loopInter)
-    }
-    else {
-      delete webs[client.id]
-    }
-
-    client.removeAllListeners()
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    })
-  }
-
-  client.on('Ddisconnect', e => {
-    Ddisconnect()
+  client.on('Ddisconnect', () => {
+    client.out = true
+    Ddisconnect(client)
   })
 
   client.on('outLog', e => {
@@ -187,7 +188,6 @@ io.on('connection', client => {
 
     client.loopInter = setInterval(() => {
       if (client.out) {
-        Ddisconnect()
         client.emit('Cdisconnect')
         return clearInterval(client.loopInter)
       }
@@ -372,14 +372,17 @@ io.on('connection', client => {
 
     client.on('restart', async cid => {
       if (cid) {
-        if (parents[cid]) {
+        const p = parents[cid]
+        if (p) {
           parents[cid].out = true
+          Ddisconnect(p)
         }
 
       }
       else {
         Object.values(parents).forEach(p => {
           p.out = true
+          Ddisconnect(p)
         })
       }
 
