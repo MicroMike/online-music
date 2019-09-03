@@ -138,6 +138,10 @@ const getAllData = () => ({
 
 const Ddisconnect = (c) => {
   if (c.uniqId) {
+    c.out = true
+    clearInterval(c.loopInter)
+    client.emit('Cdisconnect')
+
     console.log('Ddisconnect')
     delete parents[c.uniqId]
     errs[c.uniqId] = []
@@ -145,8 +149,6 @@ const Ddisconnect = (c) => {
     Object.values(streams).forEach(s => {
       if (s.parentId === c.uniqId) { delete streams[s.id] }
     })
-
-    clearInterval(c.loopInter)
   }
   else {
     delete webs[c.id]
@@ -191,11 +193,11 @@ io.on('connection', client => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
 
+    client.uniqId = parentId
+    parents[parentId] = client
+
     client.loopInter = setInterval(() => {
-      if (client.out) {
-        client.emit('Cdisconnect')
-        return clearInterval(client.loopInter)
-      }
+      if (client.out) { return }
 
       client.emit('streamInfos')
 
@@ -204,9 +206,6 @@ io.on('connection', client => {
 
       if (!RUN_WAIT_PAGE) { client.emit('run') }
     }, 1000 * 10)
-
-    client.uniqId = parentId
-    parents[parentId] = client
   })
 
   client.on('getAccount', async ({ streamId, parentId, env }) => {
@@ -379,14 +378,12 @@ io.on('connection', client => {
       if (cid) {
         const p = parents[cid]
         if (p) {
-          parents[cid].out = true
           Ddisconnect(p)
         }
 
       }
       else {
         Object.values(parents).forEach(p => {
-          p.out = true
           Ddisconnect(p)
         })
       }
