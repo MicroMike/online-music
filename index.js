@@ -193,13 +193,13 @@ io.on('connection', client => {
   client.on('parent', async ({ parentId, connected, s, env }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
-    else {
-      Object.values(streams).forEach(s => {
-        if (s.parentId === parentId) { delete streams[s.id] }
-      })
-    }
 
     client.loopInter = setInterval(() => {
+      if (client.out) {
+        client.emit('Cdisconnect')
+        return clearInterval(client.loopInter)
+      }
+
       client.emit('streamInfos')
 
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
@@ -403,16 +403,14 @@ io.on('connection', client => {
 
     client.on('restart', async cid => {
       if (cid) {
-        parents[cid] && parents[cid].emit('Cdisconnect')
+        if (parents[cid]) {
+          parents[cid].out = true
+        }
 
-        Object.values(streams).forEach(s => {
-          if (s.parentId === cid) { delete streams[s.id] }
-        })
       }
       else {
-        streams = {}
         Object.values(parents).forEach(p => {
-          p.emit('Cdisconnect')
+          p.out = true
         })
       }
 
