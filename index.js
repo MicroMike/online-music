@@ -256,7 +256,7 @@ io.on('connection', client => {
     plays++
     if (next) { nexts++ }
 
-    serverPlaystemp[parentId] = serverPlaystemp[parentId] === 0 ? serverPlaystemp[parentId] + 1 : 0
+    serverPlaystemp[parentId] = serverPlaystemp[parentId] ? serverPlaystemp[parentId] + 1 : 1
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
