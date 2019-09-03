@@ -289,7 +289,7 @@ io.on('connection', client => {
     })
   })
 
-  client.on('disconnect', () => {
+  client.on('Ddisconnect', () => {
     if (client.uniqId) {
       delete parents[client.uniqId]
       errs[client.uniqId] = []
