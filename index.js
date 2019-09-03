@@ -215,25 +215,20 @@ io.on('connection', client => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
-      if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) { client.emit('run') }
+      if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) {
+        const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
+        if (!runnerAccount) { return }
+
+        let ok = false
+        while (!ok) {
+          const streamId = rand(1000000)
+          if (!streams[streamId]) {
+            ok = true
+            client.emit('run', { runnerAccount, streamId })
+          }
+        }
+      }
     }, 1000 * 5)
-  })
-
-  client.on('getAccount', async ({ streamId, parentId, env }) => {
-    const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
-
-    if (!runnerAccount) {
-      client.emit('account', { fail: true })
-      return
-    }
-
-    streams[streamId] = { account: runnerAccount, id: streamId, parentId }
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-    })
-
-    client.emit('account', { runnerAccount, streamId })
   })
 
   client.on('used', account => {
