@@ -136,7 +136,6 @@ const getAllData = () => ({
   errs,
 })
 
-let total = 0
 io.on('connection', client => {
   client.on('connect', () => {
     console.log('connect')
@@ -174,9 +173,6 @@ io.on('connection', client => {
   client.on('pong', () => {
     console.log('pong')
   })
-
-  total++
-  console.log('connection', total)
 
   client.emit('activate', client.id)
 
@@ -300,9 +296,6 @@ io.on('connection', client => {
   })
 
   client.on('disconnect', () => {
-    total--
-    console.log('disconnect', total)
-
     if (client.uniqId) {
       delete parents[client.uniqId]
       errs[client.uniqId] = []
