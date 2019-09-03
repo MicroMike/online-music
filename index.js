@@ -67,13 +67,15 @@ let gain3 = 0
 let gain3temp = plays
 let tempPlays = []
 let tempCalc = plays
+let serverPlaystemp = {}
 let serverPlays = {}
 
 setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
-  serverPlays = {}
+  serverPlays = { ...serverPlaystemp }
+  serverPlaystemp = {}
   await getAccounts()
 }, 1000 * 60)
 
@@ -254,7 +256,7 @@ io.on('connection', client => {
     plays++
     if (next) { nexts++ }
 
-    serverPlays[parentId] = serverPlays[parentId] === 0 ? serverPlays[parentId] + 1 : 0
+    serverPlaystemp[parentId] = serverPlaystemp[parentId] === 0 ? serverPlaystemp[parentId] + 1 : 0
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
