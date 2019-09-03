@@ -148,6 +148,7 @@ const Ddisconnect = (c) => {
 
     console.log('Ddisconnect')
     delete parents[c.uniqId]
+    delete serverPlaystemp[c.uniqId]
     errs[c.uniqId] = []
 
     Object.values(streams).forEach(s => {
