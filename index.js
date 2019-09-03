@@ -196,7 +196,7 @@ io.on('connection', client => {
     })
   })
 
-  client.on('parent', ({ parentId, connected, s, env }) => {
+  client.on('parent', async ({ parentId, connected, s, env }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
     else {
