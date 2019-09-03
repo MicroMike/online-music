@@ -132,43 +132,6 @@ const getAllData = () => ({
 })
 
 io.on('connection', client => {
-  client.on('connect', () => {
-    console.log('connect')
-  })
-  client.on('connect_error', () => {
-    console.log('connect_error')
-  })
-  client.on('connect_timeout', () => {
-    console.log('connect_timeout')
-  })
-  client.on('error', () => {
-    console.log('error')
-  })
-  client.on('disconnect', () => {
-    console.log('disconnect')
-  })
-  client.on('reconnect', () => {
-    console.log('reconnect')
-  })
-  client.on('reconnect_attempt', () => {
-    console.log('reconnect_attempt')
-  })
-  client.on('reconnecting', () => {
-    console.log('reconnecting')
-  })
-  client.on('reconnect_error', () => {
-    console.log('reconnect_error')
-  })
-  client.on('reconnect_failed', () => {
-    console.log('reconnect_failed')
-  })
-  client.on('ping', () => {
-    console.log('ping')
-  })
-  client.on('pong', () => {
-    console.log('pong')
-  })
-
   client.emit('activate', client.id)
 
   client.on('outLog', e => {
