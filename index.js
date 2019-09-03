@@ -211,7 +211,7 @@ io.on('connection', client => {
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
       if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) { client.emit('run') }
-    }, 1000 * 10)
+    }, 1000 * 5)
   })
 
   client.on('getAccount', async ({ streamId, parentId, env }) => {
