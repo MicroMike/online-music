@@ -187,17 +187,12 @@ io.on('connection', client => {
     console.log(log)
   })
 
-  let delayStream = 0
   client.on('streamInfos', s => {
-    setTimeout(() => {
-      Object.assign(streams, s)
+    Object.assign(streams, s)
 
-      Object.values(webs).forEach(w => {
-        w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-      })
-
-      delayStream--
-    }, 1000 * ++delayStream);
+    Object.values(webs).forEach(w => {
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+    })
   })
 
   client.on('parent', ({ parentId, connected, s }) => {
@@ -209,6 +204,8 @@ io.on('connection', client => {
     }
 
     client.loopInter = setInterval(() => {
+      client.emit('streamInfos')
+
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
