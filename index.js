@@ -67,11 +67,13 @@ let gain3 = 0
 let gain3temp = plays
 let tempPlays = []
 let tempCalc = plays
+let serverPlays = []
 
 setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
+  serverPlays = []
   await getAccounts()
 }, 1000 * 60)
 
@@ -133,6 +135,7 @@ const getAllData = () => ({
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24).split('.')[0] + '€/jour ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain3: gain3 + '€/min ' + String(gain3 * 60 * 24).split('.')[0] + '€/jour ' + String(gain3 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: getNumbers(),
+  serverPlays,
   errs,
 })
 
@@ -195,6 +198,7 @@ io.on('connection', client => {
 
     client.uniqId = parentId
     parents[parentId] = client
+    serverPlays[parentId] = 0
 
     client.loopInter = setInterval(() => {
       if (client.out) { return }
@@ -252,6 +256,7 @@ io.on('connection', client => {
     if (next) { nexts++ }
 
     if (streams[streamId]) {
+      serverPlays[streams[streamId].parentId] = serverPlays[streams[streamId].parentId] + 1
       streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
     }
 

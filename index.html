@@ -100,12 +100,19 @@
     socket.on('allData', data => {
       const clients = data.clients
       const errs = data.errs
+      const serverPlays = data.serverPlays
       delete data.clients
       delete data.errs
 
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
+      document.querySelector('#serverPlays').innerHTML = ''
       document.querySelector('#errs').innerHTML = ''
+
+      for (let k of serverPlays.keys().sort()) {
+        const val = serverPlays[k]
+        document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
+      }
 
       Object.keys(clients).sort().forEach((k, i) => {
         const val = clients[k]
@@ -224,6 +231,7 @@
 
 <body>
   <div id="servers"></div>
+  <div id="serverPlays"></div>
   <div id="errs"></div>
   <div id="data"></div>
   <button onClick="restart()">RESTART</button>
