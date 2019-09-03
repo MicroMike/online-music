@@ -136,6 +136,43 @@ const getAllData = () => ({
   errs,
 })
 
+io.on('connect', () => {
+  console.log('connect')
+})
+io.on('connect_error', () => {
+  console.log('connect_error')
+})
+io.on('connect_timeout', () => {
+  console.log('connect_timeout')
+})
+io.on('error', () => {
+  console.log('error')
+})
+io.on('disconnect', () => {
+  console.log('disconnect')
+})
+io.on('reconnect', () => {
+  console.log('reconnect')
+})
+io.on('reconnect_attempt', () => {
+  console.log('reconnect_attempt')
+})
+io.on('reconnecting', () => {
+  console.log('reconnecting')
+})
+io.on('reconnect_error', () => {
+  console.log('reconnect_error')
+})
+io.on('reconnect_failed', () => {
+  console.log('reconnect_failed')
+})
+io.on('ping', () => {
+  console.log('ping')
+})
+io.on('pong', () => {
+  console.log('pong')
+})
+
 let total = 0
 io.on('connection', client => {
   total++
