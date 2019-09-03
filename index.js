@@ -386,6 +386,8 @@ io.on('connection', client => {
           p.emit('Cdisconnect')
         })
       }
+
+      await getAccounts()
     })
   })
 });
