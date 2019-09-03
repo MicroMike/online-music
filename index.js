@@ -39,6 +39,7 @@ let checkClient
 let used = {}
 let errs = []
 let playerCount
+let firstCheck
 
 actions('gain', body => {
   const r = body.g
@@ -196,6 +197,7 @@ io.on('connection', client => {
   })
 
   client.on('parent', ({ parentId, connected, s }) => {
+    if (parentId === 'check') { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
     else {
       Object.values(streams).forEach(s => {
@@ -217,8 +219,6 @@ io.on('connection', client => {
   })
 
   client.on('getAccount', async ({ streamId, parentId, env }) => {
-    if (env.CHECK && env.FIRST) { checkAccounts = await getCheckAccounts() }
-
     const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env)
 
     if (!runnerAccount) { return }
