@@ -254,6 +254,7 @@ io.on('connection', client => {
 
   client.on('Ddisconnect', () => {
     if (client.uniqId) {
+      console.log('Ddisconnect')
       delete parents[client.uniqId]
       errs[client.uniqId] = []
 
