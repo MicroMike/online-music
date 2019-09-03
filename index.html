@@ -110,10 +110,10 @@
       document.querySelector('#serverPlays').innerHTML = ''
       document.querySelector('#errs').innerHTML = ''
 
-      for (let k of Array.from(serverPlays.keys()).sort()) {
+      Object.keys(serverPlays).sort().forEach((k, i) => {
         const val = serverPlays[k]
         document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
-      }
+      })
 
       Object.keys(clients).sort().forEach((k, i) => {
         const val = clients[k]
