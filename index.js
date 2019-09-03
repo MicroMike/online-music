@@ -196,8 +196,8 @@ io.on('connection', client => {
     })
   })
 
-  client.on('parent', ({ parentId, connected, s }) => {
-    if (parentId === 'check') { checkAccounts = await getCheckAccounts() }
+  client.on('parent', ({ parentId, connected, s, env }) => {
+    if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
     else {
       Object.values(streams).forEach(s => {
@@ -219,9 +219,12 @@ io.on('connection', client => {
   })
 
   client.on('getAccount', async ({ streamId, parentId, env }) => {
-    const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : await getAccount(env)
+    const runnerAccount = env.CHECK ? checkAccounts.shift() : await getAccount(env)
 
-    if (!runnerAccount) { return }
+    if (!runnerAccount) {
+      client.emit('account', { fail: true })
+      return
+    }
 
     streams[streamId] = { account: runnerAccount, id: streamId, parentId }
 
