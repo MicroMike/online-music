@@ -224,6 +224,7 @@ io.on('connection', client => {
           const streamId = rand(1000000)
           if (!streams[streamId]) {
             ok = true
+            streams[streamId] = { account: runnerAccount, id: streamId, parentId }
             client.emit('run', { runnerAccount, streamId })
           }
         }
