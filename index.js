@@ -103,7 +103,7 @@ const getAccount = async env => {
         return typeAccounts[0]
       }
 
-      const index = !env.CHECK ? rand(Taccounts.length) : 0
+      const index = !env.CHECK && !env.TYPE ? rand(Taccounts.length) : 0
       const account = Taccounts[index]
       accounts = Taccounts.filter(a => a !== account)
 
