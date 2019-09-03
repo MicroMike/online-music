@@ -146,12 +146,12 @@ const Ddisconnect = (c) => {
     c.out = true
     clearInterval(c.loopInter)
     c.emit('Cdisconnect')
-
+    
     console.log('Ddisconnect')
     delete parents[c.uniqId]
     delete serverPlaystemp[c.uniqId]
     errs[c.uniqId] = []
-
+    
     Object.values(streams).forEach(s => {
       if (s.parentId === c.uniqId) { delete streams[s.id] }
     })
@@ -159,9 +159,10 @@ const Ddisconnect = (c) => {
   else {
     delete webs[c.id]
   }
-
+  
   c.removeAllListeners()
-
+  c.disconnect()
+  
   Object.values(webs).forEach(w => {
     w.emit('allData', getAllData())
     w.emit('playerInfos', Object.values(streams).map(s => s.infos))
