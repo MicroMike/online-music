@@ -63,11 +63,15 @@ const getAccounts = async () => {
 
 let gain = 0
 let gain2 = 0
+let gain3 = 0
+let gain3temp = plays
 let tempPlays = []
 let tempCalc = plays
 
 setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
+  gain3 = plays - gain3temp
+  gain3temp = plays
   await getAccounts()
 }, 1000 * 60)
 
