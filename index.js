@@ -169,6 +169,11 @@ io.on('connection', client => {
 
   client.on('parent', ({ parentId, connected, s }) => {
     if (connected) { Object.assign(streams, s) }
+    else {
+      Object.values(streams).forEach(s => {
+        if (s.parentId === parentId) { delete streams[s.id] }
+      })
+    }
 
     client.loopInter = setInterval(() => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE|CONNECT/)).length
