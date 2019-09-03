@@ -136,45 +136,45 @@ const getAllData = () => ({
   errs,
 })
 
-io.on('connect', () => {
-  console.log('connect')
-})
-io.on('connect_error', () => {
-  console.log('connect_error')
-})
-io.on('connect_timeout', () => {
-  console.log('connect_timeout')
-})
-io.on('error', () => {
-  console.log('error')
-})
-io.on('disconnect', () => {
-  console.log('disconnect')
-})
-io.on('reconnect', () => {
-  console.log('reconnect')
-})
-io.on('reconnect_attempt', () => {
-  console.log('reconnect_attempt')
-})
-io.on('reconnecting', () => {
-  console.log('reconnecting')
-})
-io.on('reconnect_error', () => {
-  console.log('reconnect_error')
-})
-io.on('reconnect_failed', () => {
-  console.log('reconnect_failed')
-})
-io.on('ping', () => {
-  console.log('ping')
-})
-io.on('pong', () => {
-  console.log('pong')
-})
-
 let total = 0
 io.on('connection', client => {
+  client.on('connect', () => {
+    console.log('connect')
+  })
+  client.on('connect_error', () => {
+    console.log('connect_error')
+  })
+  client.on('connect_timeout', () => {
+    console.log('connect_timeout')
+  })
+  client.on('error', () => {
+    console.log('error')
+  })
+  client.on('disconnect', () => {
+    console.log('disconnect')
+  })
+  client.on('reconnect', () => {
+    console.log('reconnect')
+  })
+  client.on('reconnect_attempt', () => {
+    console.log('reconnect_attempt')
+  })
+  client.on('reconnecting', () => {
+    console.log('reconnecting')
+  })
+  client.on('reconnect_error', () => {
+    console.log('reconnect_error')
+  })
+  client.on('reconnect_failed', () => {
+    console.log('reconnect_failed')
+  })
+  client.on('ping', () => {
+    console.log('ping')
+  })
+  client.on('pong', () => {
+    console.log('pong')
+  })
+
   total++
   console.log('connection', total)
 
