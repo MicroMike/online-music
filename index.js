@@ -73,6 +73,7 @@ setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
+  serverPlays = {}
   await getAccounts()
 }, 1000 * 60)
 
@@ -249,14 +250,11 @@ io.on('connection', client => {
     })
   })
 
-  client.on('plays', ({ streamId, next, currentAlbum, matchTime }) => {
+  client.on('plays', ({ streamId, parentId, next, currentAlbum, matchTime }) => {
     plays++
     if (next) { nexts++ }
 
-    if (streams[streamId]) {
-      serverPlays[streams[streamId].parentId] = serverPlays[streams[streamId].parentId] ? serverPlays[streams[streamId].parentId] + 1 : 0
-      streams[streamId].countPlays = streams[streamId].countPlays ? streams[streamId].countPlays + 1 : 0
-    }
+    serverPlays[parentId] = serverPlays[parentId] === 0 ? serverPlays[parentId] + 1 : 0
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
