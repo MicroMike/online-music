@@ -198,6 +198,11 @@ io.on('connection', client => {
   client.on('parent', async ({ parentId, connected, s, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) { Object.assign(streams, s) }
+    else {
+      Object.values(streams).forEach(s => {
+        if (s.parentId === parentId) { delete streams[s.id] }
+      })
+    }
 
     client.uniqId = parentId
     parents[parentId] = client
