@@ -222,7 +222,7 @@ io.on('connection', client => {
 
         let ok = false
         while (!ok) {
-          const streamId = rand(1000000)
+          const streamId = rand(10000)
           if (!streams[streamId]) {
             ok = true
             streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'WAIT_PAGE' } }
