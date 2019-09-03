@@ -211,7 +211,7 @@ io.on('connection', client => {
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
       console.log(getNumbers(parentId), max)
-      if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) { client.emit('run') }
+      if (!RUN_WAIT_PAGE && (!getNumbers(parentId) || getNumbers(parentId) < Number(max))) { client.emit('run') }
     }, 1000 * 10)
   })
 
