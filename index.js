@@ -134,6 +134,34 @@ const getAllData = () => ({
 io.on('connection', client => {
   client.emit('activate', client.id)
 
+  const Ddisconnect = () => {
+    if (client.uniqId) {
+      console.log('Ddisconnect')
+      delete parents[client.uniqId]
+      errs[client.uniqId] = []
+
+      Object.values(streams).forEach(s => {
+        if (s.parentId === client.uniqId) { delete streams[s.id] }
+      })
+
+      clearInterval(client.loopInter)
+    }
+    else {
+      delete webs[client.id]
+    }
+
+    client.removeAllListeners()
+
+    Object.values(webs).forEach(w => {
+      w.emit('allData', getAllData())
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+    })
+  }
+
+  client.on('Ddisconnect', e => {
+    Ddisconnect()
+  })
+
   client.on('outLog', e => {
     if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
 
@@ -159,6 +187,7 @@ io.on('connection', client => {
 
     client.loopInter = setInterval(() => {
       if (client.out) {
+        Ddisconnect()
         client.emit('Cdisconnect')
         return clearInterval(client.loopInter)
       }
@@ -248,30 +277,6 @@ io.on('connection', client => {
 
     Object.values(webs).forEach(w => {
       // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    })
-  })
-
-  client.on('Ddisconnect', () => {
-    if (client.uniqId) {
-      console.log('Ddisconnect')
-      delete parents[client.uniqId]
-      errs[client.uniqId] = []
-
-      Object.values(streams).forEach(s => {
-        if (s.parentId === client.uniqId) { delete streams[s.id] }
-      })
-
-      clearInterval(client.loopInter)
-    }
-    else {
-      delete webs[client.id]
-    }
-
-    client.removeAllListeners()
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
       w.emit('playerInfos', Object.values(streams).map(s => s.infos))
     })
   })
