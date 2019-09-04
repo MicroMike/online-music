@@ -193,7 +193,7 @@ io.on('connection', client => {
   client.on('parent', async ({ parentId, connected, s, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) {
-      console.log('reconnected')
+      console.log('reconnected', parentId)
       Object.assign(streams, s)
     }
     else {
