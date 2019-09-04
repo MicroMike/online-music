@@ -388,6 +388,7 @@ io.on('connection', client => {
     client.on('close', async streamId => {
       const parentId = streams[streamId].parentId
       const parent = parents[parentId]
+      console.log(parent)
 
       parent && parent.emit('close', streamId)
     })
