@@ -147,7 +147,7 @@ const Ddisconnect = (c) => {
     clearInterval(c.loopInter)
     c.emit('Cdisconnect')
 
-    console.log('Ddisconnect')
+    console.log('Ddisconnect', c.uniqId)
     delete parents[c.uniqId]
     delete serverPlaystemp[c.uniqId]
     errs[c.uniqId] = []
@@ -225,8 +225,8 @@ io.on('connection', client => {
           const streamId = rand(10000)
           if (!streams[streamId]) {
             ok = true
-            streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'WAIT_PAGE' } }
             client.emit('run', { runnerAccount, streamId })
+            streams[streamId] = { account: runnerAccount, id: streamId, parentId }
           }
         }
       }
