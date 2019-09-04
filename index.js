@@ -143,7 +143,6 @@ const getAllData = () => ({
 
 const Ddisconnect = (c) => {
   if (c.uniqId) {
-    c.out = true
     clearInterval(c.loopInter)
     c.emit('Cdisconnect')
 
@@ -173,7 +172,6 @@ io.on('connection', client => {
   client.emit('activate', client.id)
 
   client.on('Ddisconnect', () => {
-    client.out = true
     Ddisconnect(client)
   })
 
@@ -211,7 +209,7 @@ io.on('connection', client => {
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      if (client.out || client.disconnected) {
+      if (client.disconnected) {
         Ddisconnect(client)
         return
       }
