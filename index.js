@@ -166,7 +166,7 @@ const Ddisconnect = (c) => {
   })
 }
 
-io.on('connection', client => {
+io.on('connect', client => {
   client.on('Ddisconnect', () => {
     Ddisconnect(client)
   })
