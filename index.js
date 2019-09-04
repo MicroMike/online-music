@@ -167,8 +167,6 @@ const Ddisconnect = (c) => {
 }
 
 io.on('connection', client => {
-  client.emit('activate', client.id)
-
   client.on('Ddisconnect', () => {
     Ddisconnect(client)
   })
@@ -194,7 +192,10 @@ io.on('connection', client => {
 
   client.on('parent', async ({ parentId, connected, s, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
-    if (connected) { Object.assign(streams, s) }
+    if (connected) {
+      console.log('reconnected')
+      Object.assign(streams, s)
+    }
     else {
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
@@ -403,6 +404,8 @@ io.on('connection', client => {
       await getAccounts()
     })
   })
+
+  client.emit('activate', client.id)
 });
 
 app.listen(process.env.PORT || 3000);
