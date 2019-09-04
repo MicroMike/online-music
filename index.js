@@ -410,9 +410,7 @@ io.on('connection', client => {
     })
   })
 
-  setTimeout(() => {
-    client.emit('activate', client.id)
-  }, rand(1000 * 10));
+  client.emit('activate', client.id)
 });
 
 app.listen(process.env.PORT || 3000);
