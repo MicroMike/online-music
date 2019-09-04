@@ -193,11 +193,9 @@ io.on('connection', client => {
   client.on('parent', async ({ parentId, connected, s, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
     if (connected) {
-      console.log('reconnected', parentId)
       Object.assign(streams, s)
     }
     else {
-      console.log('disconnected', parentId)
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
       })
@@ -209,11 +207,10 @@ io.on('connection', client => {
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      // if (client.disconnected) {
-      //   console.log('disconnected')
-      //   Ddisconnect(client)
-      //   return
-      // }
+      if (client.disconnected) {
+        Ddisconnect(client)
+        return
+      }
 
       client.emit('streamInfos')
 
@@ -386,6 +383,13 @@ io.on('connection', client => {
       const parent = parents[parentId]
 
       parent && parent.emit('forceOut', streamId)
+    })
+
+    client.on('close', async streamId => {
+      const parentId = streams[streamId].parentId
+      const parent = parents[parentId]
+
+      parent && parent.emit('close', streamId)
     })
 
     client.on('restart', async cid => {

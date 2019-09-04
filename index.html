@@ -65,6 +65,10 @@
       socket.emit('restart', id)
     }
 
+    const close = (id = null) => {
+      socket.emit('close', id)
+    }
+
     const kill = (id = null) => {
       socket.emit('kill', id)
     }
@@ -120,7 +124,7 @@
       Object.keys(clients).sort().forEach((k, i) => {
         const val = clients[k]
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
-        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${k} => ${val}<button id="R_${k}" onclick="restart('${k}')">R</button></span>`)
+        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${k} => ${val}<button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="close('${k}')">C</button></span>`)
       })
 
       for (let key in errs) {
