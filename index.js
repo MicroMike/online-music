@@ -197,6 +197,7 @@ io.on('connection', client => {
       Object.assign(streams, s)
     }
     else {
+      console.log('disconnected', parentId)
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
       })
