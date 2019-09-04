@@ -205,11 +205,16 @@ io.on('connection', client => {
       })
     }
 
+    client.emit('streamInfos')
+
     client.uniqId = parentId
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      if (client.out) { return }
+      if (client.out || client.disconnected) {
+        Ddisconnect(client)
+        return
+      }
 
       client.emit('streamInfos')
 
