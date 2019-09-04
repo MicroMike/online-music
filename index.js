@@ -67,15 +67,13 @@ let gain3 = 0
 let gain3temp = plays
 let tempPlays = []
 let tempCalc = plays
-let serverPlaystemp = {}
 let serverPlays = {}
 
 setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
-  serverPlays = { ...serverPlaystemp }
-  if (time % 5 === 0) { serverPlaystemp = {} }
+  if (time % 5 === 0) { serverPlays = {} }
   await getAccounts()
 }, 1000 * 60)
 
@@ -148,7 +146,7 @@ const Ddisconnect = (c) => {
 
     console.log('Ddisconnect', c.uniqId)
     delete parents[c.uniqId]
-    delete serverPlaystemp[c.uniqId]
+    delete serverPlays[c.uniqId]
     errs[c.uniqId] = []
 
     Object.values(streams).forEach(s => {
@@ -266,7 +264,7 @@ io.on('connection', client => {
     plays++
     if (next) { nexts++ }
 
-    serverPlaystemp[parentId] = serverPlaystemp[parentId] ? serverPlaystemp[parentId] + 1 : 1
+    serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + 1 : 1
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
