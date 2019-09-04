@@ -208,8 +208,7 @@ io.on('connection', client => {
 
     client.loopInter = setInterval(() => {
       if (client.disconnected) {
-        Ddisconnect(client)
-        return
+        console.log(getNumbers(parentId))
       }
 
       client.emit('streamInfos')
@@ -227,7 +226,6 @@ io.on('connection', client => {
           if (!streams[streamId]) {
             ok = true
             client.emit('run', { runnerAccount, streamId })
-            streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
 
             Object.values(webs).forEach(w => {
               w.emit('playerInfos', Object.values(streams).map(s => s.infos))
@@ -312,7 +310,12 @@ io.on('connection', client => {
   })
 
   client.on('web', () => {
+    0
     webs[client.id] = client
+
+    client.on('disconnect', () => {
+      Ddisconnect(client)
+    })
 
     Object.values(imgs).forEach(d => {
       Object.values(webs).forEach(c => {
