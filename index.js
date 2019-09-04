@@ -208,6 +208,7 @@ io.on('connection', client => {
 
     client.loopInter = setInterval(() => {
       if (client.disconnected) {
+        console.log('disconnected')
         Ddisconnect(client)
         return
       }
