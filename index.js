@@ -167,6 +167,10 @@ const Ddisconnect = (c) => {
 }
 
 io.on('connect', client => {
+  client.on('disconnect', () => {
+    Ddisconnect(client)
+  })
+
   client.on('Ddisconnect', () => {
     Ddisconnect(client)
   })
@@ -208,10 +212,6 @@ io.on('connect', client => {
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      if (!client.connected) {
-        console.log(getNumbers(parentId))
-      }
-
       client.emit('streamInfos')
 
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
