@@ -213,7 +213,7 @@ io.on('connection', client => {
 
       client.emit('streamInfos')
 
-      const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/RUN|WAIT_PAGE/)).length
+      const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
       if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) {
@@ -226,7 +226,11 @@ io.on('connection', client => {
           if (!streams[streamId]) {
             ok = true
             client.emit('run', { runnerAccount, streamId })
-            streams[streamId] = { account: runnerAccount, id: streamId, parentId }
+            streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
+
+            Object.values(webs).forEach(w => {
+              w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+            })
           }
         }
       }
