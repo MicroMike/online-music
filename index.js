@@ -208,7 +208,7 @@ io.on('connect', client => {
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      if (client.disconnected) {
+      if (!client.connected) {
         console.log(getNumbers(parentId))
       }
 
