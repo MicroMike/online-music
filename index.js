@@ -187,6 +187,7 @@ io.on('connection', client => {
 
     Object.values(webs).forEach(w => {
       w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+      w.emit('allData', getAllData())
     })
   })
 
