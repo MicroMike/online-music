@@ -209,11 +209,11 @@ io.on('connection', client => {
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      if (client.disconnected) {
-        console.log('disconnected')
-        Ddisconnect(client)
-        return
-      }
+      // if (client.disconnected) {
+      //   console.log('disconnected')
+      //   Ddisconnect(client)
+      //   return
+      // }
 
       client.emit('streamInfos')
 
