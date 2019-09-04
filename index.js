@@ -73,7 +73,7 @@ setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
-  if (time % 5 === 0) { serverPlays = {} }
+  if (time % 2 === 0) { serverPlays = {} }
   await getAccounts()
 }, 1000 * 60)
 
