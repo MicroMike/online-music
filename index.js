@@ -234,6 +234,7 @@ io.on('connect', client => {
           if (!streams[streamId]) {
             ok = true
             client.emit('run', { runnerAccount, streamId })
+            streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
 
             Object.values(webs).forEach(w => {
               w.emit('playerInfos', Object.values(streams).map(s => s.infos))
