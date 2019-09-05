@@ -395,12 +395,12 @@ io.on('connect', client => {
       parent && parent.emit('forceOut', streamId)
     })
 
-    client.on('close', async streamId => {
+    client.on('killall', async streamId => {
       const parentId = streams[streamId].parentId
       const parent = parents[parentId]
       console.log(parent)
 
-      parent && parent.emit('close', streamId)
+      parent && parent.emit('killall', streamId)
     })
 
     client.on('restart', async cid => {
