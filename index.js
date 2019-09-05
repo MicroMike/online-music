@@ -168,6 +168,9 @@ const Ddisconnect = (c) => {
 
 io.on('connect', client => {
   client.on('disconnect', () => {
+    if (client.connected) {
+      console.log('still connected')
+    }
     Ddisconnect(client)
   })
 
