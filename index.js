@@ -68,11 +68,13 @@ let gain3temp = plays
 let tempPlays = []
 let tempCalc = plays
 let serverPlays = {}
+let serverPlaysTemp = {}
 
 setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
+  serverPlaysTemp = serverPlays
   serverPlays = {}
   await getAccounts()
 }, 1000 * 60)
@@ -135,7 +137,7 @@ const getAllData = () => ({
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24).split('.')[0] + '€/jour ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain3: gain3 + '€/min ' + String(gain3 * 60 * 24).split('.')[0] + '€/jour ' + String(gain3 * 60 * 24 * 30).split('.')[0] + '€/mois',
   clients: getNumbers(),
-  serverPlays,
+  serverPlays: serverPlaysTemp,
   errs,
 })
 
