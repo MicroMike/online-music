@@ -399,7 +399,7 @@ io.on('connect', client => {
 
     client.on('killall', async parentId => {
       const parent = parents[parentId]
-      parent && parent.emit('killall', streamId)
+      parent && parent.emit('killall')
     })
 
     client.on('restart', async cid => {
