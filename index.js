@@ -396,11 +396,8 @@ io.on('connect', client => {
       parent && parent.emit('forceOut', streamId)
     })
 
-    client.on('killall', async streamId => {
-      const parentId = streams[streamId].parentId
+    client.on('killall', async parentId => {
       const parent = parents[parentId]
-      console.log(parent)
-
       parent && parent.emit('killall', streamId)
     })
 
