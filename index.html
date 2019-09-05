@@ -118,7 +118,7 @@
 
       Object.keys(serverPlays).sort().forEach((k, i) => {
         const val = serverPlays[k]
-        document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${val}</span>`)
+        document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${val / clients[k]}</span>`)
       })
 
       Object.keys(clients).sort().forEach((k, i) => {
