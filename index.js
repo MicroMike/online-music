@@ -224,7 +224,7 @@ io.on('connect', client => {
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
-      if ((!RUN_WAIT_PAGE || RUN_WAIT_PAGE < 3) && getNumbers(parentId) < Number(max)) {
+      if ((!RUN_WAIT_PAGE || RUN_WAIT_PAGE < 5) && getNumbers(parentId) < Number(max)) {
         const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
         if (!runnerAccount) { return }
 
