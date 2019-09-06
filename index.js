@@ -189,13 +189,13 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('streamInfos', ({ s, parentId, countPlays, env, max }) => {
-    Object.keys(streams).forEach(k => {
-      streams[k] = {
-        ...streams[k],
-        ...s[k],
-      }
-    })
+  client.on('streamInfos', ({ parentId, countPlays, env, max }) => {
+    // Object.keys(streams).forEach(k => {
+    //   streams[k] = {
+    //     ...streams[k],
+    //     ...s[k],
+    //   }
+    // })
     // Object.assign(streams, s)
 
     if (countPlays) {
