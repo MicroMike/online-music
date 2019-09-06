@@ -190,14 +190,6 @@ io.on('connect', client => {
   })
 
   client.on('streamInfos', ({ parentId, countPlays, env, max }) => {
-    // Object.keys(streams).forEach(k => {
-    //   streams[k] = {
-    //     ...streams[k],
-    //     ...s[k],
-    //   }
-    // })
-    // Object.assign(streams, s)
-
     if (countPlays) {
       serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
       plays += countPlays
@@ -236,48 +228,21 @@ io.on('connect', client => {
     }, 1000 * 5);
   })
 
-  client.on('parent', async ({ parentId, connected, s, env }) => {
+  client.on('parent', async ({ parentId, connected, env }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
     console.log('connected', parentId)
 
-    if (connected) {
-      Object.assign(streams, s)
-    }
-    else {
+    if (!connected) {
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
       })
     }
 
-    client.emit('streamInfos')
-
     client.uniqId = parentId
     parents[parentId] = client
 
-    // client.loopInter = setInterval(() => {
-    //   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
-    //   // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
-
-    //   if ((!RUN_WAIT_PAGE || RUN_WAIT_PAGE < 5) && getNumbers(parentId) < Number(max)) {
-    //     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
-    //     if (!runnerAccount) { return }
-
-    //     let ok = false
-    //     while (!ok) {
-    //       const streamId = rand(10000)
-    //       if (!streams[streamId]) {
-    //         ok = true
-    //         client.emit('run', { runnerAccount, streamId })
-    //         streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
-
-    //         Object.values(webs).forEach(w => {
-    //           w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    //         })
-    //       }
-    //     }
-    //   }
-    // }, 1000 * 5)
+    client.emit('go')
   })
 
   client.on('used', account => {
