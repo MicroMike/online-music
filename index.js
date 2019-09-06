@@ -228,6 +228,10 @@ io.on('connect', client => {
     }, 1000 * 5);
   })
 
+  client.on('go', () => {
+    client.emit('streamInfos')
+  })
+
   client.on('parent', async ({ parentId, connected, env }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
