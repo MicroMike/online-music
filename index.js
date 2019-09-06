@@ -189,7 +189,7 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('streamInfos', ({ s, parentId, countPlays }) => {
+  client.on('streamInfos', ({ s, parentId, countPlays, env, max }) => {
     Object.assign(streams, s)
 
     if (countPlays) {
@@ -210,12 +210,34 @@ io.on('connect', client => {
       w.emit('allData', getAllData())
     })
 
+    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
+    // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
+
+    if ((!RUN_WAIT_PAGE || RUN_WAIT_PAGE < 5) && getNumbers(parentId) < Number(max)) {
+      const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
+      if (!runnerAccount) { return }
+
+      let ok = false
+      while (!ok) {
+        const streamId = rand(10000)
+        if (!streams[streamId]) {
+          ok = true
+          client.emit('run', { runnerAccount, streamId })
+          streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
+
+          Object.values(webs).forEach(w => {
+            w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+          })
+        }
+      }
+    }
+
     setTimeout(() => {
       client.emit('streamInfos')
     }, 1000 * 5);
   })
 
-  client.on('parent', async ({ parentId, connected, s, env, max }) => {
+  client.on('parent', async ({ parentId, connected, s, env }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
     console.log('connected', parentId)
@@ -234,29 +256,29 @@ io.on('connect', client => {
     client.uniqId = parentId
     parents[parentId] = client
 
-    client.loopInter = setInterval(() => {
-      const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
-      // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
+    // client.loopInter = setInterval(() => {
+    //   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
+    //   // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
-      if ((!RUN_WAIT_PAGE || RUN_WAIT_PAGE < 5) && getNumbers(parentId) < Number(max)) {
-        const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
-        if (!runnerAccount) { return }
+    //   if ((!RUN_WAIT_PAGE || RUN_WAIT_PAGE < 5) && getNumbers(parentId) < Number(max)) {
+    //     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
+    //     if (!runnerAccount) { return }
 
-        let ok = false
-        while (!ok) {
-          const streamId = rand(10000)
-          if (!streams[streamId]) {
-            ok = true
-            client.emit('run', { runnerAccount, streamId })
-            streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
+    //     let ok = false
+    //     while (!ok) {
+    //       const streamId = rand(10000)
+    //       if (!streams[streamId]) {
+    //         ok = true
+    //         client.emit('run', { runnerAccount, streamId })
+    //         streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
 
-            Object.values(webs).forEach(w => {
-              w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-            })
-          }
-        }
-      }
-    }, 1000 * 5)
+    //         Object.values(webs).forEach(w => {
+    //           w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+    //         })
+    //       }
+    //     }
+    //   }
+    // }, 1000 * 5)
   })
 
   client.on('used', account => {
