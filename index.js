@@ -192,15 +192,17 @@ io.on('connect', client => {
   client.on('streamInfos', ({ s, parentId, countPlays }) => {
     Object.assign(streams, s)
 
-    console.log(parentId + ': Add ' + countPlays + ' plays')
-    serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
-    actions('gain?' + countPlays + '/' + countPlays + '/' + time, body => {
-      if (body.new) {
-        plays = 0
-        nexts = 0
-        time = 0
-      }
-    })
+    if (countPlays) {
+      console.log(parentId + ': Add ' + countPlays + ' plays')
+      serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
+      actions('gain?' + countPlays + '/' + countPlays + '/' + time, body => {
+        if (body.new) {
+          plays = 0
+          nexts = 0
+          time = 0
+        }
+      })
+    }
 
     Object.values(webs).forEach(w => {
       w.emit('playerInfos', Object.values(streams).map(s => s.infos))
