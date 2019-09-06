@@ -192,13 +192,28 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('streamInfos', s => {
+  client.on('streamInfos', ({ s, parentId }) => {
     Object.assign(streams, s)
+
+    const countPlays = Object.values(s).forEach(sp => sp.plays).reduce((a, b) => a + b, 0)
+    serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
+
+    actions('gain?' + countPlays + '/' + countPlays + '/' + time, body => {
+      if (body.new) {
+        plays = 0
+        nexts = 0
+        time = 0
+      }
+    })
 
     Object.values(webs).forEach(w => {
       w.emit('playerInfos', Object.values(streams).map(s => s.infos))
       w.emit('allData', getAllData())
     })
+
+    setTimeout(() => {
+      client.emit('streamInfos')
+    }, 1000 * 5);
   })
 
   client.on('parent', async ({ parentId, connected, s, env, max }) => {
@@ -221,8 +236,6 @@ io.on('connect', client => {
     parents[parentId] = client
 
     client.loopInter = setInterval(() => {
-      client.emit('streamInfos')
-
       const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
       // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
@@ -269,25 +282,25 @@ io.on('connect', client => {
     })
   })
 
-  client.on('plays', ({ streamId, parentId, next, currentAlbum, matchTime }) => {
-    plays++
-    if (next) { nexts++ }
+  // client.on('plays', ({ streamId, parentId, next, currentAlbum, matchTime }) => {
+  //   plays++
+  //   if (next) { nexts++ }
 
-    serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + 1 : 1
+  //   serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + 1 : 1
 
-    actions('listen?' + currentAlbum)
-    actions('gain?' + plays + '/' + nexts + '/' + time, body => {
-      if (body.new) {
-        plays = 0
-        nexts = 0
-        time = 0
-      }
-    })
+  //   actions('listen?' + currentAlbum)
+  //   actions('gain?' + plays + '/' + nexts + '/' + time, body => {
+  //     if (body.new) {
+  //       plays = 0
+  //       nexts = 0
+  //       time = 0
+  //     }
+  //   })
 
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-    })
-  })
+  //   Object.values(webs).forEach(w => {
+  //     w.emit('allData', getAllData())
+  //   })
+  // })
 
   client.on('playerInfos', datas => {
     const stream = streams[datas.streamId]

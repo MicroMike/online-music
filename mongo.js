@@ -100,9 +100,9 @@ module.exports = {
               r.save((err, g) => callback && callback({ new: true, g }))
             }
             else {
-              Rg.plays = Number(p[0])
-              Rg.nexts = Number(p[1])
-              Rg.time = Number(p[2])
+              if (p[0]) { Rg.plays = Number(p[0]) }
+              if (p[1]) { Rg.nexts = Number(p[1]) }
+              if (p[2]) { Rg.time = Number(p[2]) }
               Rg.save((err, g) => callback && callback({ g }))
             }
           })
