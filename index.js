@@ -325,9 +325,8 @@ io.on('connect', client => {
   client.on('playerInfos', datas => {
     const stream = streams[datas.streamId]
 
-    if (stream) {
-      streams[datas.streamId].infos = { ...datas }
-    }
+    if (!stream) { streams[datas.streamId] = {} }
+    streams[datas.streamId].infos = { ...datas }
 
     Object.values(webs).forEach(w => {
       // Object.values(streams).filter(s => !clients[s.parentId]).map(s => w.emit('playerInfos', { account: s.account, id: s.uniqId, nope: true }))
