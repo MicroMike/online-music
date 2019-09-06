@@ -217,19 +217,13 @@ io.on('connect', client => {
       const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
-      let ok = false
-      while (!ok) {
-        const streamId = rand(10000)
-        if (!streams[streamId]) {
-          ok = true
-          client.emit('run', { runnerAccount, streamId })
-          streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
+      const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
+      client.emit('run', { runnerAccount, streamId })
+      streams[streamId] = { account: runnerAccount, id: streamId, parentId, infos: { time: 'CREATE' } }
 
-          Object.values(webs).forEach(w => {
-            w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-          })
-        }
-      }
+      Object.values(webs).forEach(w => {
+        w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+      })
     }
 
     Object.values(webs).forEach(w => {
