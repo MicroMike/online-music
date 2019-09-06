@@ -233,16 +233,15 @@ io.on('connect', client => {
 
     console.log('connected', parentId)
 
+    client.uniqId = parentId
+    parents[parentId] = client
+
     if (!connected) {
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
       })
+      client.emit('go')
     }
-
-    client.uniqId = parentId
-    parents[parentId] = client
-
-    client.emit('go')
   })
 
   client.on('used', account => {
