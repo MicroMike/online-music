@@ -189,12 +189,11 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('streamInfos', ({ s, parentId }) => {
+  client.on('streamInfos', ({ s, parentId, countPlays }) => {
     Object.assign(streams, s)
 
-    const countPlays = Object.values(s).forEach(sp => sp.plays).reduce((a, b) => a + b, 0)
+    console.log(parentId + ': Add ' + countPlays + ' plays')
     serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
-
     actions('gain?' + countPlays + '/' + countPlays + '/' + time, body => {
       if (body.new) {
         plays = 0
