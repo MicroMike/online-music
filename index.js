@@ -205,11 +205,6 @@ io.on('connect', client => {
       })
     }
 
-    Object.values(webs).forEach(w => {
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-      w.emit('allData', getAllData())
-    })
-
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
     // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
@@ -231,6 +226,11 @@ io.on('connect', client => {
         }
       }
     }
+
+    Object.values(webs).forEach(w => {
+      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+      w.emit('allData', getAllData())
+    })
 
     setTimeout(() => {
       client.emit('streamInfos')
