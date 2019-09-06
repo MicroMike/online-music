@@ -195,7 +195,8 @@ io.on('connect', client => {
     if (countPlays) {
       console.log(parentId + ': Add ' + countPlays + ' plays')
       serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
-      actions('gain?' + countPlays + '/' + countPlays + '/' + time, body => {
+      plays += countPlays
+      actions('gain?' + plays + '/' + plays + '/' + time, body => {
         if (body.new) {
           plays = 0
           nexts = 0
