@@ -326,10 +326,7 @@ io.on('connect', client => {
     const stream = streams[datas.streamId]
 
     if (stream) {
-      streams[datas.streamId].infos = {
-        ...datas,
-        countPlays: stream.countPlays
-      }
+      streams[datas.streamId].infos = { ...datas }
     }
 
     Object.values(webs).forEach(w => {
