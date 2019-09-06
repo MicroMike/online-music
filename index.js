@@ -193,7 +193,6 @@ io.on('connect', client => {
     Object.assign(streams, s)
 
     if (countPlays) {
-      console.log(parentId + ': Add ' + countPlays + ' plays')
       serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + countPlays : countPlays
       plays += countPlays
       actions('gain?' + plays + '/' + plays + '/' + time, body => {
