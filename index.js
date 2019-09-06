@@ -237,6 +237,7 @@ io.on('connect', client => {
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
       })
+      client.emit('streamInfos')
     }
     else {
       client.emit('recup')
@@ -244,8 +245,6 @@ io.on('connect', client => {
 
     client.uniqId = parentId
     parents[parentId] = client
-
-    client.emit('streamInfos')
   })
 
   client.on('used', account => {
