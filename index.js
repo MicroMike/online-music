@@ -203,7 +203,7 @@ io.on('connect', client => {
     setTimeout(() => { delete used[streamId] }, 1000 * 60 * 10);
   });
 
-  client.on('retryOk', streamId => {
+  client.on('retryOk', ({ streamId }) => {
     delete imgs[streamId]
 
     Object.values(webs).forEach(w => {
