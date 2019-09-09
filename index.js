@@ -327,7 +327,7 @@ io.on('connect', client => {
 
     client.on('kill', async streamId => {
       const stream = streams[streamId]
-      stream && stream.emit('forceOut', streamId)
+      stream && stream.emit && stream.emit('forceOut', streamId)
     })
 
     client.on('killall', async parentId => {
