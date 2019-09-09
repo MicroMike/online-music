@@ -260,9 +260,12 @@ io.on('connect', client => {
     }
 
     if (parents[client.uniqId]) {
-      Object.values(streams).forEach(s => {
-        if (s.parentId === client.uniqId) { delete streams[s.uniqId] }
-      })
+      if (parents[client.uniqId].out) {
+        Object.values(streams).forEach(s => {
+          if (s.parentId === client.uniqId) { delete streams[s.uniqId] }
+        })
+      }
+
       clearInterval(client.inter)
       delete parents[client.uniqId]
     }
@@ -345,10 +348,12 @@ io.on('connect', client => {
     client.on('restart', async cid => {
       if (cid) {
         const p = parents[cid]
+        p.out = true
         p && p.emit('Cdisconnect')
       }
       else {
         Object.values(parents).forEach(p => {
+          p.out = true
           p.emit('Cdisconnect')
         })
       }
