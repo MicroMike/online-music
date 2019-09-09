@@ -334,8 +334,10 @@ io.on('connect', client => {
     client.on('restart', async cid => {
       if (cid) {
         const p = parents[cid]
-        p.out = true
-        p && p.emit('Cdisconnect')
+        if (f) {
+          p.out = true
+          p.emit('Cdisconnect')
+        }
       }
       else {
         Object.values(parents).forEach(p => {
