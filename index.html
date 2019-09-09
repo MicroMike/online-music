@@ -143,7 +143,7 @@
     })
 
     socket.on('endStream', streamId => {
-      const isDom = document.querySelector('#class' + streamId)
+      const isDom = streamId && document.querySelector('#class' + streamId)
       isDom && isDom.parentElement.remove()
     })
 
