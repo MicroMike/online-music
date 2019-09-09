@@ -142,7 +142,9 @@ const getAllData = () => ({
   errs,
 })
 
-const runLoop = (c, { parentId, countPlays, env, max }) => {
+const runLoop = (c, { parentId, env, max }) => {
+  c.emit('ping', 'pong')
+
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
   // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
@@ -191,7 +193,7 @@ io.on('connect', client => {
     parents[parentId] = client
   })
 
-  client.on('client', async ({ parentId, streamId, account, env }) => {
+  client.on('client', async ({ parentId, streamId, account }) => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
@@ -222,7 +224,7 @@ io.on('connect', client => {
     })
   })
 
-  client.on('plays', ({ streamId, parentId, next, currentAlbum, matchTime }) => {
+  client.on('plays', ({ parentId, next, currentAlbum }) => {
     plays++
     if (next) { nexts++ }
 
