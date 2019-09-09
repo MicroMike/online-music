@@ -153,12 +153,14 @@ const runLoop = (c, { parentId, countPlays, env, max }) => {
     const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
     c.emit('run', { runnerAccount, streamId })
   }
-
-  Object.values(webs).forEach(w => {
-    w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    w.emit('allData', getAllData())
-  })
 }
+
+setInterval(() => {
+  Object.values(webs).forEach(w => {
+    w.emit('allData', getAllData())
+    w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+  })
+}, 1000);
 
 io.on('connect', client => {
   client.on('outLog', e => {
@@ -234,10 +236,6 @@ io.on('connect', client => {
         time = 0
       }
     })
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-    })
   })
 
   client.on('playerInfos', datas => {
@@ -245,11 +243,6 @@ io.on('connect', client => {
 
     if (!stream) { streams[datas.streamId] = { parentId: datas.parentId } }
     streams[datas.streamId].infos = { ...datas }
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    })
   })
 
   client.on('disconnect', () => {
@@ -271,11 +264,6 @@ io.on('connect', client => {
     if (webs[client.id]) { delete webs[client.id] }
 
     client.removeAllListeners()
-
-    Object.values(webs).forEach(w => {
-      w.emit('allData', getAllData())
-      w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-    })
   })
 
   client.on('web', () => {
