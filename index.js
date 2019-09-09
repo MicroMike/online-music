@@ -175,8 +175,6 @@ io.on('connect', client => {
   client.on('parent', async ({ parentId, connected, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
-    console.log('connected', parentId)
-
     if (!connected) {
       Object.values(streams).forEach(s => {
         if (s.parentId === parentId) { delete streams[s.id] }
