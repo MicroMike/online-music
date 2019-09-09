@@ -200,7 +200,10 @@ io.on('connect', client => {
     client.parentId = parentId
     client.account = account
 
-    streams[streamId] = client
+    streams[streamId] = {
+      ...streams[streamId],
+      ...client
+    }
   })
 
   client.on('used', streamId => {
