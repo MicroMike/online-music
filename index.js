@@ -199,7 +199,7 @@ io.on('connect', client => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
-    client.infos = streams[streamId].infos || {}
+    client.infos = streams[streamId] ? streams[streamId].infos : {}
 
     streams[streamId] = client
   })
