@@ -161,10 +161,6 @@ const runLoop = (c, { parentId, countPlays, env, max }) => {
 }
 
 io.on('connect', client => {
-  client.on('disconnect', (why) => {
-    if (client.uniqId) { console.log(why) }
-  })
-
   client.on('outLog', e => {
     if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
 
