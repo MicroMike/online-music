@@ -10,7 +10,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, (error) => {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_hh7w1mwf:i77e7hdna588rqokcp2m62hq0d@ds231377.mlab.com:31377/heroku_hh7w1mwf', (error) => {
   if (error) {
     console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
     throw error;
@@ -143,8 +143,6 @@ const getAllData = () => ({
 })
 
 const runLoop = (c, { parentId, env, max }) => {
-  c.emit('ping', 'pong')
-
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
   // const CONNECT = Object.values(streams).filter(s => s.parentId === id && s.infos && s.infos.time && String(s.infos.time).match(/CONNECT/)).length
 
