@@ -5,7 +5,9 @@ const {
   handler
 } = require('./mongo')
 const app = require('http').createServer(handler)
-const io = require('socket.io')(app);
+const io = require('socket.io')(app, {
+  pingTimeout: 1000 * 60
+});
 const fs = require('fs');
 const mongoose = require('mongoose');
 
