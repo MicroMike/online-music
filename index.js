@@ -247,8 +247,11 @@ io.on('connect', client => {
   client.on('playerInfos', datas => {
     const stream = streams[datas.streamId]
 
-    if (!stream) { streams[datas.streamId] = { parentId: datas.parentId } }
-    streams[datas.streamId].infos = { ...datas }
+    if (datas.remove) { delete streams[datas.streamId] }
+    else {
+      if (!stream) { streams[datas.streamId] = { parentId: datas.parentId } }
+      streams[datas.streamId].infos = { ...datas }
+    }
   })
 
   client.on('disconnect', why => {
