@@ -206,7 +206,7 @@ io.on('connect', client => {
     streams[streamId] = client
   })
 
-  client.on('used', streamId => {
+  client.on('used', ({ streamId, account }) => {
     used[streamId] = account
     setTimeout(() => { delete used[streamId] }, 1000 * 60 * 10);
   });
