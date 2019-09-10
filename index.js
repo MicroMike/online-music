@@ -192,7 +192,7 @@ io.on('connect', client => {
     client.uniqId = parentId
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
-    }, 1000 * 5);
+    }, 1000 * 10);
 
     parents[parentId] = client
   })
