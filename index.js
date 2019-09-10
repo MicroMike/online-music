@@ -80,6 +80,10 @@ setInterval(async () => {
   serverPlaysTemp = { ...serverPlays }
   serverPlays = {}
   await getAccounts()
+
+  Object.values(streams).forEach(s => {
+    if (!s.connected) { delete streams[s.streamId] }
+  })
 }, 1000 * 60)
 
 const timer = 5
@@ -255,12 +259,6 @@ io.on('connect', client => {
     }
 
     if (parents[client.uniqId]) {
-      if (parents[client.uniqId].out) {
-        Object.values(streams).forEach(s => {
-          if (s.parentId === client.uniqId) { delete streams[s.uniqId] }
-        })
-      }
-
       clearInterval(client.inter)
       delete parents[client.uniqId]
     }
