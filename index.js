@@ -129,9 +129,6 @@ const getNumbers = (id) => {
 }
 
 const getAllData = () => ({
-  // clients: {
-  //   ...Object.values(clients).map(c => Object.values(streams).filter(s => s.parentId === c.uniqId)),
-  // },
   accounts: accounts && accounts.length,
   streams: Object.values(streams).length,
   playing: Object.values(streams).filter(s => s.infos).length,
@@ -251,6 +248,15 @@ io.on('connect', client => {
     else {
       if (!stream) { streams[datas.streamId] = { parentId: datas.parentId } }
       streams[datas.streamId].infos = { ...datas }
+    }
+
+    if (datas.infos.time === 'WAIT_PAGE') {
+      client.timeout = setTimeout(() => {
+        delete streams[datas.streamId]
+      }, 1000 * 60);
+    }
+    else {
+      clearTimeout(client.timeout)
     }
   })
 
