@@ -250,7 +250,7 @@ io.on('connect', client => {
       streams[datas.streamId].infos = { ...datas }
     }
 
-    if (datas.infos.time === 'WAIT_PAGE') {
+    if (datas.time === 'WAIT_PAGE') {
       client.timeout = setTimeout(() => {
         delete streams[datas.streamId]
       }, 1000 * 60);
