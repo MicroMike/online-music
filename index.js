@@ -79,6 +79,7 @@ setInterval(async () => {
   gain3temp = plays
   serverPlaysTemp = { ...serverPlays }
   serverPlays = {}
+
   await getAccounts()
 
   Object.values(streams).forEach(s => {
@@ -119,6 +120,8 @@ const getAccount = env => {
   const index = !env.TYPE ? rand(Taccounts.length) : 0
   const account = Taccounts[index]
   accounts = Taccounts.filter(a => a !== account)
+
+  console.log('Size: ' + accounts.length)
 
   return account
 }
