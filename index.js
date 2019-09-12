@@ -82,9 +82,14 @@ setInterval(async () => {
 
   await getAccounts()
 
+  const testDouble = []
   Object.values(streams).forEach(s => {
     if (!s.connected) { delete streams[s.streamId] }
+    else {
+      testDouble[s.account] = testDouble[s.account] ? testDouble[s.account] + 1 : 1
+    }
   })
+  console.log('Double: ' + testDouble.filter(t => t > 1).length)
 }, 1000 * 60)
 
 const timer = 5
@@ -120,8 +125,6 @@ const getAccount = env => {
   const index = !env.TYPE ? rand(Taccounts.length) : 0
   const account = Taccounts[index]
   accounts = Taccounts.filter(a => a !== account)
-
-  console.log('Size: ' + accounts.length)
 
   return account
 }
