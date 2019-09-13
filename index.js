@@ -279,7 +279,8 @@ io.on('connect', client => {
     console.log(why)
 
     if (streams[client.uniqId]) {
-      parents[client.parentId].wait = false
+      try { parents[client.parentId].wait = false }
+      catch (e) { }
       delete streams[client.uniqId]
     }
 
