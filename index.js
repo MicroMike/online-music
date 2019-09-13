@@ -158,6 +158,7 @@ const getAllData = () => ({
 })
 
 const runLoop = (c, { parentId, env, max }) => {
+  console.log(getNumbers(parentId), Number(max))
   if (!parents[parentId].wait && getNumbers(parentId) < Number(max)) {
     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
     if (!runnerAccount) { return }
