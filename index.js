@@ -196,7 +196,6 @@ io.on('connect', client => {
     }
 
     client.uniqId = parentId
-    client.wait = false
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
     }, 1000 * 10);
@@ -272,8 +271,6 @@ io.on('connect', client => {
     console.log(why)
 
     if (streams[client.uniqId]) {
-      try { parents[client.parentId].wait = false }
-      catch (e) { }
       delete streams[client.uniqId]
     }
 
@@ -367,7 +364,7 @@ io.on('connect', client => {
         })
       }
 
-      await getAccounts()
+      accounts = await getAccounts()
     })
   })
 
