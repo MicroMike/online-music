@@ -193,11 +193,13 @@ io.on('connect', client => {
     }
 
     client.uniqId = parentId
+    client.inter = false
+    client.wait = false
+    parents[parentId] = client
+
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
     }, 1000 * 10);
-
-    parents[parentId] = client
   })
 
   client.on('client', async ({ parentId, streamId, account }) => {
