@@ -114,7 +114,7 @@ const rand = (max, min) => {
 (async () => await getAccounts())()
 
 const getAccount = env => {
-  let Taccounts = await getAccounts()
+  let Taccounts = [...accounts]
 
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
