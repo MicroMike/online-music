@@ -250,24 +250,26 @@ io.on('connect', client => {
   })
 
   client.on('playerInfos', datas => {
-    if (datas.exit) {
-      parents[datas.parentId].wait = false
-      delete streams[datas.streamId]
-    }
-    else if (datas.stopWait) {
-      parents[datas.parentId].wait = false
-      streams[datas.streamId].infos = { ...datas }
-    }
-    else {
-      if (streams[datas.streamId]) {
+    try {
+      if (datas.exit) {
+        parents[datas.parentId].wait = false
+        delete streams[datas.streamId]
+      }
+      else if (datas.stopWait) {
+        parents[datas.parentId].wait = false
         streams[datas.streamId].infos = { ...datas }
       }
       else {
-        try { parents[datas.parentId].wait = true }
-        catch (e) { }
-        streams[datas.streamId] = { parentId: datas.parentId, infos: { ...datas } }
+        if (streams[datas.streamId]) {
+          streams[datas.streamId].infos = { ...datas }
+        }
+        else {
+          parents[datas.parentId].wait = true
+          streams[datas.streamId] = { parentId: datas.parentId, infos: { ...datas } }
+        }
       }
     }
+    catch (e) { }
   })
 
   client.on('disconnect', why => {
