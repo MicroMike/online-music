@@ -263,6 +263,7 @@ io.on('connect', client => {
         streams[datas.streamId].infos = { ...datas }
       }
       else {
+        console.log(datas)
         parents[datas.parentId].wait = true
         streams[datas.streamId] = { parentId: datas.parentId, infos: { ...datas } }
       }
