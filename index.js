@@ -268,7 +268,7 @@ io.on('connect', client => {
         }
         else {
           parents[datas.parentId].wait = true
-          streams[datas.streamId] = { uniqId: streamId, parentId: datas.parentId, infos: { ...datas } }
+          streams[datas.streamId] = { uniqId: datas.streamId, parentId: datas.parentId, account: datas.account, infos: { ...datas } }
         }
       }
     }
