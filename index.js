@@ -83,8 +83,6 @@ setInterval(async () => {
   serverPlaysTemp = { ...serverPlays }
   serverPlays = {}
 
-  await getAccounts()
-
   const testDouble = []
   Object.values(streams).forEach(s => {
     if (!s.connected) { delete streams[s.streamId] }
@@ -116,7 +114,7 @@ const rand = (max, min) => {
 (async () => await getAccounts())()
 
 const getAccount = env => {
-  let Taccounts = [...accounts]
+  let Taccounts = await getAccounts()
 
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
@@ -158,7 +156,9 @@ const getAllData = () => ({
 })
 
 const runLoop = (c, { parentId, env, max }) => {
-  if (!parents[parentId].wait && getNumbers(parentId) < Number(max)) {
+  const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
+
+  if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) {
     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
     if (!runnerAccount) { return }
 
@@ -254,19 +254,13 @@ io.on('connect', client => {
   client.on('playerInfos', datas => {
     try {
       if (datas.exit) {
-        parents[datas.parentId].wait = false
         delete streams[datas.streamId]
-      }
-      else if (datas.stopWait) {
-        parents[datas.parentId].wait = false
-        streams[datas.streamId].infos = { ...datas }
       }
       else {
         if (streams[datas.streamId]) {
           streams[datas.streamId].infos = { ...datas }
         }
         else {
-          parents[datas.parentId].wait = true
           streams[datas.streamId] = { uniqId: datas.streamId, parentId: datas.parentId, account: datas.account, infos: { ...datas } }
         }
       }
