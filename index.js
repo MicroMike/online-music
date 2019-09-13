@@ -121,8 +121,6 @@ const getAccount = env => {
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
-  accounts = [...Taccounts]
-
   if (env.TYPE) {
     const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
     return typeAccounts[0]
@@ -131,6 +129,8 @@ const getAccount = env => {
   const index = !env.TYPE ? rand(Taccounts.length) : 0
   const account = Taccounts[index]
   accounts = Taccounts.filter(a => a !== account)
+
+  accounts = [...Taccounts]
 
   return account
 }
