@@ -56,12 +56,15 @@ actions('gain', body => {
 const getAccounts = async () => {
   let Taccounts = await getAllAccounts()
 
-  accounts = [...Taccounts]
-
   playerCount = Taccounts.reduce((arr, a) => {
     arr[a.split(':')[0]] = arr[a.split(':')[0]] ? arr[a.split(':')[0]] + 1 : 1
     return arr
   }, {})
+
+  Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+  Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+
+  accounts = [...Taccounts]
 }
 
 let gain = 0
