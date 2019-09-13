@@ -156,7 +156,7 @@ const getAllData = () => ({
 })
 
 const runLoop = (c, { parentId, env, max }) => {
-  const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE/)).length
+  const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE|CONNECT/)).length
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) {
     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
