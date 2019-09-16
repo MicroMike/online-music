@@ -204,6 +204,7 @@ io.on('connect', client => {
     }
 
     client.uniqId = parentId
+    client.wait = false
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
     }, 1000 * 10);
