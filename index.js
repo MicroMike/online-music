@@ -53,7 +53,7 @@ actions('gain', body => {
   }
 })
 
-const getAccounts = async () => {
+const getAccounts = async (restart = false) => {
   let Taccounts = await getAllAccounts()
 
   playerCount = Taccounts.reduce((arr, a) => {
@@ -61,8 +61,10 @@ const getAccounts = async () => {
     return arr
   }, {})
 
-  Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-  Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+  if (!restart) {
+    Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+    Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+  }
 
   accounts = [...Taccounts]
 }
@@ -369,7 +371,7 @@ io.on('connect', client => {
         })
       }
 
-      await getAccounts()
+      await getAccounts(true)
     })
   })
 
