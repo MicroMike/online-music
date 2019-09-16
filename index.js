@@ -158,7 +158,7 @@ const getAllData = () => ({
 const runLoop = (c, { parentId, env, max }) => {
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && String(s.infos.time).match(/CREATE|RUN|WAIT_PAGE|CONNECT/)).length
 
-  if (!RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) {
+  if (!parents[parentId].wait && !RUN_WAIT_PAGE && getNumbers(parentId) < Number(max)) {
     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
     if (!runnerAccount) { return }
 
@@ -184,6 +184,14 @@ io.on('connect', client => {
 
   client.on('log', log => {
     console.log(log)
+  })
+
+  client.on('wait', parentId => {
+    parents[parentId].wait = true
+  })
+
+  client.on('stopWait', parentId => {
+    parents[parentId].wait = false
   })
 
   client.on('parent', async ({ parentId, connected, env, max }) => {
@@ -251,20 +259,12 @@ io.on('connect', client => {
   })
 
   client.on('playerInfos', datas => {
-    try {
-      if (datas.exit) {
-        delete streams[datas.streamId]
-      }
-      else {
-        if (streams[datas.streamId]) {
-          streams[datas.streamId].infos = { ...datas }
-        }
-        else {
-          streams[datas.streamId] = { uniqId: datas.streamId, parentId: datas.parentId, account: datas.account, infos: { ...datas } }
-        }
-      }
+    if (streams[datas.streamId]) {
+      streams[datas.streamId].infos = { ...datas }
     }
-    catch (e) { }
+    else {
+      streams[datas.streamId] = { uniqId: datas.streamId, parentId: datas.parentId, account: datas.account, infos: { ...datas } }
+    }
   })
 
   client.on('disconnect', why => {
