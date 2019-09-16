@@ -209,7 +209,7 @@ io.on('connect', client => {
     client.wait = false
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
-    }, 1000 * 60 + rand(1000 * 60 * getNumbers(parentId)));
+    }, rand(1000 * 60 * Object.keys(parents).length));
 
     parents[parentId] = client
   })
