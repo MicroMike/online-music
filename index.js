@@ -114,7 +114,7 @@ const rand = (max, min) => {
 (async () => await getAccounts())()
 
 const getAccount = env => {
-  let Taccounts = [...accounts]
+  let Taccounts = accounts && [...accounts]
 
   Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
   Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
@@ -187,11 +187,11 @@ io.on('connect', client => {
   })
 
   client.on('wait', parentId => {
-    parents[parentId].wait = true
+    try { parents[parentId].wait = true } catch (e) { }
   })
 
   client.on('stopWait', parentId => {
-    parents[parentId].wait = false
+    try { parents[parentId].wait = false } catch (e) { }
   })
 
   client.on('parent', async ({ parentId, connected, env, max }) => {
