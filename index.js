@@ -275,13 +275,13 @@ io.on('connect', client => {
   })
 
   client.on('disconnect', why => {
-    // console.log(why)
 
     if (streams[client.uniqId]) {
       delete streams[client.uniqId]
     }
 
     if (parents[client.uniqId]) {
+      console.log(why)
       clearInterval(client.inter)
       delete parents[client.uniqId]
     }
