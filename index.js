@@ -90,7 +90,7 @@ setInterval(async () => {
       testDouble[s.account] = testDouble[s.account] ? testDouble[s.account] + 1 : 1
     }
   })
-  console.log('Double: ' + testDouble.filter(t => t > 1).length)
+  await getAccounts()
 }, 1000 * 60)
 
 const timer = 5
