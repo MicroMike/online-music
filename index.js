@@ -160,7 +160,8 @@ const getAllData = () => ({
 const runLoop = (c, { parentId, env, max }) => {
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && s.infos.other).length
 
-  if (/*!parents[parentId].wait && !RUN_WAIT_PAGE && */getNumbers(parentId) < Number(max)) {
+  if (getNumbers(parentId) < Number(max)) {
+    console.log(getNumbers(parentId), Number(max))
     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
     if (!runnerAccount) { return }
 
