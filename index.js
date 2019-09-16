@@ -266,6 +266,10 @@ io.on('connect', client => {
     else {
       streams[datas.streamId] = { uniqId: datas.streamId, parentId: datas.parentId, account: datas.account, infos: { ...datas } }
     }
+
+    if (!datas.other) {
+      try { parents[datas.parentId].wait = false } catch (e) { }
+    }
   })
 
   client.on('disconnect', why => {
