@@ -364,7 +364,7 @@ io.on('connect', client => {
         })
       }
 
-      accounts = await getAccounts()
+      await getAccounts()
     })
   })
 
