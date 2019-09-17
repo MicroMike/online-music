@@ -140,6 +140,12 @@ const getNumbers = (id) => {
   return id ? (numbers[id] || 0) : numbers
 }
 
+let maxs = () => {
+  let max = []
+  Object.values(parents).forEach(p => max[p.uniqId] = p.max)
+  return max
+}
+
 const getAllData = () => ({
   accounts: accounts && accounts.length,
   streams: Object.values(streams).length,
@@ -155,6 +161,7 @@ const getAllData = () => ({
   clients: getNumbers(),
   serverPlays: serverPlaysTemp,
   errs,
+  maxs: maxs()
 })
 
 const runLoop = (c, { parentId, env, max }) => {
@@ -207,6 +214,7 @@ io.on('connect', client => {
 
     client.uniqId = parentId
     client.wait = false
+    client.max = Number(max)
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
     }, 1000 * 60 + rand(1000 * 60));
