@@ -143,7 +143,6 @@ const getNumbers = (id) => {
 const maxs = () => {
   let pmax = {}
   Object.values(parents).forEach(p => pmax[p.uniqId] = p.max)
-  console.log(pmax)
   return pmax
 }
 
