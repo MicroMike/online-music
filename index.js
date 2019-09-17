@@ -140,9 +140,10 @@ const getNumbers = (id) => {
   return id ? (numbers[id] || 0) : numbers
 }
 
-let maxs = () => {
+const maxs = () => {
   let max = []
   Object.values(parents).forEach(p => max[p.uniqId] = p.max)
+  console.log(max)
   return max
 }
 
@@ -161,7 +162,7 @@ const getAllData = () => ({
   clients: getNumbers(),
   serverPlays: serverPlaysTemp,
   errs,
-  maxs: maxs()
+  parentsMax: maxs()
 })
 
 const runLoop = (c, { parentId, env, max }) => {
