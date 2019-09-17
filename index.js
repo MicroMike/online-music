@@ -195,14 +195,6 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('wait', parentId => {
-    try { parents[parentId].wait = true } catch (e) { }
-  })
-
-  client.on('stopWait', parentId => {
-    try { parents[parentId].wait = false } catch (e) { }
-  })
-
   client.on('parent', async ({ parentId, connected, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
@@ -213,7 +205,6 @@ io.on('connect', client => {
     }
 
     client.uniqId = parentId
-    client.wait = false
     client.max = Number(max)
     client.inter = setInterval(() => {
       runLoop(client, { parentId, env, max })
@@ -275,10 +266,6 @@ io.on('connect', client => {
     }
     else {
       streams[datas.streamId] = { uniqId: datas.streamId, parentId: datas.parentId, account: datas.account, infos: { ...datas } }
-    }
-
-    if (!datas.other) {
-      try { parents[datas.parentId].wait = false } catch (e) { }
     }
   })
 
