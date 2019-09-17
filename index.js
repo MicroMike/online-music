@@ -141,10 +141,10 @@ const getNumbers = (id) => {
 }
 
 const maxs = () => {
-  let max = []
-  Object.values(parents).forEach(p => max[p.uniqId] = p.max)
-  console.log(max)
-  return max
+  let pmax = {}
+  Object.values(parents).forEach(p => pmax[p.uniqId] = p.max)
+  console.log(pmax)
+  return pmax
 }
 
 const getAllData = () => ({
