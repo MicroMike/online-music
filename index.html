@@ -125,6 +125,8 @@
 
       Object.keys(clients).sort().forEach((k, i) => {
         const val = clients[k]
+        console.log(serverPlays)
+        console.log(maxs)
         const serverPlaysVal = serverPlays[k]
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
         document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${k} => ${val}/${maxs[k]} => ${Math.floor(serverPlaysVal / clients[k] * 100) / 100}<button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">C</button></span>`)
