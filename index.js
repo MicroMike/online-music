@@ -195,11 +195,11 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('ping', () => {
-    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === client.uniqId && s.infos && s.infos.other).length
+  client.on('ping', ({ parentId, env, max }) => {
+    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
-    if (!RUN_WAIT_PAGE && getNumbers(client.uniqId) < client.max) {
-      const runnerAccount = client.env.CHECK ? checkAccounts.shift() : getAccount(client.env)
+    if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+      const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
       const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
