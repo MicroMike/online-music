@@ -195,7 +195,7 @@ io.on('connect', client => {
     console.log(log)
   })
 
-  client.on('ping', ({ parentId, env, max }) => {
+  client.on('run', ({ parentId, env, max }) => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
     console.log(RUN_WAIT_PAGE, getNumbers(parentId), max)
