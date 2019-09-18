@@ -276,7 +276,9 @@ io.on('connect', client => {
     if (next) { nexts++ }
 
     serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + 1 : 1
-    streams[streamId].countPlays = countPlays
+    if (streams[streamId]) {
+      streams[streamId].countPlays = countPlays
+    }
 
     actions('listen?' + currentAlbum)
     actions('gain?' + plays + '/' + nexts + '/' + time, body => {
