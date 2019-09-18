@@ -217,7 +217,7 @@ io.on('connect', client => {
 
       setTimeout(() => {
         client.emit('run', { runnerAccount, streamId })
-      }, rand(1000 * 60));
+      }, 1000 * 30 + rand(1000 * 90));
     }
   })
 
