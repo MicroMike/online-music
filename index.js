@@ -149,7 +149,7 @@ const maxs = () => {
 const playing = () => {
   let p = {}
   Object.values(streams).forEach(s => {
-    if (s.countPlays && s.countPlays > 0) {
+    if (s.infos && s.infos.countPlays && s.infos.countPlays > 0) {
       p[s.parentId] = p[s.parentId] ? p[s.parentId] + 1 : 1
     }
   })
@@ -276,8 +276,8 @@ io.on('connect', client => {
     if (next) { nexts++ }
 
     serverPlays[parentId] = serverPlays[parentId] ? serverPlays[parentId] + 1 : 1
-    if (streams[streamId]) {
-      streams[streamId].countPlays = countPlays
+    if (streams[streamId] && streams[streamId].infos) {
+      streams[streamId].infos.countPlays = countPlays
     }
 
     actions('listen?' + currentAlbum)
