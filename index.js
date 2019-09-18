@@ -198,7 +198,7 @@ io.on('connect', client => {
   client.on('ping', () => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === client.uniqId && s.infos && s.infos.other).length
 
-    if (!RUN_WAIT_PAGE && getNumbers(client.uniqId) < parents[client.parentId].max) {
+    if (!RUN_WAIT_PAGE && getNumbers(client.uniqId) < client.max) {
       const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
