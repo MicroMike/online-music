@@ -215,9 +215,7 @@ io.on('connect', client => {
 
       const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
 
-      setTimeout(() => {
-        client.emit('run', { runnerAccount, streamId })
-      }, 1000 * 30 + rand(1000 * 90));
+      client.emit('run', { runnerAccount, streamId })
     }
   })
 
