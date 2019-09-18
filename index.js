@@ -218,9 +218,9 @@ io.on('connect', client => {
 
     client.uniqId = parentId
     client.max = Number(max)
-    client.inter = setInterval(() => {
-      runLoop(client, { parentId, env, max })
-    }, 1000 * 60 + rand(1000 * 60));
+    // client.inter = setInterval(() => {
+    //   runLoop(client, { parentId, env, max })
+    // }, 1000 * 60 + rand(1000 * 60));
 
     parents[parentId] = client
   })
