@@ -149,7 +149,7 @@ const maxs = () => {
 const playing = () => {
   let p = {}
   Object.values(streams).forEach(s => {
-    if (s.infos && s.infos.countPlays && s.infos.countPlays > 0) {
+    if (s.infos && s.infos.countPlays && s.infos.countPlays >= 0) {
       p[s.parentId] = p[s.parentId] ? p[s.parentId] + 1 : 1
     }
   })
