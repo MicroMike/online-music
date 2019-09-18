@@ -164,17 +164,17 @@ const getAllData = () => ({
   parentsMax: maxs()
 })
 
-const runLoop = (c, { parentId, env, max }) => {
-  const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && s.infos.other).length
+// const runLoop = (c, { parentId, env, max }) => {
+//   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && s.infos.other).length
 
-  if (/*!parents[parentId].wait && !RUN_WAIT_PAGE && */getNumbers(parentId) < Number(max)) {
-    const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
-    if (!runnerAccount) { return }
+//   if (/*!parents[parentId].wait && !RUN_WAIT_PAGE && */getNumbers(parentId) < max) {
+//     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
+//     if (!runnerAccount) { return }
 
-    const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
-    c.emit('run', { runnerAccount, streamId })
-  }
-}
+//     const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
+//     c.emit('run', { runnerAccount, streamId })
+//   }
+// }
 
 setInterval(() => {
   Object.values(webs).forEach(w => {
@@ -217,7 +217,7 @@ io.on('connect', client => {
     }
 
     client.uniqId = parentId
-    client.max = Number(max)
+    client.max = max
     // client.inter = setInterval(() => {
     //   runLoop(client, { parentId, env, max })
     // }, 1000 * 60 + rand(1000 * 60));
