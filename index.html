@@ -104,13 +104,13 @@
     })
 
     socket.on('allData', data => {
-      const clients = data.clients
+      const parents = data.parents
       const errs = data.errs
       const serverPlays = data.serverPlays
       const parentsMax = data.parentsMax
       const parentPlaying = data.parentPlaying
 
-      delete data.clients
+      delete data.parents
       delete data.errs
       delete data.serverPlays
       delete data.parentsMax
@@ -123,11 +123,11 @@
 
       // Object.keys(serverPlays).sort().forEach((k, i) => {
       //   const val = serverPlays[k]
-      //   document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${Math.floor(val / clients[k] * 100) / 100}</span>`)
+      //   document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${Math.floor(val / parents[k] * 100) / 100}</span>`)
       // })
 
-      Object.keys(clients).sort().forEach((k, i) => {
-        const val = clients[k]
+      Object.keys(parents).sort().forEach((k, i) => {
+        const val = parents[k]
         const serverPlaysVal = serverPlays[k] / parentPlaying[k]
         const calc = Math.floor(serverPlaysVal * 10) / 10
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
