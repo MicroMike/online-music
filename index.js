@@ -195,6 +195,18 @@ io.on('connect', client => {
     console.log(log)
   })
 
+  client.on('ping', () => {
+    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === client.parentId && s.infos && s.infos.other).length
+
+    if (!RUN_WAIT_PAGE && getNumbers(client.parentId) < parents[client.parentId].max) {
+      const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
+      if (!runnerAccount) { return }
+
+      const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
+      client.emit('run', { runnerAccount, streamId })
+    }
+  })
+
   client.on('parent', async ({ parentId, connected, env, max }) => {
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
@@ -356,7 +368,7 @@ io.on('connect', client => {
         const p = parents[cid]
         if (p) {
           p.out = true
-          p.emit('Cdisconnect')
+          p.emit('CdisconnectU')
         }
       }
       else {
