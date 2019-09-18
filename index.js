@@ -199,7 +199,7 @@ io.on('connect', client => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === client.uniqId && s.infos && s.infos.other).length
 
     if (!RUN_WAIT_PAGE && getNumbers(client.uniqId) < client.max) {
-      const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
+      const runnerAccount = client.env.CHECK ? checkAccounts.shift() : getAccount(client.env)
       if (!runnerAccount) { return }
 
       const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
@@ -218,6 +218,7 @@ io.on('connect', client => {
 
     client.uniqId = parentId
     client.max = max
+    client.env = env
     // client.inter = setInterval(() => {
     //   runLoop(client, { parentId, env, max })
     // }, 1000 * 60 + rand(1000 * 60));
