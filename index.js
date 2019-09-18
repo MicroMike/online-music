@@ -146,6 +146,16 @@ const maxs = () => {
   return pmax
 }
 
+const playing = () => {
+  let p = {}
+  Object.values(streams).forEach(s => {
+    if (s.infos && !s.info.other) {
+      s[s.parentId] = s[s.parentId] ? s[s.parentId] + 1 : 1
+    }
+  })
+  return p
+}
+
 const getAllData = () => ({
   accounts: accounts && accounts.length,
   streams: Object.values(streams).length,
@@ -161,7 +171,8 @@ const getAllData = () => ({
   clients: getNumbers(),
   serverPlays: serverPlaysTemp,
   errs,
-  parentsMax: maxs()
+  parentsMax: maxs(),
+  parentPlaying: playing(),
 })
 
 // const runLoop = (c, { parentId, env, max }) => {
