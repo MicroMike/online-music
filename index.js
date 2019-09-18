@@ -198,13 +198,15 @@ io.on('connect', client => {
   client.on('run', ({ parentId, env, max }) => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
-    console.log(RUN_WAIT_PAGE, getNumbers(parentId), max)
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
       const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
-      client.emit('run', { runnerAccount, streamId })
+
+      setTimeout(() => {
+        client.emit('run', { runnerAccount, streamId })
+      }, rand(1000 * 60));
     }
   })
 
