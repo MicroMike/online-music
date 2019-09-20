@@ -106,13 +106,13 @@
     socket.on('allData', data => {
       const parents = data.parents
       const errs = data.errs
-      const serverPlays = data.serverPlays
+      const resultRatio = data.resultRatio
       const parentsMax = data.parentsMax
       const parentPlaying = data.parentPlaying
 
       delete data.parents
       delete data.errs
-      delete data.serverPlays
+      delete data.resultRatio
       delete data.parentsMax
       delete data.parentPlaying
 
@@ -128,10 +128,9 @@
 
       Object.keys(parents).sort().forEach((k, i) => {
         const val = parents[k]
-        const serverPlaysVal = serverPlays[k] / parentPlaying[k]
-        const calc = Math.floor(serverPlaysVal * 10) / 10
+        const ratio = resultRatio[k]
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
-        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span style="color:${calc < 1 ? 'orange' : 'black'};">${k} <br> => <br> ${val}/${parentsMax[k]} <br> => <br> ${calc} <br> <button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">C</button></span>`)
+        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span style="color:${ratio < 1 ? 'orange' : 'black'};">${k} <br> => <br> ${val}/${parentsMax[k]} <br> => <br> ${ratio} <br> <button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">C</button></span>`)
       })
 
       for (let key in errs) {

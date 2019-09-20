@@ -76,14 +76,14 @@ let gain3temp = plays
 let tempPlays = []
 let tempCalc = plays
 let serverPlays = {}
-let serverPlaysTemp = {}
+
+const calcRatio = {}
+const resultRatio = {}
 
 setInterval(async () => {
   gain = plays * 0.004 * 0.9 / ++time
   gain3 = (plays - gain3temp) * 0.004 * 0.9
   gain3temp = plays
-  serverPlaysTemp = { ...serverPlays }
-  serverPlays = {}
 
   const testDouble = []
   Object.values(streams).forEach(s => {
@@ -169,7 +169,7 @@ const getAllData = () => ({
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24).split('.')[0] + '€/jour ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain3: gain3 + '€/min ' + String(gain3 * 60 * 24).split('.')[0] + '€/jour ' + String(gain3 * 60 * 24 * 30).split('.')[0] + '€/mois',
   parents: getNumbers(),
-  serverPlays: serverPlaysTemp,
+  resultRatio,
   errs,
   parentsMax: maxs(),
   parentPlaying: playing(),
@@ -187,12 +187,24 @@ const getAllData = () => ({
 //   }
 // }
 
+
 setInterval(() => {
   Object.values(webs).forEach(w => {
     w.emit('allData', getAllData())
     w.emit('playerInfos', Object.values(streams).map(s => s.infos))
   })
 }, 1000);
+
+setInterval(() => {
+  Object.values(parents).forEach(p => {
+    calcRatio[p.uniqId].push(serverPlays[parentId] || 0)
+    serverPlays[parentId] = 0
+    if (calcRatio[p.uniqId].length > 6) { calcRatio[p.uniqId].shift() }
+
+    const calc = calcRatio.reduce((a, b) => a + b, 0)
+    resultRatio[parentId] = Math.floor(calc * 10) / 10
+  })
+}, 1000 * 10);
 
 io.on('connect', client => {
   client.on('outLog', e => {
@@ -208,10 +220,8 @@ io.on('connect', client => {
 
   client.on('run', ({ parentId, env, max }) => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
-    const nbPlaying = serverPlaysTemp[parentId] / playing(parentId)
-    const calc = Math.floor(nbPlaying * 10) / 10
 
-    if (calc >= 1 && !RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+    if (resultRatio[parentId] >= 1 && !RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
