@@ -188,25 +188,23 @@ const getAllData = () => ({
 
 
 setInterval(() => {
-  Object.values(webs).forEach(w => {
-    w.emit('allData', getAllData())
-    w.emit('playerInfos', Object.values(streams).map(s => s.infos))
-  })
-}, 1000);
-
-setInterval(() => {
   Object.values(parents).forEach(p => {
     if (!calcRatio[p.uniqId]) { calcRatio[p.uniqId] = [] }
 
     calcRatio[p.uniqId].push(serverPlays[p.uniqId] || 0)
     serverPlays[p.uniqId] = 0
 
-    if (calcRatio[p.uniqId].length > 6) { calcRatio[p.uniqId].shift() }
+    if (calcRatio[p.uniqId].length > 60) { calcRatio[p.uniqId].shift() }
 
     const calc = calcRatio[p.uniqId].reduce((a, b) => a + b, 0) / playing(p.uniqId)
     resultRatio[p.uniqId] = Math.floor(calc * 10) / 10
   })
-}, 1000 * 10);
+
+  Object.values(webs).forEach(w => {
+    w.emit('allData', getAllData())
+    w.emit('playerInfos', Object.values(streams).map(s => s.infos))
+  })
+}, 1000);
 
 io.on('connect', client => {
   client.on('outLog', e => {
