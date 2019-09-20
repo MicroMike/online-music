@@ -108,13 +108,11 @@
       const errs = data.errs
       const resultRatio = data.resultRatio
       const parentsMax = data.parentsMax
-      const parentPlaying = data.parentPlaying
 
       delete data.parents
       delete data.errs
       delete data.resultRatio
       delete data.parentsMax
-      delete data.parentPlaying
 
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
