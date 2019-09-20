@@ -203,7 +203,7 @@ setInterval(() => {
 
     if (calcRatio[p.uniqId].length > 6) { calcRatio[p.uniqId].shift() }
 
-    const calc = calcRatio.reduce((a, b) => a + b, 0) / playing(p.uniqId)
+    const calc = calcRatio[p.uniqId].reduce((a, b) => a + b, 0) / playing(p.uniqId)
     resultRatio[p.uniqId] = Math.floor(calc * 10) / 10
   })
 }, 1000 * 10);
