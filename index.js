@@ -146,14 +146,14 @@ const maxs = () => {
   return pmax
 }
 
-const playing = () => {
+const playing = (id = false) => {
   let p = {}
   Object.values(streams).forEach(s => {
     if (s.infos && s.infos.countPlays && s.infos.countPlays >= 0) {
       p[s.parentId] = p[s.parentId] ? p[s.parentId] + 1 : 1
     }
   })
-  return p
+  return id ? p[id] : p
 }
 
 const getAllData = () => ({
@@ -208,8 +208,10 @@ io.on('connect', client => {
 
   client.on('run', ({ parentId, env, max }) => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
+    const nbPlaying = serverPlaysTemp[parentId] / playing(parentId)
+    const calc = Math.floor(nbPlaying * 10) / 10
 
-    if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+    if (calc >= 1 && !RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
