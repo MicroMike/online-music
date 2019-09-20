@@ -221,7 +221,7 @@ io.on('connect', client => {
   client.on('run', ({ parentId, env, max }) => {
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
-    if (resultRatio[parentId] >= 1 && !RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+    if ((!resultRatio[parentId] || resultRatio[parentId] >= 1) && !RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
       if (!runnerAccount) { return }
 
