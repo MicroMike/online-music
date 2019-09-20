@@ -197,8 +197,11 @@ setInterval(() => {
 
 setInterval(() => {
   Object.values(parents).forEach(p => {
+    if (!calcRatio[p.uniqId]) { calcRatio[p.uniqId] = [] }
+
     calcRatio[p.uniqId].push(serverPlays[parentId] || 0)
     serverPlays[parentId] = 0
+
     if (calcRatio[p.uniqId].length > 6) { calcRatio[p.uniqId].shift() }
 
     const calc = calcRatio.reduce((a, b) => a + b, 0)
