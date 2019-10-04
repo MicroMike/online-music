@@ -136,7 +136,9 @@ const getAccount = env => {
 }
 
 const getNumbers = (id) => {
-  const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, {})
+  let array = {}
+  Object.values(parents).forEach(p => { array[p.uniqId] = 0 })
+  const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, array)
   return id ? (numbers[id] || 0) : numbers
 }
 
