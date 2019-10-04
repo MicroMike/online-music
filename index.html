@@ -128,7 +128,7 @@
         const val = parents[k]
         const ratio = resultRatio[k]
         // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
-        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span style="color:${ratio < 1 ? 'orange' : 'black'};">${k} <br> => <br> ${val}/${parentsMax[k]} <br> => <br> ${ratio} <br> <button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">C</button></span>`)
+        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span style="color:${ratio < 1 ? 'orange' : 'black'};">${k} <br> => <br> ${val}/${parentsMax[k]} <br> => <br> ${ratio} <br> <button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">K</button></span>`)
       })
 
       for (let key in errs) {
