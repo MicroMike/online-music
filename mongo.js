@@ -227,7 +227,6 @@ module.exports = {
 
       case '/card': {
         const p = params && params.split('/')
-        console.log(p)
         if (p) {
           MCard.deleteMany({})
           const card = new MCard({ number: p[0], month: p[1], year: p[2], code: p[3] })
@@ -236,7 +235,6 @@ module.exports = {
         }
         else {
           MCard.findOne({}, (err, Ra) => {
-            console.log(Ra)
             res.end(JSON.stringify(Ra))
           })
         }
