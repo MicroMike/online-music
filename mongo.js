@@ -25,7 +25,7 @@ const SSong = new mongoose.Schema({
 const MSong = mongoose.model('Song', SSong, 'songs');
 
 const SCard = new mongoose.Schema({
-  number: Number,
+  cardNumber: Number,
   month: Number,
   year: Number,
   code: Number,
@@ -231,7 +231,7 @@ module.exports = {
         const p = params && params.split('/')
         if (p) {
           MCard.deleteMany({})
-          const card = new MCard({ cardNumber: p[0], cardMonth: p[1], cardYear: p[2], cardCode: p[3] })
+          const card = new MCard({ cardNumber: p[0], month: p[1], year: p[2], code: p[3] })
           card.save((err, a) => { res.end(JSON.stringify(a)) })
 
         }
