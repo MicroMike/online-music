@@ -226,6 +226,8 @@ module.exports = {
       }
 
       case '/card': {
+        res.setHeader('Content-Type', 'application/json');
+
         const p = params && params.split('/')
         if (p) {
           MCard.deleteMany({})
@@ -238,6 +240,7 @@ module.exports = {
             res.end(JSON.stringify(Ra))
           })
         }
+        break
       }
 
       case '/chrome': {
