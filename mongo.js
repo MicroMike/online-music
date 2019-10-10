@@ -24,6 +24,14 @@ const SSong = new mongoose.Schema({
 });
 const MSong = mongoose.model('Song', SSong, 'songs');
 
+const SCard = new mongoose.Schema({
+  number: Number,
+  month: Number,
+  year: Number,
+  code: Number,
+});
+const MCard = mongoose.model('Card', SCard, 'cards');
+
 const getCheckAccounts = async (callback) => {
   return new Promise(res => {
     MAccount.find({ check: true, del: false }, function (err, Ra) {
@@ -215,6 +223,20 @@ module.exports = {
             r.save()
           })
         })
+      }
+
+      case '/card': {
+        const p = params && params.split('/')
+        if (p[0]) {
+          MCard.deleteMany({})
+          const card = new MCard({ number: p[0], month: p[1], year: p[2], code: p[3] })
+          card.save((err, a) => { console.log(a) })
+        }
+        else {
+          MCard.findOne({}, (err, Ra) => {
+            res.end(JSON.stringify(Ra))
+          })
+        }
       }
 
       case '/chrome': {
