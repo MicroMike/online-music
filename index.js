@@ -242,7 +242,7 @@ io.on('connect', client => {
       })
     }
     else {
-      console.log(connected, 'reconnected')
+      console.log(parentId, 'reconnected')
     }
 
     client.uniqId = parentId
