@@ -241,6 +241,9 @@ io.on('connect', client => {
         if (s.parentId === parentId) { delete streams[s.id] }
       })
     }
+    else {
+      console.log(connected, 'reconnected')
+    }
 
     client.uniqId = parentId
     client.max = max
