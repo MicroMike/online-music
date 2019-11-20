@@ -28,7 +28,7 @@ const SCard = new mongoose.Schema({
   cardNumber: Number,
   month: Number,
   year: Number,
-  code: Number,
+  code: String,
 });
 const MCard = mongoose.model('Card', SCard, 'cards');
 
