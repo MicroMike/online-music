@@ -230,8 +230,8 @@ module.exports = {
 
         const p = params && params.split('/')
         if (p) {
-          MCard.deleteMany({}, () => {
-            const card = new MCard({ cardNumber: p[0], month: p[1], year: p[2], code: p[3] })
+          MCard.deleteMany({}, (err, Ra) => {
+            const card = new MCard({ cardNumber: p[0], month: p[1] || Ra.month, year: p[2] || Ra.year, code: p[3] || Ra.code })
             card.save((err, a) => { res.end(JSON.stringify(a)) })
           })
         }
