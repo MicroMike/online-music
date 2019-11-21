@@ -240,14 +240,19 @@ io.on('connect', client => {
     }
     console.log(parentId, 'reconnected', connected)
 
-    client.uniqId = parentId
-    client.max = max
-    client.env = env
     // client.inter = setInterval(() => {
     //   runLoop(client, { parentId, env, max })
     // }, 1000 * 60 + rand(1000 * 60));
 
-    parents[parentId] = client
+    if (parents[parentId]) {
+      parents[parentId] += max
+    }
+    else {
+      client.uniqId = parentId
+      client.max = max
+      client.env = env
+      parents[parentId] = client
+    }
   })
 
   client.on('client', async ({ parentId, streamId, account }) => {
