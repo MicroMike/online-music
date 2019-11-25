@@ -236,6 +236,7 @@ io.on('connect', client => {
   })
 
   client.on('parent', async ({ parentId, connected, env, max }) => {
+    console.log(parentId + ' => ' + client.id)
     if (env.CHECK) { checkAccounts = await getCheckAccounts() }
 
     if (!connected) {
