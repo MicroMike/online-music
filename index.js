@@ -317,6 +317,8 @@ io.on('connect', client => {
 
   client.on('disconnect', why => {
 
+    console.log(why + ' => ' + client.id)
+
     if (streams[client.uniqId]) {
       delete streams[client.uniqId]
     }
