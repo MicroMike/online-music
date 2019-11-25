@@ -6,7 +6,7 @@ const {
 } = require('./mongo')
 const app = require('http').createServer(handler)
 const io = require('socket.io')(app, {
-  pingTimeout: 1000 * 60 * 2
+  pingTimeout: 1000 * 30
 });
 const fs = require('fs');
 const mongoose = require('mongoose');
@@ -417,7 +417,7 @@ io.on('connect', client => {
     })
   })
 
-  client.emit('activate', client.id)
+  setTimeout(() => { client.emit('activate', client.id) }, 1000 * 10);
 });
 
 app.listen(process.env.PORT || 3000);
