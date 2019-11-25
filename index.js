@@ -209,6 +209,8 @@ setInterval(() => {
 }, 1000);
 
 io.on('connect', client => {
+  client.emit('activate', client.id)
+
   client.on('outLog', e => {
     if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
 
@@ -410,8 +412,6 @@ io.on('connect', client => {
       await getAccounts(true)
     })
   })
-
-  client.emit('activate', client.id)
 });
 
 app.listen(process.env.PORT || 3000);
