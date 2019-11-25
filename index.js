@@ -209,6 +209,9 @@ setInterval(() => {
 }, 1000);
 
 io.on('connect', client => {
+
+  console.log(client.id)
+
   client.emit('activate', client.id)
 
   client.on('outLog', e => {
