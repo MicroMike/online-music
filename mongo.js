@@ -246,8 +246,8 @@ module.exports = {
         break
       }
 
-      case '/chrome': {
-        fs.readFile(__dirname + '/chrome.html',
+      case '/cardForm': {
+        fs.readFile(__dirname + '/card.html',
           function (err, data) {
             if (err) {
               res.writeHead(500);
