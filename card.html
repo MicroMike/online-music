@@ -5,9 +5,10 @@
   <title>Socket.IO chat</title>
   <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function () {
-      fetch('https://online-music.herokuapp.com/card', (e, r, b) => {
-        console.log(e, r, b)
-      })
+      fetch('https://online-music.herokuapp.com/card')
+        .then((response) => {
+          console.log(response)
+        })
       document.querySelector('input')
     }, false);
   </script>
