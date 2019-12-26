@@ -18,10 +18,10 @@
     }, false);
 
     const update = () => {
-      const cardNumber = document.querySelector('#cardNumber').value = card.cardNumber
-      const month = document.querySelector('#month').value = card.month
-      const year = document.querySelector('#year').value = card.year
-      const code = document.querySelector('#code').value = card.code
+      const cardNumber = document.querySelector('#cardNumber').value
+      const month = document.querySelector('#month').value
+      const year = document.querySelector('#year').value
+      const code = document.querySelector('#code').value
 
       fetch(`https://online-music.herokuapp.com/card/${cardNumber}/${month}/${year}/${code}`)
     }
