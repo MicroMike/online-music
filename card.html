@@ -2,14 +2,21 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
-    <script type="text/javascript">
-        // fetch('https://online-music.herokuapp.com/card', a => console.log(a))
-    </script>
+  <title>Socket.IO chat</title>
+  <script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('https://online-music.herokuapp.com/card', (e, r, b) => {
+        console.log(e, r, b)
+      })
+      document.querySelector('input')
+    }, false);
+  </script>
 </head>
 
 <body>
-    <iframe width="640" height="360" src="https://uptostream.com/iframe/zieglt3es4p2" scrolling="no" frameborder="0" allowfullscreen webkitallowfullscreen></iframe>
+  <form>
+    <input id="test" name="" value="test" />
+  </form>
 </body>
 
 </html>
