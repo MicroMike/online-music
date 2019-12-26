@@ -23,7 +23,7 @@
       const year = document.querySelector('#year').value
       const code = document.querySelector('#code').value
 
-      fetch(`https://online-music.herokuapp.com/card/${cardNumber}/${month}/${year}/${code}`)
+      fetch(`https://online-music.herokuapp.com/card?${cardNumber}/${month}/${year}/${code}`)
     }
   </script>
 </head>
