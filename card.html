@@ -8,6 +8,7 @@
       fetch('https://online-music.herokuapp.com/card')
         .then((response) => {
           const card = response.json()
+          console.log(card)
           document.querySelector('#cardNumber').value = card.cardNumber
           document.querySelector('#month').value = card.month
           document.querySelector('#year').value = card.year
