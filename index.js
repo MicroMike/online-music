@@ -208,9 +208,14 @@ setInterval(() => {
   })
 }, 1000);
 
-io.on('connect', client => {
+const clientsCo = {}
 
-  console.log(client.id)
+setInterval(() => {
+  console.log('number of clients =>' + Object.keys(clientsCo).length)
+}, 60 * 1000 * 2);
+
+io.on('connect', client => {
+  clientsCo[client.id] = true
 
   client.on('outLog', e => {
     if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
@@ -316,6 +321,7 @@ io.on('connect', client => {
   client.on('disconnect', why => {
 
     console.log(why + ' => ' + client.id)
+    delete clientsCo[client.id]
 
     if (streams[client.uniqId]) {
       delete streams[client.uniqId]
