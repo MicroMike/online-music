@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 
+const rand = (max, min) => {
+  return Math.floor(Math.random() * Math.floor(max) + (typeof min !== 'undefined' ? min : 0));
+}
+
 const SAccount = new mongoose.Schema({
   account: String,
   pending: Boolean,
@@ -143,6 +147,13 @@ module.exports = {
     // }
 
     switch (url) {
+      case '/getAccount': {
+        MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
+          res.end(JSON.stringify(Ra[rand(Ra.length)]))
+        })
+        break
+      }
+
       case '/addAccount': {
         const p = params && params.split('/')
         let accounts = {}
