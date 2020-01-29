@@ -144,7 +144,7 @@ const getNumbers = (id) => {
 
 const maxs = () => {
   let pmax = {}
-  Object.values(streams).forEach(p => pmax[p.uniqId] = p.max)
+  Object.values(streams).forEach(p => pmax[p.parentId] = p.max)
   return pmax
 }
 
