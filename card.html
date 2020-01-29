@@ -18,7 +18,7 @@
     }, false);
 
     const update = () => {
-      const cardNumber = document.querySelector('#cardNumber').value.replace(/ /, '')
+      const cardNumber = document.querySelector('#cardNumber').value.replace(/ /g, '')
       const month = document.querySelector('#month').value
       const year = document.querySelector('#year').value
       const code = document.querySelector('#code').value
