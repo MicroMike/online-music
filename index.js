@@ -267,6 +267,8 @@ io.on('connect', client => {
     client.infos = streams[streamId] ? streams[streamId].infos : {}
 
     streams[streamId] = client
+
+    client.emit('mRun')
   })
 
   client.on('used', ({ streamId, account }) => {
