@@ -161,7 +161,7 @@ module.exports = {
         const p = params && params.split('/')
         MAccount.find({ account: p[0] }, (err, Ra) => {
           Ra.used = false
-          account.save(() => { res.end(JSON.stringify(Ra)) })
+          Ra.save(() => { res.end(JSON.stringify(Ra)) })
         })
         break
       }
