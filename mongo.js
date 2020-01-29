@@ -148,6 +148,17 @@ module.exports = {
     // }
 
     switch (url) {
+      case '/clearUsed': {
+        MAccount.find({ used: true }, (err, Ra) => {
+          Ra.forEach(account => {
+            account.used = false
+            account.save()
+          })
+        })
+        res.end(JSON.stringify({ ok: true }))
+        break
+      }
+
       case '/useAccount': {
         MAccount.find({ used: { $ne: true }, check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
           const account = Ra[rand(Ra.length)]
