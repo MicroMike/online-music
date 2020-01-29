@@ -167,7 +167,9 @@ module.exports = {
             account.used = true
             account.save(() => { res.end(JSON.stringify(account)) })
           }
-          res.end(JSON.stringify({ ok: true }))
+          else {
+            res.end(JSON.stringify({ ok: true }))
+          }
       })
         break
       }
