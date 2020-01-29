@@ -260,11 +260,11 @@ io.on('connect', client => {
     parents[parentId] = client
   })
 
-  client.on('client', async ({ parentId, streamId, account }) => {
+  client.on('client', async ({ parentId, streamId, account, back }) => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
-    client.infos = streams[streamId] ? streams[streamId].infos : {}
+    client.infos = back ? streams[streamId].infos : {}
 
     streams[streamId] = client
   })
