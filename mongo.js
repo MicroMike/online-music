@@ -11,6 +11,7 @@ const SAccount = new mongoose.Schema({
   check: Boolean,
   pause: Boolean,
   del: Boolean,
+  used: Boolean,
 });
 const MAccount = mongoose.model('Account', SAccount, 'accounts');
 
@@ -147,9 +148,20 @@ module.exports = {
     // }
 
     switch (url) {
-      case '/getAccount': {
-        MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
-          res.end(JSON.stringify(Ra[rand(Ra.length)]))
+      case '/useAccount': {
+        MAccount.find({ used: { $ne: true }, check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
+          const account = Ra[rand(Ra.length)]
+          account.used = true
+          account.save(() => { res.end(JSON.stringify(account)) })
+        })
+        break
+      }
+
+      case '/noUseAccount': {
+        const p = params && params.split('/')
+        MAccount.find({ account: p[0] }, (err, Ra) => {
+          Ra.used = false
+          account.save(() => { res.end(JSON.stringify(Ra)) })
         })
         break
       }
