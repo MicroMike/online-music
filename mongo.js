@@ -158,8 +158,7 @@ module.exports = {
       }
 
       case '/noUseAccount': {
-        const p = params && params.split('/')
-        MAccount.find({ account: p[0] }, (err, Ra) => {
+        MAccount.find({ account: params }, (err, Ra) => {
           Ra.used = false
           Ra.save(() => { res.end(JSON.stringify(Ra)) })
         })
