@@ -150,7 +150,7 @@ module.exports = {
     switch (url) {
       case '/clearUsed': {
         MAccount.find({ used: true }, (err, Ra) => {
-          Ra.forEach(account => {
+          Ra && Ra.forEach(account => {
             account.used = false
             account.save()
           })
@@ -170,8 +170,13 @@ module.exports = {
 
       case '/noUseAccount': {
         MAccount.findOne({ account: params }, (err, Ra) => {
-          Ra.used = false
-          Ra.save(() => { res.end(JSON.stringify(Ra)) })
+          if (Ra) {
+            Ra.used = false
+            Ra.save(() => { res.end(JSON.stringify(Ra)) })
+          }
+          else {
+            res.end(JSON.stringify({ ok: true }))
+          }
         })
         break
       }
