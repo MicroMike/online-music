@@ -215,15 +215,15 @@ setInterval(() => {
   console.log('number of clients =>' + Object.keys(clientsCo).length)
 }, 60 * 1000 * 2);
 
-const checkRun = (parentId, client, max) => {
+const checkRun = (parentId, client, max, back) => {
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-    client.emit('canRun')
+    client.emit(back ? 'mRun' : 'canRun')
   }
   else {
     setTimeout(() => {
-      checkRun(parentId, client, max)
+      checkRun(parentId, client, max, back)
     }, 1000 * 30);
   }
 }
@@ -274,8 +274,10 @@ io.on('connect', client => {
     parents[parentId] = client
   })
 
-  client.on('canRun', ({ parentId, max }) => {
-    checkRun(parentId, client, max)
+  client.on('canRun', ({ parentId, max, back }) => {
+    setTimeout(() => {
+      checkRun(parentId, client, max, back)
+    }, 1000 * 30);
   })
 
   client.on('client', async ({ parentId, streamId, account, max, back }) => {
@@ -288,9 +290,7 @@ io.on('connect', client => {
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
 
-    if (!back) {
-      client.emit('mRun')
-    }
+    client.emit('mRun')
   })
 
   client.on('used', ({ streamId, account }) => {
