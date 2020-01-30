@@ -219,6 +219,7 @@ const checkRun = (parentId, client, max, back) => {
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+    streams[client.uniqId].infos = { time: 'CONNECT', other: true }
     client.emit(back ? 'mRun' : 'canRun')
   }
   else {
