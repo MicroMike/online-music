@@ -222,7 +222,7 @@ const checkRun = (client, params) => {
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
     if (!back) {
-      streams[streamId].infos = { time: 'CONNECT', other: true }
+      streams[streamId] = { infos: { time: 'CONNECT', other: true } }
     }
     client.emit(back ? 'mRun' : 'canRun')
   }
