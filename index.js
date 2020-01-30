@@ -277,7 +277,7 @@ io.on('connect', client => {
     checkRun(parentId, client, max)
   })
 
-  client.on('client', async ({ parentId, streamId, account, max }) => {
+  client.on('client', async ({ parentId, streamId, account, max, back }) => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
@@ -287,7 +287,9 @@ io.on('connect', client => {
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
 
-    client.emit('mRun')    
+    if (!back) {
+      client.emit('mRun')
+    }
   })
 
   client.on('used', ({ streamId, account }) => {
