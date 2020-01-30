@@ -288,7 +288,7 @@ io.on('connect', client => {
     client.account = account
     client.max = max
 
-    const alreadyPlaying = back && account ? { time: 'PLAY', ok: true } : {}
+    const alreadyPlaying = back && account ? { parentId, streamId, account, time: 'PLAY', ok: true } : {}
     client.infos = streams[streamId] ? streams[streamId].infos : alreadyPlaying
 
     streams[streamId] = client
