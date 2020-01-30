@@ -137,14 +137,14 @@ const getAccount = env => {
 
 const getNumbers = (id) => {
   let array = {}
-  Object.keys(parents).forEach(p => { array[p.uniqId] = 0 })
+  Object.values(parents).forEach(p => { array[p.uniqId] = 0 })
   const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, array)
   return id ? (numbers[id] || 0) : numbers
 }
 
 const maxs = () => {
   let pmax = {}
-  Object.values(streams).forEach(p => pmax[p.parentId] = Number(p.max))
+  Object.values(parents).forEach(p => pmax[p.uniqId] = Number(p.max))
   return pmax
 }
 
@@ -281,7 +281,7 @@ io.on('connect', client => {
     client.max = max
 
     streams[streamId] = client
-    parents[parentId] = true
+    parents[parentId] = { uniqId: parentId, max }
 
     checkRun(parentId, client)
   })
