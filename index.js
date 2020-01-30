@@ -438,8 +438,7 @@ io.on('connect', client => {
         Object.values(streams).filter(s => s.parentId === cid).forEach(s => !s.connected && delete streams[s.uniqId])
       }
       else {
-        Object.values(parents).forEach(p => {
-          p.out = true
+        Object.values(streams).forEach(p => {
           p.emit('Cdisconnect')
         })
       }
