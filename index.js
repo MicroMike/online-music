@@ -221,7 +221,9 @@ const checkRun = (parentId, client) => {
     client.emit('mRun')
   }
   else {
-    checkRun(parentId, client)
+    setTimeout(() => {
+      checkRun(parentId, client)
+    }, 1000 * 30);
   }
 }
 
