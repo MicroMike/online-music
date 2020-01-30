@@ -190,7 +190,7 @@ const getAllData = () => ({
 
 
 setInterval(() => {
-  Object.values(parents).forEach(p => {
+  Object.keys(parents).forEach(p => {
     if (!calcRatio[p.uniqId]) { calcRatio[p.uniqId] = [] }
 
     calcRatio[p.uniqId].push(serverPlays[p.uniqId] || 0)
@@ -268,6 +268,7 @@ io.on('connect', client => {
     client.max = max
 
     streams[streamId] = client
+    parents[parentId] = true
 
     client.emit('mRun')
   })
