@@ -214,6 +214,17 @@ setInterval(() => {
   console.log('number of clients =>' + Object.keys(clientsCo).length)
 }, 60 * 1000 * 2);
 
+const checkRun = (parentId, client) => {
+  const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
+
+  if (!RUN_WAIT_PAGE) {
+    client.emit('mRun')
+  }
+  else {
+    checkRun(parentId, client)
+  }
+}
+
 io.on('connect', client => {
   clientsCo[client.id] = true
 
@@ -270,7 +281,7 @@ io.on('connect', client => {
     streams[streamId] = client
     parents[parentId] = true
 
-    client.emit('mRun')
+    checkRun(parentId, client)
   })
 
   client.on('used', ({ streamId, account }) => {
