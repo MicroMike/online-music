@@ -286,8 +286,10 @@ io.on('connect', client => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
-    client.infos = streams[streamId] ? streams[streamId].infos : {}
     client.max = max
+
+    const alreadyPlaying = back && account ? { time: 'PLAY', ok: true } : {}
+    client.infos = streams[streamId] ? streams[streamId].infos : alreadyPlaying
 
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
