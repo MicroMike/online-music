@@ -217,15 +217,13 @@ setInterval(() => {
 }, 60 * 1000 * 2);
 
 const checkRun = (client, params) => {
-  const { parentId, max, back, streamId, account } = params
+  const { parentId, max, streamId } = params
 
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-    if (!back) {
-      streams[streamId] = { infos: { time: 'CONNECT', other: true } }
-    }
-    client.emit(back && account ? 'mRun' : 'canRun')
+    streams[streamId] = { infos: { time: 'CONNECT', other: true } }
+    client.emit('canRun')
   }
   else {
     setTimeout(() => {
@@ -294,7 +292,7 @@ io.on('connect', client => {
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
 
-    client.emit('mRun')
+    if (!back) { client.emit('mRun') }
   })
 
   client.on('used', ({ streamId, account }) => {
