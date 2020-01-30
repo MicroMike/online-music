@@ -286,6 +286,8 @@ io.on('connect', client => {
 
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
+
+    client.emit('mRun')    
   })
 
   client.on('used', ({ streamId, account }) => {
