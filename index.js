@@ -216,7 +216,7 @@ setInterval(() => {
 }, 60 * 1000 * 2);
 
 const checkRun = (client, params) => {
-  const { parentId, client, max, back, streamId } = params
+  const { parentId, max, back, streamId } = params
 
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
