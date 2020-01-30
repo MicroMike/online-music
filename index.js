@@ -170,7 +170,8 @@ const getAllData = () => ({
   gain: gain + '€/min ' + String(gain * 60 * 24).split('.')[0] + '€/jour ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24).split('.')[0] + '€/jour ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain3: gain3 + '€/min ' + String(gain3 * 60 * 24).split('.')[0] + '€/jour ' + String(gain3 * 60 * 24 * 30).split('.')[0] + '€/mois',
-  parents: getNumbers(),
+  numbers: getNumbers(),
+  numbersPlaying: playing(),
   resultRatio,
   errs,
   parentsMax: maxs(),
@@ -281,7 +282,7 @@ io.on('connect', client => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
-    client.infos = streams[streamId] ? streams[streamId].infos : {}
+    client.infos = streams[streamId] ? streams[streamId].infos : { other: true }
     client.max = max
 
     streams[streamId] = client
