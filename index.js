@@ -197,21 +197,26 @@ setInterval(() => {
   })
 }, 1000);
 
-const checkRun = (client, params) => {
-  const { parentId, max, streamId } = params
+const checkRunArray = []
+
+const checkRun = () => {
+  const { client, parentId, max, streamId } = checkRunArray[0]
 
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-    streams[streamId] = { infos: { time: 'WAIT', other: true } }
-    client.emit('canRun')
+    if (client.connected) {
+      streams[streamId] = { infos: { time: 'WAIT', other: true } }
+      client.emit('canRun')
+    }
+
+    checkRunArray.shift()
   }
-  else {
-    setTimeout(() => {
-      checkRun(client, params)
-    }, 1000 * 30);
-  }
+
+  setTimeout(checkRun, 1000 * 5);
 }
+
+checkRun()
 
 io.on('connect', client => {
   client.on('outLog', e => {
@@ -258,7 +263,7 @@ io.on('connect', client => {
   })
 
   client.on('canRun', (params) => {
-    checkRun(client, params)
+    checkRunArray.push({ client, ...params })
   })
 
   client.on('client', async ({ parentId, streamId, account, max, back }) => {
