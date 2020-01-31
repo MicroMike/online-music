@@ -200,6 +200,8 @@ setInterval(() => {
 const checkRunArray = []
 
 const checkRun = () => {
+  if (checkRunArray.length === 0) { return setTimeout(checkRun, 1000 * 5) }
+
   const { client, parentId, max, streamId } = checkRunArray[0]
 
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
@@ -213,7 +215,7 @@ const checkRun = () => {
     checkRunArray.shift()
   }
 
-  setTimeout(checkRun, 1000 * 5);
+  setTimeout(checkRun, 1000 * 5)
 }
 
 checkRun()
