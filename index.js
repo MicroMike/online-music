@@ -178,19 +178,6 @@ const getAllData = () => ({
   parentsMax: maxs(),
 })
 
-// const runLoop = (c, { parentId, env, max }) => {
-//   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && s.infos.other).length
-
-//   if (/*!parents[parentId].wait && !RUN_WAIT_PAGE && */getNumbers(parentId) < max) {
-//     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
-//     if (!runnerAccount) { return }
-
-//     const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
-//     c.emit('run', { runnerAccount, streamId })
-//   }
-// }
-
-
 setInterval(() => {
   Object.keys(parents).forEach(p => {
     if (!calcRatio[p.uniqId]) { calcRatio[p.uniqId] = [] }
@@ -210,12 +197,6 @@ setInterval(() => {
   })
 }, 1000);
 
-const clientsCo = {}
-
-setInterval(() => {
-  console.log('number of clients =>' + Object.keys(clientsCo).length)
-}, 60 * 1000 * 2);
-
 const checkRun = (client, params) => {
   const { parentId, max, streamId } = params
 
@@ -233,8 +214,6 @@ const checkRun = (client, params) => {
 }
 
 io.on('connect', client => {
-  clientsCo[client.id] = true
-
   client.on('outLog', e => {
     if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
 
@@ -348,10 +327,6 @@ io.on('connect', client => {
   })
 
   client.on('disconnect', why => {
-
-    console.log(why + ' => ' + client.id)
-    delete clientsCo[client.id]
-
     if (streams[client.uniqId]) {
       delete streams[client.uniqId]
     }
@@ -433,20 +408,7 @@ io.on('connect', client => {
     })
 
     client.on('restart', async cid => {
-      if (cid) {
-        const p = parents[cid]
-        if (p) {
-          p.out = true
-          p.emit('CdisconnectU')
-        }
-        Object.values(streams).filter(s => s.parentId === cid).forEach(s => !s.connected && delete streams[s.uniqId])
-      }
-      else {
-        Object.values(streams).forEach(p => {
-          p.emit('Cdisconnect')
-        })
-      }
-
+      Object.values(streams).filter(s => !cid || s.parentId === cid).forEach(c => c.emit('Cdisconnect'))
       await getAccounts(true)
     })
   })
