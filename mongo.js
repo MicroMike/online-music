@@ -98,6 +98,21 @@ module.exports = {
         })
         break
 
+      case 'useAccount': {
+        if (params) {
+          MAccount.findOne({ account: params }, (err, Ra) => {
+            if (Ra) {
+              Ra.used = true
+              Ra.save(() => { res.end(JSON.stringify(Ra)) })
+            }
+            else {
+              res.end(JSON.stringify({ ok: true }))
+            }
+          })
+        }
+        break
+      }
+
       case 'gain':
         const date = new Date()
         const month = date.getMonth() + 1
