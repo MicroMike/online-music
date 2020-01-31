@@ -207,11 +207,7 @@ const checkRun = () => {
   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
   if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-    if (client.connected) {
-      streams[streamId] = { infos: { time: 'WAIT', other: true } }
-      client.emit('canRun')
-    }
-
+    if (client.connected) { client.emit('canRun') }
     checkRunArray.shift()
   }
 
