@@ -203,12 +203,15 @@ const checkRun = () => {
   Object.values(checkRunArray).forEach(arr => {
     if (arr.length === 0) { return }
 
-    const { client, parentId, max } = arr[0]
+    const { client, parentId, max, streamId } = arr[0]
 
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-      if (client.connected) { client.emit('canRun') }
+      if (client.connected) {
+        streams[streamId] = { ...streams[streamId], infos: { time: 'WAIT', other: true } }
+        client.emit('canRun')
+      }
       arr.shift()
     }
   })
