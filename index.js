@@ -213,7 +213,7 @@ const checkRun = () => {
     }
   })
 
-  setTimeout(checkRun, 1000 * 15)
+  setTimeout(checkRun, 1000 * 5)
 }
 
 checkRun()
