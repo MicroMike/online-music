@@ -209,7 +209,7 @@ const checkRun = () => {
 
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       if (client.connected) {
-        streams[streamId] = { ...streams[streamId], infos: { time: 'WAIT', other: true } }
+        streams[streamId] = { ...streams[streamId], parentId, streamId, account: 'loading', infos: { time: 'WAIT', other: true } }
         client.emit('canRun')
       }
       arr.shift()
