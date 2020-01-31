@@ -279,6 +279,7 @@ io.on('connect', client => {
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
 
+    request('https://online-music.herokuapp.com/useAccount?' + acount)
     if (!back) { client.emit('mRun') }
   })
 
