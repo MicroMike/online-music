@@ -179,16 +179,16 @@ const getAllData = () => ({
 })
 
 setInterval(() => {
-  Object.keys(parents).forEach(p => {
-    if (!calcRatio[p.uniqId]) { calcRatio[p.uniqId] = [] }
+  Object.keys(parents).forEach(key => {
+    if (!calcRatio[key]) { calcRatio[key] = [] }
 
-    calcRatio[p.uniqId].push(serverPlays[p.uniqId] || 0)
-    serverPlays[p.uniqId] = 0
+    calcRatio[key].push(serverPlays[key] || 0)
+    serverPlays[key] = 0
 
-    if (calcRatio[p.uniqId].length > 60) { calcRatio[p.uniqId].shift() }
+    if (calcRatio[key].length > 60) { calcRatio[key].shift() }
 
-    const calc = calcRatio[p.uniqId].reduce((a, b) => a + b, 0) / playing(p.uniqId)
-    resultRatio[p.uniqId] = Math.floor(calc * 10) / 10
+    const calc = calcRatio[key].reduce((a, b) => a + b, 0) / playing(key)
+    resultRatio[key] = Math.floor(calc * 10) / 10
   })
 
   Object.values(webs).forEach(w => {
