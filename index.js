@@ -197,21 +197,23 @@ setInterval(() => {
   })
 }, 1000);
 
-const checkRunArray = []
+const checkRunArray = {}
 
 const checkRun = () => {
-  if (checkRunArray.length === 0) { return setTimeout(checkRun, 1000 * 5) }
+  Object.values(checkRunArray).forEach(arr => {
+    if (arr.length === 0) { return }
 
-  const { client, parentId, max, streamId } = checkRunArray[0]
+    const { client, parentId, max } = arr[0]
 
-  const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
+    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
-  if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-    if (client.connected) { client.emit('canRun') }
-    checkRunArray.shift()
-  }
+    if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+      if (client.connected) { client.emit('canRun') }
+      arr.shift()
+    }
+  })
 
-  setTimeout(checkRun, 1000 * 5)
+  setTimeout(checkRun, 1000 * 15)
 }
 
 checkRun()
@@ -261,7 +263,8 @@ io.on('connect', client => {
   })
 
   client.on('canRun', (params) => {
-    checkRunArray.push({ client, ...params })
+    if (!checkRunArray[params.parentId]) { checkRunArray[params.parentId] = [] }
+    checkRunArray[params.parentId].push({ client, ...params })
   })
 
   client.on('client', async ({ parentId, streamId, account, max, back }) => {
