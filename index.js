@@ -204,13 +204,18 @@ const checkRun = () => {
     if (arr.length === 0) { return }
 
     const { client, parentId, max, streamId } = arr[0]
-    console.log(parentId, max, streamId)
 
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       if (client.connected) {
-        streams[streamId] = { ...streams[streamId], parentId, streamId, account: 'loading', infos: { time: 'WAIT', other: true } }
+        client.uniqId = streamId
+        client.parentId = parentId
+        client.account = 'loading'
+        client.max = max
+        client.infos = { time: 'WAIT', other: true }
+
+        streams[streamId] = client
         client.emit('canRun')
       }
       arr.shift()
@@ -271,10 +276,7 @@ io.on('connect', client => {
   })
 
   client.on('client', async ({ parentId, streamId, account, max, back }) => {
-    client.uniqId = streamId
-    client.parentId = parentId
     client.account = account
-    client.max = max
 
     const alreadyPlaying = back && account ? { parentId, streamId, account, time: 'PLAY', ok: true } : {}
     client.infos = streams[streamId] ? streams[streamId].infos : alreadyPlaying
