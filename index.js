@@ -204,6 +204,7 @@ const checkRun = () => {
     if (arr.length === 0) { return }
 
     const { client, parentId, max, streamId } = arr[0]
+    console.log(client, parentId, max, streamId)
 
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
