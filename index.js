@@ -209,12 +209,7 @@ const checkRun = () => {
 
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       if (client.connected) {
-        client.uniqId = streamId
-        client.parentId = parentId
-        client.account = 'loading'
-        client.max = max
-        client.infos = { time: 'WAIT', other: true }
-
+        client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
         streams[streamId] = client
         client.emit('canRun')
       }
@@ -282,7 +277,7 @@ io.on('connect', client => {
     client.max = max
 
     const alreadyPlaying = back && account ? { parentId, streamId, account, time: 'PLAY', ok: true } : {}
-    client.infos = streams[streamId] ? streams[streamId].infos : alreadyPlaying
+    client.infos = client.infos || alreadyPlaying
 
     streams[streamId] = client
     parents[parentId] = { uniqId: parentId, max }
