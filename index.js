@@ -209,6 +209,9 @@ const checkRun = () => {
 
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
       if (client.connected) {
+        client.uniqId = streamId
+        client.parentId = parentId
+        client.max = max
         client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
         streams[streamId] = client
         client.emit('canRun')
