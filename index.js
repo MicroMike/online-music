@@ -137,19 +137,20 @@ const getAccount = env => {
 
 const getNumbers = (id) => {
   let array = {}
-  // Object.values(parents).forEach(p => { array[p.uniqId] = 0 })
+  Object.keys(parents).forEach(key => { array[key] = 0 })
   const numbers = Object.values(streams).map(s => s.parentId).reduce((arr, s) => { arr[s] = arr[s] ? arr[s] + 1 : 1; return arr }, array)
   return id ? (numbers[id] || 0) : numbers
 }
 
 const maxs = () => {
   let pmax = {}
-  Object.values(streams).forEach(p => pmax[p.parentId] = p.max)
+  Object.values(parents).forEach(p => pmax[p.uniqId] = Number(p.max))
   return pmax
 }
 
 const playing = (id = false) => {
   let p = {}
+  Object.keys(parents).forEach(key => { p[key] = 0 })
   Object.values(streams).forEach(s => {
     if (s.infos && s.infos.countPlays && s.infos.countPlays >= 0) {
       p[s.parentId] = p[s.parentId] ? p[s.parentId] + 1 : 1
@@ -170,36 +171,24 @@ const getAllData = () => ({
   gain: gain + '€/min ' + String(gain * 60 * 24).split('.')[0] + '€/jour ' + String(gain * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain2: gain2 + '€/min ' + String(gain2 * 60 * 24).split('.')[0] + '€/jour ' + String(gain2 * 60 * 24 * 30).split('.')[0] + '€/mois',
   gain3: gain3 + '€/min ' + String(gain3 * 60 * 24).split('.')[0] + '€/jour ' + String(gain3 * 60 * 24 * 30).split('.')[0] + '€/mois',
-  parents: getNumbers(),
+  numbers: getNumbers(),
+  numbersPlaying: playing(),
   resultRatio,
   errs,
   parentsMax: maxs(),
 })
 
-// const runLoop = (c, { parentId, env, max }) => {
-//   const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.time && s.infos.other).length
-
-//   if (/*!parents[parentId].wait && !RUN_WAIT_PAGE && */getNumbers(parentId) < max) {
-//     const runnerAccount = env.CHECK ? checkAccounts.shift() : getAccount(env)
-//     if (!runnerAccount) { return }
-
-//     const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
-//     c.emit('run', { runnerAccount, streamId })
-//   }
-// }
-
-
 setInterval(() => {
-  Object.values(parents).forEach(p => {
-    if (!calcRatio[p.uniqId]) { calcRatio[p.uniqId] = [] }
+  Object.keys(parents).forEach(key => {
+    if (!calcRatio[key]) { calcRatio[key] = [] }
 
-    calcRatio[p.uniqId].push(serverPlays[p.uniqId] || 0)
-    serverPlays[p.uniqId] = 0
+    calcRatio[key].push(serverPlays[key] || 0)
+    serverPlays[key] = 0
 
-    if (calcRatio[p.uniqId].length > 60) { calcRatio[p.uniqId].shift() }
+    if (calcRatio[key].length > 60) { calcRatio[key].shift() }
 
-    const calc = calcRatio[p.uniqId].reduce((a, b) => a + b, 0) / playing(p.uniqId)
-    resultRatio[p.uniqId] = Math.floor(calc * 10) / 10
+    const calc = calcRatio[key].reduce((a, b) => a + b, 0) / playing(key)
+    resultRatio[key] = Math.floor(calc * 10) / 10
   })
 
   Object.values(webs).forEach(w => {
@@ -208,15 +197,35 @@ setInterval(() => {
   })
 }, 1000);
 
-const clientsCo = {}
+const checkRunArray = {}
 
-setInterval(() => {
-  console.log('number of clients =>' + Object.keys(clientsCo).length)
-}, 60 * 1000 * 2);
+const checkRun = () => {
+  Object.values(checkRunArray).forEach(arr => {
+    if (arr.length === 0) { return }
+
+    const { client, parentId, max, streamId } = arr[0]
+
+    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
+
+    if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+      if (client.connected) {
+        client.uniqId = streamId
+        client.parentId = parentId
+        client.max = max
+        client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
+        streams[streamId] = client
+        client.emit('canRun')
+      }
+      arr.shift()
+    }
+  })
+
+  setTimeout(checkRun, 1000 * 5)
+}
+
+checkRun()
 
 io.on('connect', client => {
-  clientsCo[client.id] = true
-
   client.on('outLog', e => {
     if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
 
@@ -229,7 +238,6 @@ io.on('connect', client => {
   })
 
   client.on('run', ({ parentId, env, max, back }) => {
-    const atLeastOne = Object.values(streams).filter(s => s.parentId === parentId).length >= 1
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
     if (!atLeastOne || ((!resultRatio[parentId] || resultRatio[parentId] >= 0.5) && !RUN_WAIT_PAGE && getNumbers(parentId) < max)) {
       const runnerAccount = env.CHECK ? checkAccounts && checkAccounts.shift() : getAccount(env)
@@ -260,16 +268,25 @@ io.on('connect', client => {
     parents[parentId] = client
   })
 
-  client.on('client', async ({ parentId, streamId, account, max }) => {
+  client.on('canRun', (params) => {
+    if (!checkRunArray[params.parentId]) { checkRunArray[params.parentId] = [] }
+    checkRunArray[params.parentId].push({ client, ...params })
+  })
+
+  client.on('client', async ({ parentId, streamId, account, max, back }) => {
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
-    client.infos = streams[streamId] ? streams[streamId].infos : {}
     client.max = max
 
-    streams[streamId] = client
+    const alreadyPlaying = back && account ? { parentId, streamId, account, time: 'PLAY', ok: true } : {}
+    client.infos = client.infos || alreadyPlaying
 
-    client.emit('mRun')
+    streams[streamId] = client
+    parents[parentId] = { uniqId: parentId, max }
+
+    actions('useAccount?' + account)
+    if (!back) { client.emit('mRun') }
   })
 
   client.on('used', ({ streamId, account }) => {
@@ -323,18 +340,10 @@ io.on('connect', client => {
   })
 
   client.on('disconnect', why => {
-
-    console.log(why + ' => ' + client.id)
-    delete clientsCo[client.id]
-
     if (streams[client.uniqId]) {
       delete streams[client.uniqId]
-    }
-
-    if (parents[client.uniqId]) {
-      console.log(why)
-      clearInterval(client.inter)
-      delete parents[client.uniqId]
+      const noMore = Object.values(streams).filter(s => s.parentId === client.parentId).length === 0
+      if (noMore) { delete parents[client.parentId] }
     }
 
     if (webs[client.id]) { delete webs[client.id] }
@@ -399,7 +408,7 @@ io.on('connect', client => {
 
     client.on('kill', async streamId => {
       const stream = streams[streamId]
-      stream && stream.emit && stream.emit('forceOut', streamId)
+      stream && stream.emit && stream.emit('Cdisconnect')
     })
 
     client.on('killall', async parentId => {
@@ -408,21 +417,7 @@ io.on('connect', client => {
     })
 
     client.on('restart', async cid => {
-      if (cid) {
-        const p = parents[cid]
-        if (p) {
-          p.out = true
-          p.emit('CdisconnectU')
-        }
-        Object.values(streams).filter(s => s.parentId === cid).forEach(s => !s.connected && delete streams[s.uniqId])
-      }
-      else {
-        Object.values(parents).forEach(p => {
-          p.out = true
-          p.emit('Cdisconnect')
-        })
-      }
-
+      Object.values(streams).filter(s => !cid || s.parentId === cid).forEach(c => c.emit('Cdisconnect'))
       await getAccounts(true)
     })
   })
