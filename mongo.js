@@ -189,35 +189,12 @@ module.exports = {
       case '/checkAccount': {
         MAccount.findOne({ check: true }, (err, Ra) => {
           if (Ra) {
-            res.end(JSON.stringify(account))
+            res.end(JSON.stringify(Ra))
           }
           else {
             res.end(JSON.stringify({ ok: false }))
           }
         })
-        if (params) {
-          MAccount.findOne({ account: params }, (err, Ra) => {
-            if (Ra) {
-              Ra.used = true
-              Ra.save(() => { res.end(JSON.stringify(Ra)) })
-            }
-            else {
-              res.end(JSON.stringify({ ok: true }))
-            }
-          })
-        }
-        else {
-          MAccount.find({ used: { $ne: true }, check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
-            const account = Ra[rand(Ra.length)]
-            if (account) {
-              account.used = true
-              account.save(() => { res.end(JSON.stringify(account)) })
-            }
-            else {
-              res.end(JSON.stringify({ ok: true }))
-            }
-          })
-        }
         break
       }
 
