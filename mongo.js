@@ -170,7 +170,19 @@ module.exports = {
           else {
             res.end(JSON.stringify({ ok: true }))
           }
-      })
+        })
+        break
+      }
+
+      case '/checkAccount': {
+        MAccount.findOne({ check: true }, (err, Ra) => {
+          if (Ra) {
+            res.end(JSON.stringify(account))
+          }
+          else {
+            res.end(JSON.stringify({ ok: false }))
+          }
+        })
         break
       }
 
