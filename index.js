@@ -426,7 +426,7 @@ io.on('connect', client => {
     })
 
     client.on('restart', async cid => {
-      Object.values(streams).filter(s => s.account && (!cid || s.parentId === cid)).forEach(c => c.emit('Cdisconnect'))
+      Object.values(streams).filter(c => c.emit && (!cid || c.parentId === cid)).forEach(c => c.emit('Cdisconnect'))
       await getAccounts(true)
     })
   })
