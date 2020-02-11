@@ -205,17 +205,17 @@ const checkRun = () => {
 
     const { client, parentId, max, streamId } = arr[0]
 
+    if (client.disconnected) { return arr.shift() }
+
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
     if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
-      if (client.connected) {
-        client.uniqId = streamId
-        client.parentId = parentId
-        client.max = max
-        client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
-        streams[streamId] = client
-        client.emit('canRun')
-      }
+      client.uniqId = streamId
+      client.parentId = parentId
+      client.max = max
+      client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
+      streams[streamId] = client
+      client.emit('canRun')
       arr.shift()
     }
   })
@@ -274,6 +274,13 @@ io.on('connect', client => {
   })
 
   client.on('client', async ({ parentId, streamId, account, max, back }) => {
+    const accountAlreadyUsed = Object.values(streams).find(c => c.account === account)
+    if (accountAlreadyUsed) {
+      delete streams[streamId]
+      client.emit('accountAlreadyUsed')
+      return
+    }
+
     client.uniqId = streamId
     client.parentId = parentId
     client.account = account
@@ -340,6 +347,8 @@ io.on('connect', client => {
   })
 
   client.on('disconnect', why => {
+    client.account && actions('noUseAccount?' + client.account)
+
     if (streams[client.uniqId]) {
       delete streams[client.uniqId]
       const noMore = Object.values(streams).filter(s => s.parentId === client.parentId).length === 0
