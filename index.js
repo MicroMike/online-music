@@ -93,6 +93,13 @@ setInterval(async () => {
   //   }
   // })
   await getAccounts()
+
+  Object.values(streams).forEach(c => {
+    if (!c.emit) {
+      delete streams[c.uniqId]
+      c.account && actions('noUseAccount?' + c.account)
+    }
+  })
 }, 1000 * 60)
 
 const timer = 5
