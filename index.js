@@ -197,7 +197,7 @@ setInterval(() => {
   })
 }, 1000);
 
-const checkRunArray = {}
+let checkRunArray = {}
 
 const checkRun = () => {
   Object.values(checkRunArray).forEach(arr => {
@@ -426,7 +426,17 @@ io.on('connect', client => {
     })
 
     client.on('restart', async cid => {
-      Object.values(streams).filter(c => c.emit && (!cid || c.parentId === cid)).forEach(c => c.emit('Cdisconnect'))
+      checkRunArray = {}
+      Object.values(streams).map(c => {
+        if (!c.emit) {
+          console.log(c.uniqId, c.account, c.infos)
+          return
+        }
+
+        if (!cid || c.parentId === cid) {
+          c.emit('Cdisconnect')
+        }
+      })
       await getAccounts(true)
     })
   })
