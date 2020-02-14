@@ -168,10 +168,9 @@ const playing = (id = false) => {
 
 const playerCountPlaying = () => {
   const arr = []
-  Object.keys(parents).forEach(key => { arr[key] = 0 })
-  Object.values(streams).map(({ account }) => {
-    const player = account && account.split(':')[0]
-    arr[player] = arr[player] + 1
+  Object.values(streams).map(s => {
+    const player = s.account && s.account.split(':')[0]
+    arr[player] = arr[player] ? arr[player] + 1 : 1
   })
   return arr
 }
