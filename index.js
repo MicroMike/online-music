@@ -220,8 +220,6 @@ const checkRun = () => {
   Object.values(checkRunArray).forEach(arr => {
     if (arr.length === 0) { return }
 
-    arr.forEach(a => a.client.emit && a.client.emit('wait'))
-
     const { client, parentId, max, streamId } = arr[0]
 
     if (client.disconnected) { return arr.shift() }
