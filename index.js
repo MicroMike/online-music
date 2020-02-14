@@ -170,7 +170,7 @@ const playerCountPlaying = () => {
   const arr = []
   Object.keys(parents).forEach(key => { arr[key] = 0 })
   Object.values(streams).map(({ account }) => {
-    const player = account.split(':')[0]
+    const player = account && account.split(':')[0]
     arr[player] = arr[player] + 1
   })
   return arr
