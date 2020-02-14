@@ -220,7 +220,7 @@ const checkRun = () => {
   for (let key in checkRunArray) {
     const obj = checkRunArray[key]
 
-    if (!obj.client || obj.client.disconnected) { return checkRunArray[key] = null }
+    if (!obj || !obj.client || obj.client.disconnected) { return checkRunArray[key] = null }
 
     const { client, parentId, max, streamId } = obj
 
