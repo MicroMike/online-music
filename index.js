@@ -217,12 +217,10 @@ setInterval(() => {
 let checkRunArray = []
 
 const checkRun = () => {
-  for (let key in checkRunArray) {
-    const obj = checkRunArray[key]
-
-    if (!obj || !obj.client || obj.client.disconnected) { return checkRunArray[key] = null }
-
+  checkRunArray.forEach(obj => {
     const { client, parentId, max, streamId } = obj
+
+    if (client.disconnected) { return checkRunArray[parentId] = null }
 
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
@@ -235,7 +233,7 @@ const checkRun = () => {
       client.emit('canRun')
       checkRunArray[key] = null
     }
-  }
+  })
 
   setTimeout(checkRun, 1000 * 5)
 }
