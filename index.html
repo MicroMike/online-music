@@ -113,12 +113,14 @@
       const errs = data.errs
       const resultRatio = data.resultRatio
       const parentsMax = data.parentsMax
+      const playerCountPlaying = data.playerCountPlaying
 
       delete data.numbers
       delete data.numbersPlaying
       delete data.errs
       delete data.resultRatio
       delete data.parentsMax
+      delete data.playerCountPlaying
 
       document.querySelector('#data').innerHTML = ''
       document.querySelector('#servers').innerHTML = ''
@@ -149,7 +151,8 @@
 
       Object.keys(data).forEach(k => {
         let d = data[k]
-        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${d}</div>`)
+        let p = playerCountPlaying[k]
+        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${p}/${d}</div>`)
       })
     })
 
