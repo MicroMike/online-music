@@ -450,7 +450,7 @@ io.on('connect', client => {
     })
 
     client.on('restart', async cid => {
-      checkRunArray = {}
+      checkRunArray = []
       Object.values(streams).map(c => {
         if (!c.emit) {
           console.log(c.uniqId, c.account, c.infos)
