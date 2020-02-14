@@ -219,9 +219,11 @@ let checkRunArray = []
 const checkRun = () => {
   for (let key in checkRunArray) {
     const obj = checkRunArray[key]
+
+    if (!obj.client || client.disconnected) { return checkRunArray[key] = null }
+
     const { client, parentId, max, streamId } = obj
 
-    if (client.disconnected) { return checkRunArray[key] = null }
 
     const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
