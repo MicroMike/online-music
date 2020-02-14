@@ -388,7 +388,9 @@ io.on('connect', client => {
 
     client.on('screenshot', streamId => {
       const stream = streams[streamId]
-      stream && stream.emit('screenshot')
+      if (stream && stream.emit) {
+        stream.emit('screenshot')
+      }
     })
 
     client.on('streamOn', streamId => {
