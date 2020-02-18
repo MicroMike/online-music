@@ -237,9 +237,9 @@ const checkRun = () => {
 
     if (client.disconnected) { return arr.shift() }
 
-    const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
+    const tooManyLoad = Object.values(streams).filter(s => s.parentId[0] === parentId[0] && s.infos && s.infos.other).length > 5
 
-    if (!RUN_WAIT_PAGE && getNumbers(parentId) < max) {
+    if (!tooManyLoad && getNumbers(parentId) < max) {
       client.uniqId = streamId
       client.parentId = parentId
       client.max = max
