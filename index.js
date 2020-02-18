@@ -101,16 +101,16 @@ setInterval(async () => {
       return
     }
 
-    const freeze = c.infos.time === 'PLAY' && c.freeze
+    const freeze = c.infos.time === 'PLAY' && c.freeze > 2
     if (freeze) {
       c.emit('Cdisconnect')
     }
-    else {
-      c.freeze = false;
-    }
 
     if (c.infos.time === 'PLAY') {
-      c.freeze = true;
+      c.freeze = c.freeze ? c.freeze + 1 : 1;
+    }
+    else {
+      c.freeze = 0;
     }
   })
 }, 1000 * 60)
