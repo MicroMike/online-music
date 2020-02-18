@@ -95,7 +95,7 @@ setInterval(async () => {
   await getAccounts()
 
   Object.values(streams).forEach(c => {
-    if (!c.emi) {
+    if (!c.emit) {
       delete streams[c.uniqId]
       c.account && actions('noUseAccount?' + c.account)
       return
