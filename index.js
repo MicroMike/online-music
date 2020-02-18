@@ -95,9 +95,20 @@ setInterval(async () => {
   await getAccounts()
 
   Object.values(streams).forEach(c => {
-    if (!c.emit) {
+    const freeze = c.infos.time === 'PLAY' && c.freeze
+
+    if (!c.emi || freeze) {
       delete streams[c.uniqId]
       c.account && actions('noUseAccount?' + c.account)
+      return
+    }
+
+    if (!freeze) {
+      c.freeze = false;
+    }
+
+    if (c.infos.time === 'PLAY') {
+      c.freeze = true;
     }
   })
 }, 1000 * 60)
