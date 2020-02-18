@@ -101,9 +101,10 @@ setInterval(async () => {
       return
     }
 
-    const freeze = c.infos.time === 'PLAY' && c.freeze > 2
+    const freeze = c.infos && c.infos.time === 'PLAY' && c.freeze > 2
     if (freeze) {
       c.emit('Cdisconnect')
+      return
     }
 
     if (c.infos.time === 'PLAY') {
@@ -237,7 +238,7 @@ const checkRun = () => {
 
     if (client.disconnected) { return arr.shift() }
 
-    const tooManyLoad = Object.values(streams).filter(s => s.parentId[0] === parentId[0] && s.infos && s.infos.other).length > 5
+    const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 
     if (!tooManyLoad && getNumbers(parentId) < max) {
       client.uniqId = streamId
