@@ -95,15 +95,17 @@ setInterval(async () => {
   await getAccounts()
 
   Object.values(streams).forEach(c => {
-    const freeze = c.infos.time === 'PLAY' && c.freeze
-
-    if (!c.emi || freeze) {
+    if (!c.emi) {
       delete streams[c.uniqId]
       c.account && actions('noUseAccount?' + c.account)
       return
     }
 
-    if (!freeze) {
+    const freeze = c.infos.time === 'PLAY' && c.freeze
+    if (freeze) {
+      c.emit('Cdisconnect')
+    }
+    else {
       c.freeze = false;
     }
 
