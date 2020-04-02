@@ -199,7 +199,7 @@ module.exports = {
       }
 
       case '/checkAccount': {
-        MAccount.findOne({ check: true }, (err, Ra) => {
+        MAccount.findOne({ check: true, del: { $ne: true } }, (err, Ra) => {
           if (Ra) {
             res.end(JSON.stringify(Ra))
           }
