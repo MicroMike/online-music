@@ -85,11 +85,6 @@ module.exports = {
 				getAccounts(a => callback && callback(a), true)
 				break
 
-			case 'gain':
-				params && MGain.findOne({ month: new Date().getMonth() + 1 }, (err, Ra) => {
-				})
-				break
-
 			case 'listen':
 				params && MSong.findOne({ song: params }, (err, Ra) => {
 					if (!Ra) {
