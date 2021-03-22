@@ -137,7 +137,7 @@ module.exports = {
 							r.save((err, g) => callback && callback({ new: true, g }))
 						}
 						else {
-							if (p[0]) { Rg.plays = Rg.plays + 1 }
+							Rg.plays += 1
 							Rg.save((err, g) => callback && callback({ g }))
 						}
 					})
