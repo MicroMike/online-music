@@ -2,284 +2,295 @@
 <html>
 
 <head>
-  <title>Socket.IO chat</title>
-  <script src="/socket.io/socket.io.js"></script>
-  <style>
-    body {
-      background: #fff;
-    }
+	<title>Socket.IO chat</title>
+	<script src="/socket.io/socket.io.js"></script>
+	<style>
+		body {
+			background: #fff;
+		}
 
-    #errs,
-    #servers,
-    #serverPlays {
-      display: flex;
-    }
+		#errs,
+		#servers,
+		#serverPlays {
+			display: flex;
+		}
 
-    #errs>span,
-    #servers>span,
-    #serverPlays>span {
-      flex: 0;
-      border-right: 1px solid black;
-      padding: 5px;
-      text-align: center;
-    }
+		#errs>span,
+		#servers>span,
+		#serverPlays>span {
+			flex: 0;
+			border-right: 1px solid black;
+			padding: 5px;
+			text-align: center;
+		}
 
-    [id^="players-"] {
-      position: relative;
-    }
+		[id^="players-"] {
+			position: relative;
+		}
 
-    [id^="players-"] div {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0%;
-      max-width: 100%;
-      height: 100%;
-      background: lightskyblue;
-      z-index: -1;
-      transition: width 5s;
-    }
-  </style>
-  <script type="text/javascript">
-    var socket = io();
+		[id^="players-"] div {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 0%;
+			max-width: 100%;
+			height: 100%;
+			background: lightskyblue;
+			z-index: -1;
+			transition: width 5s;
+		}
 
-    const updateAccounts = id => {
-      socket.emit('updateAccounts')
-    }
+		.screenshot {
+			display: flex;
+			flex-wrap: wrap;
+		}
 
-    const screenshot = id => {
-      socket.emit('screenshot', id)
-    }
+		.screenshot>div {
+			display: flex;
+			flex-direction: column;
+			width: 500px;
+		}
+	</style>
+	<script type="text/javascript">
+		var socket = io();
 
-    const getData = () => {
-      socket.emit('getAllData')
-    }
+		const updateAccounts = id => {
+			socket.emit('updateAccounts')
+		}
 
-    const clearData = () => {
-      socket.emit('clearData')
-    }
+		const screenshot = id => {
+			socket.emit('screenshot', id)
+		}
 
-    const restart = (id = null) => {
-      document.querySelector('#errs').innerHTML = ''
-      document.querySelector('.screenshot').innerHTML = ''
-      document.querySelector('.players').innerHTML = ''
-      document.querySelector('.freezedPlayers').innerHTML = ''
-      document.querySelector('.others').innerHTML = ''
-      document.querySelector('.codes').innerHTML = ''
-      socket.emit('restart', id)
-    }
+		const getData = () => {
+			socket.emit('getAllData')
+		}
 
-    const killall = (id = null) => {
-      socket.emit('killall', id)
-    }
+		const clearData = () => {
+			socket.emit('clearData')
+		}
 
-    const kill = (id = null) => {
-      socket.emit('kill', id)
-    }
+		const restart = (id = null) => {
+			document.querySelector('#errs').innerHTML = ''
+			document.querySelector('.screenshot').innerHTML = ''
+			document.querySelector('.players').innerHTML = ''
+			document.querySelector('.freezedPlayers').innerHTML = ''
+			document.querySelector('.others').innerHTML = ''
+			document.querySelector('.codes').innerHTML = ''
+			socket.emit('restart', id)
+		}
 
-    const stop = (id = null) => {
-      socket.emit('stop', id)
-    }
+		const killall = (id = null) => {
+			socket.emit('killall', id)
+		}
 
-    const spotifyPause = () => {
-      socket.emit('spotifyPause')
-    }
+		const kill = (id = null) => {
+			socket.emit('kill', id)
+		}
 
-    const clearScreen = () => {
-      document.querySelector('.screenshot').innerHTML = ''
-      socket.emit('clearScreen')
-    }
+		const stop = (id = null) => {
+			socket.emit('stop', id)
+		}
 
-    const clearErrs = id => {
-      document.querySelector('#errs').innerHTML = ''
-      socket.emit('clearErrs')
-    }
+		const spotifyPause = () => {
+			socket.emit('spotifyPause')
+		}
 
-    const check = () => {
-      socket.emit('check')
-    }
+		const clearScreen = () => {
+			document.querySelector('.screenshot').innerHTML = ''
+			socket.emit('clearScreen')
+		}
 
-    const endCheck = () => {
-      socket.emit('endCheck')
-    }
+		const clearErrs = id => {
+			document.querySelector('#errs').innerHTML = ''
+			socket.emit('clearErrs')
+		}
 
-    socket.on('activate', () => {
-      socket.emit('web')
-    })
+		const check = () => {
+			socket.emit('check')
+		}
 
-    socket.on('allData', data => {
-      const numbers = data.numbers
-      const numbersPlaying = data.numbersPlaying
-      const errs = data.errs
-      const resultRatio = data.resultRatio
-      const parentsMax = data.parentsMax
-      const playerCountPlaying = data.playerCountPlaying
+		const endCheck = () => {
+			socket.emit('endCheck')
+		}
 
-      delete data.numbers
-      delete data.numbersPlaying
-      delete data.errs
-      delete data.resultRatio
-      delete data.parentsMax
-      delete data.playerCountPlaying
+		socket.on('activate', () => {
+			socket.emit('web')
+		})
 
-      document.querySelector('#data').innerHTML = ''
-      document.querySelector('#servers').innerHTML = ''
-      document.querySelector('#errs').innerHTML = ''
-      // document.querySelector('#serverPlays').innerHTML = ''
+		socket.on('allData', data => {
+			const numbers = data.numbers
+			const numbersPlaying = data.numbersPlaying
+			const errs = data.errs
+			const resultRatio = data.resultRatio
+			const parentsMax = data.parentsMax
+			const playerCountPlaying = data.playerCountPlaying
 
-      // Object.keys(serverPlays).sort().forEach((k, i) => {
-      //   const val = serverPlays[k]
-      //   document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${Math.floor(val / parents[k] * 100) / 100}</span>`)
-      // })
+			delete data.numbers
+			delete data.numbersPlaying
+			delete data.errs
+			delete data.resultRatio
+			delete data.parentsMax
+			delete data.playerCountPlaying
 
-      Object.keys(numbers).sort().forEach((k, i) => {
-        const val = numbers[k]
-        const val2 = numbersPlaying[k]
-        const ratio = resultRatio[k]
-        // document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
-        document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span style="color:${ratio < 0.5 ? 'orange' : 'black'};">${k} <br> => <br> (${val}) <br> ${val2}/${parentsMax[k]} <br> => <br> ${ratio} <br> <button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">K</button></span>`)
-      })
+			document.querySelector('#data').innerHTML = ''
+			document.querySelector('#servers').innerHTML = ''
+			document.querySelector('#errs').innerHTML = ''
+			// document.querySelector('#serverPlays').innerHTML = ''
 
-      for (let key in errs) {
-        const errors = errs[key]
-        for (let error in errors) {
-          const nbError = errors[error]
-          document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${key} ${error} => ${nbError}</span>`)
-        }
-      }
-      // <button onClick="stop('${d.id}')">S</button>
+			// Object.keys(serverPlays).sort().forEach((k, i) => {
+			//   const val = serverPlays[k]
+			//   document.querySelector('#serverPlays').insertAdjacentHTML('beforeend', `<span>${k} => ${Math.floor(val / parents[k] * 100) / 100}</span>`)
+			// })
 
-      Object.keys(data).forEach(k => {
-        let d = data[k]
-        let p = playerCountPlaying[k]
-        document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${p ? p + '/' : ''}${d}</div>`)
-      })
-    })
+			Object.keys(numbers).sort().forEach((k, i) => {
+				const val = numbers[k]
+				const val2 = numbersPlaying[k]
+				const ratio = resultRatio[k]
+				// document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span>${i} => ${d.L} <button id="R_${d.id}" onclick="restart('${d.id}')">R</button></span>`)
+				document.querySelector('#servers').insertAdjacentHTML('beforeend', `<span style="color:${ratio < 0.5 ? 'orange' : 'black'};">${k} <br> => <br> (${val}) <br> ${val2}/${parentsMax[k]} <br> => <br> ${ratio} <br> <button id="R_${k}" onclick="restart('${k}')">R</button><button id="C_${k}" onclick="killall('${k}')">K</button></span>`)
+			})
 
-    socket.on('endStream', streamId => {
-      const isDom = streamId && document.querySelector('#class' + streamId)
-      isDom && isDom.parentElement.remove()
-    })
+			for (let key in errs) {
+				const errors = errs[key]
+				for (let error in errors) {
+					const nbError = errors[error]
+					document.querySelector('#errs').insertAdjacentHTML('beforeend', `<span>${key} ${error} => ${nbError}</span>`)
+				}
+			}
+			// <button onClick="stop('${d.id}')">S</button>
 
-    const toggleBtn = btn => {
-      socket.emit(btn.innerText, btn.className)
-      btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'
-    }
+			Object.keys(data).forEach(k => {
+				let d = data[k]
+				let p = playerCountPlaying[k]
+				document.querySelector('#data').insertAdjacentHTML('beforeend', `<div>${k} => ${p ? p + '/' : ''}${d}</div>`)
+			})
+		})
 
-    const runScript = btn => {
-      const scriptText = document.querySelector('#script' + btn.className).value
-      socket.emit('runScript', { streamId: btn.className, scriptText })
-    }
+		socket.on('endStream', streamId => {
+			const isDom = streamId && document.querySelector('#class' + streamId)
+			isDom && isDom.parentElement.remove()
+		})
 
-    const runCode = btn => {
-      const scriptText = document.querySelector('#scriptCode' + btn.className).value
-      socket.emit('runCode', { id: btn.className, scriptText })
-    }
+		const toggleBtn = btn => {
+			socket.emit(btn.innerText, btn.className)
+			btn.innerText = btn.innerText === 'streamOn' ? 'streamOff' : 'streamOn'
+		}
 
-    socket.on('clearStream', (delList) => {
-      document.querySelector('#del').innerHTML = delList
-    })
+		const runScript = btn => {
+			const scriptText = document.querySelector('#script' + btn.className).value
+			socket.emit('runScript', { streamId: btn.className, scriptText })
+		}
 
-    socket.on('delList', (delList) => {
-      document.querySelector('#del').innerHTML = delList
-    })
+		const runCode = btn => {
+			const scriptText = document.querySelector('#scriptCode' + btn.className).value
+			socket.emit('runCode', { id: btn.className, scriptText })
+		}
 
-    socket.on('stream', ({ streamOn, streamId, img, log }) => {
-      const isDom = document.querySelector('#class' + streamId)
-      const streamBtn = streamOn ? 'streamOff' : 'streamOn'
-      const html = img
-        ? `<div>
+		socket.on('clearStream', (delList) => {
+			document.querySelector('#del').innerHTML = delList
+		})
+
+		socket.on('delList', (delList) => {
+			document.querySelector('#del').innerHTML = delList
+		})
+
+		socket.on('stream', ({ streamOn, streamId, img, log }) => {
+			const isDom = document.querySelector('#class' + streamId)
+			const streamBtn = streamOn ? 'streamOff' : 'streamOn'
+			const html = img
+				? `<div>
             <h2>${log} :</h2>
             <img id="class${streamId}" src="data:image/png;base64,${img}"/>
             <button id="btn${streamId}" class="${streamId}" onclick="toggleBtn(this)">${streamBtn}</button>
             <textarea id="script${streamId}"></textarea>
             <button id="btnScript${streamId}" class="${streamId}" onclick="runScript(this)">Run script</button>
           </div>`
-        : `<div>
+				: `<div>
             <h2>${log} :</h2>
           </div>`
-      if (!isDom) {
-        document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', html)
-      }
-      else {
-        isDom.src = 'data:image/png;base64,' + img
-      }
-    })
+			if (!isDom) {
+				document.querySelector('.screenshot').insertAdjacentHTML('beforeEnd', html)
+			}
+			else {
+				isDom.src = 'data:image/png;base64,' + img
+			}
+		})
 
-    const displayPlays = (p) => {
-      let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays, code, parentId } = p
-      time = time || 0
+		const displayPlays = (p) => {
+			let { account, time, streamId, freeze, other, out, ok, nope, warn, countPlays, code, parentId } = p
+			time = time || 0
 
-      const isCode = document.querySelector(`.codes #scriptCode${streamId}`)
+			const isCode = document.querySelector(`.codes #scriptCode${streamId}`)
 
-      const inputCode = `<div>${account}
+			const inputCode = `<div>${account}
         <textarea id="scriptCode${streamId}"></textarea>
       <button id="btnCode${streamId}" class="${streamId}" onclick="runCode(this)">code</button>
       </div>`
 
-      const insideHtml = `
+			const insideHtml = `
       <div style="width:${time}%;"></div>
       <span style="color:${(warn && 'orange') || (freeze && 'red')};">${parentId} - ${account} : ${time}</span> (${countPlays || ''})
       <button onClick="screenshot('${streamId}')">V</button>
       <button onClick="kill('${streamId}')">K</button>
       `
-      const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
+			const html = `<div id="players-${streamId}" ${freeze && `class="freeze"`}>${insideHtml}</div>`
 
-      ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
-      other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
-      freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
+			ok && document.querySelector('.players').insertAdjacentHTML('afterBegin', html)
+			other && document.querySelector('.others').insertAdjacentHTML('afterBegin', html)
+			freeze && document.querySelector('.freezedPlayers').insertAdjacentHTML('afterBegin', html)
 
-      if (ok || other || freeze || nope) {
-        document.querySelector(`scriptCode${streamId}`) && document.querySelector(`scriptCode${streamId}`).remove()
-      }
+			if (ok || other || freeze || nope) {
+				document.querySelector(`scriptCode${streamId}`) && document.querySelector(`scriptCode${streamId}`).remove()
+			}
 
-      code && !isCode && document.querySelector('.codes').insertAdjacentHTML('beforeEnd', inputCode)
+			code && !isCode && document.querySelector('.codes').insertAdjacentHTML('beforeEnd', inputCode)
 
-      for (let className of ['#players', '#freezedPlayers', '#others']) {
-        const countNb = document.querySelectorAll(className + ' [id^=players-]').length
-        document.querySelector(className + ' .count').innerText = countNb
-      }
-    }
+			for (let className of ['#players', '#freezedPlayers', '#others']) {
+				const countNb = document.querySelectorAll(className + ' [id^=players-]').length
+				document.querySelector(className + ' .count').innerText = countNb
+			}
+		}
 
-    socket.on('playerInfos', streams => {
-      document.querySelector('.players').innerHTML = ''
-      document.querySelector('.freezedPlayers').innerHTML = ''
-      document.querySelector('.others').innerHTML = ''
-      streams.forEach(s => s && displayPlays(s))
-    })
-  </script>
+		socket.on('playerInfos', streams => {
+			document.querySelector('.players').innerHTML = ''
+			document.querySelector('.freezedPlayers').innerHTML = ''
+			document.querySelector('.others').innerHTML = ''
+			streams.forEach(s => s && displayPlays(s))
+		})
+	</script>
 </head>
 
 <body>
-  <div id="servers"></div>
-  <!-- <div id="serverPlays"></div> -->
-  <div id="errs"></div>
-  <div id="data"></div>
-  <button onClick="restart()">RESTART</button>
-  <button onClick="clearScreen()">CLEAR SCREENSHOT</button>
-  <button onClick="clearErrs()">CLEAR ERRORS</button>
-  <button onClick="getData()">GET DATA</button>
-  <button onClick="updateAccounts()">UPDATE ACCOUNTS</button>
-  <div id="del"></div>
-  <div class="count"></div>
-  <div style="display: flex;">
-    <div id="players">
-      <div class="count"></div>
-      <div class="players"></div>
-    </div>
-    <div id="freezedPlayers">
-      <div class="count"></div>
-      <div class="freezedPlayers"></div>
-    </div>
-    <div id="others">
-      <div class="count"></div>
-      <div class="others"></div>
-    </div>
-    <div>
-      <div class="codes"></div>
-    </div>
-  </div>
-  <div class="screenshot"></div>
+	<div id="servers"></div>
+	<!-- <div id="serverPlays"></div> -->
+	<div id="errs"></div>
+	<div id="data"></div>
+	<button onClick="restart()">RESTART</button>
+	<button onClick="clearScreen()">CLEAR SCREENSHOT</button>
+	<button onClick="clearErrs()">CLEAR ERRORS</button>
+	<button onClick="getData()">GET DATA</button>
+	<button onClick="updateAccounts()">UPDATE ACCOUNTS</button>
+	<div id="del"></div>
+	<div class="count"></div>
+	<div style="display: flex;">
+		<div id="players">
+			<div class="count"></div>
+			<div class="players"></div>
+		</div>
+		<div id="freezedPlayers">
+			<div class="count"></div>
+			<div class="freezedPlayers"></div>
+		</div>
+		<div id="others">
+			<div class="count"></div>
+			<div class="others"></div>
+		</div>
+		<div>
+			<div class="codes"></div>
+		</div>
+	</div>
+	<div class="screenshot"></div>
 </body>
 
 </html>
