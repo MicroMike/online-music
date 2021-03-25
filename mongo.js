@@ -245,6 +245,16 @@ module.exports = {
 				break
 			}
 
+			case '/delAccount': {
+				const p = params && params.split('/')
+				let accounts = {}
+				p && p.forEach(a => {
+					a && MAccount.deleteMany({ account: a }, (err, Ra) => { })
+				})
+				res.end(JSON.stringify({ accounts: accounts }));
+				break
+			}
+
 			case '/checkAccounts':
 				getCheckAccounts(a => res.end(JSON.stringify(a)))
 				break
