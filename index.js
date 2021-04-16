@@ -238,7 +238,7 @@ const checkRun = () => {
 
 		if (client.disconnected) { return arr.shift() }
 
-		const tooManyLoad = Object.values(streams).filter(s => s.parentId[0] === parentId[0] && s.infos && s.infos.other).length > 1
+		const tooManyLoad = Object.values(streams).filter(s => s.parentId[0] === parentId[0] && s.infos && s.infos.other).length > 0
 
 		if (!tooManyLoad && getNumbers(parentId) < max) {
 			client.uniqId = streamId
