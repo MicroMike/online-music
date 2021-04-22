@@ -369,6 +369,9 @@ io.on('connect', client => {
 	})
 
 	client.on('playerInfos', datas => {
+		if (datas.ok) {
+			delete imgs[datas.streamId];
+		}
 		if (streams[datas.streamId]) {
 			streams[datas.streamId].infos = { ...datas }
 		}
