@@ -184,7 +184,7 @@ module.exports = {
 			case '/useAccount': {
 				MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
 					const filter = rand(3);
-					const randAccounts = Ra.filter(ra => filter !== 0 || /apple|spotify/.test(ra.account))
+					const randAccounts = Ra.filter(ra => filter !== 0 || /apple|spotify|napster/.test(ra.account))
 
 					const account = randAccounts.length > 0
 						? randAccounts[rand(randAccounts.length)]
