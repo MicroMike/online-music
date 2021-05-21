@@ -184,6 +184,11 @@ module.exports = {
 			case '/useAccount': {
 				MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
 					const filter = rand(10);
+
+					if (!Ra) {
+						res.end(JSON.stringify({ ok: true }))
+					}
+
 					const randAccounts = Ra.filter(ra => filter !== 0 || /apple|spotify|napster/.test(ra.account))
 
 					const account = randAccounts.length > 0
@@ -193,9 +198,6 @@ module.exports = {
 					if (account) {
 						account.used = true
 						account.save(() => { res.end(JSON.stringify(account)) })
-					}
-					else {
-						res.end(JSON.stringify({ ok: true }))
 					}
 				})
 				break
