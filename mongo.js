@@ -189,7 +189,7 @@ module.exports = {
 						res.end(JSON.stringify({ ok: true }))
 					}
 
-					const randAccounts = Ra.filter(ra => filter !== 0 || /apple|spotify|napster/.test(ra.account))
+					const randAccounts = Ra.filter(ra => filter !== 0 || /apple|spotify|napster|amazon/.test(ra.account))
 
 					const account = randAccounts.length > 0
 						? randAccounts[rand(randAccounts.length)]
