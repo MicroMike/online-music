@@ -185,7 +185,7 @@ module.exports = {
 				MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
 					const filter = rand(10);
 
-					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /apple|spotify|napster|amazon/.test(ra.account))
+					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /apple|napster|amazon/.test(ra.account))
 
 					if (!randAccounts) {
 						res.end(JSON.stringify({ ok: true }))
