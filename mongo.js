@@ -323,21 +323,25 @@ module.exports = {
 			case '/card': {
 				res.setHeader('Content-Type', 'application/json');
 
-				const p = params && params.split('/')
-				if (p) {
-					MCard.findOne({}, (err, old) => {
-						MCard.deleteMany({}, () => {
-							console.log(old)
-							const card = new MCard({ cardNumber: p[0], month: p[1] || old.month, year: p[2] || old.year, code: p[3] || old.code })
-							card.save((err, a) => { res.end(JSON.stringify(a)) })
-						})
-					})
-				}
-				else {
-					MCard.findOne({}, (err, Ra) => {
-						res.end(JSON.stringify(Ra))
-					})
-				}
+				// const p = params && params.split('/')
+				// if (p) {
+				// 	MCard.findOne({}, (err, old) => {
+				// 		MCard.deleteMany({}, () => {
+				// 			console.log(old)
+				// 			const card = new MCard({ cardNumber: p[0], month: p[1] || old.month, year: p[2] || old.year, code: p[3] || old.code })
+				// 			card.save((err, a) => { res.end(JSON.stringify(a)) })
+				// 		})
+				// 	})
+				// }
+				// else {
+				// 	MCard.findOne({}, (err, Ra) => {
+				// 		res.end(JSON.stringify(Ra))
+				// 	})
+				// }
+
+				MCard.findOne({}, (err, Ra) => {
+					res.end(JSON.stringify(Ra))
+				})
 				break
 			}
 
