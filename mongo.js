@@ -183,7 +183,8 @@ module.exports = {
 
 			case '/useAccount': {
 				MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
-					const filter = 0 || rand(10);
+					// const filter = rand(10);
+					const filter = 0;
 
 					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /tidal/.test(ra.account))
 
