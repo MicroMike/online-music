@@ -183,10 +183,10 @@ module.exports = {
 
 			case '/useAccount': {
 				MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
-					// const filter = rand(10);
-					const filter = 0;
+					const filter = rand(10);
+					// const filter = 0;
 
-					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /tidal:93jimd@gmail.com:93billyj/.test(ra.account))
+					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /spotify/.test(ra.account))
 
 					if (!randAccounts) {
 						res.end(JSON.stringify({ ok: true }))
