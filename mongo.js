@@ -182,7 +182,8 @@ module.exports = {
 			}
 
 			case '/useAccount': {
-				MAccount.find({ check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }, (err, Ra) => {
+				const filter = params ? { account: params } : { check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+				MAccount.find(filter, (err, Ra) => {
 					const filter = rand(10);
 					// const filter = 0;
 
@@ -193,8 +194,8 @@ module.exports = {
 					}
 
 					const account = randAccounts.length > 0
-						? randAccounts[rand(2) ? rand(randAccounts.length) : 0]
-						: Ra[rand(2) ? rand(Ra.length) : 0]
+						? randAccounts[rand(randAccounts.length)]
+						: Ra[rand(Ra.length)]
 
 					if (account) {
 						account.used = true
