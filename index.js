@@ -240,7 +240,7 @@ const checkRun = () => {
 
 		const tooManyLoad = Object.values(streams).filter(s => s.parentId[0] === parentId[0] && s.infos && s.infos.other).length > 2
 
-		if (!tooManyLoad && getNumbers(parentId) < max) {
+		if (client.parentId === 'check' || (!tooManyLoad && getNumbers(parentId) < max)) {
 			client.uniqId = streamId
 			client.parentId = parentId
 			client.max = max
