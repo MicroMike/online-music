@@ -182,8 +182,7 @@ module.exports = {
 			}
 
 			case '/useAccount': {
-				const regex = params && params !== '' && new RegExp(params)
-				const filter = params && params !== '' ? { account: regex } : { check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+				const filter = params && params !== '' ? { account: params } : { check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
 				MAccount.find(filter, (err, Ra) => {
 					const filter = rand(10);
 					// const filter = 0;
