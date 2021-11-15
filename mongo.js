@@ -12,6 +12,8 @@ const SAccount = new mongoose.Schema({
 	pause: Boolean,
 	del: Boolean,
 	used: Boolean,
+	used2: Boolean,
+	v2: Boolean,
 });
 const MAccount = mongoose.model('Account', SAccount, 'accounts');
 
@@ -174,6 +176,7 @@ module.exports = {
 				MAccount.find({ used: true }, (err, Ra) => {
 					Ra && Ra.forEach(account => {
 						account.used = false
+						account.used2 = false
 						account.save()
 					})
 				})
@@ -185,7 +188,7 @@ module.exports = {
 				const isV2 = params === 'v2'
 				const filter = params && params !== ''
 					? isV2
-						? { used: { $ne: true }, v2: true }
+						? { used2: { $ne: true }, v2: true }
 						: { account: params }
 					: { check: { $ne: true }, used: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
 
@@ -204,6 +207,9 @@ module.exports = {
 						: Ra[rand(Ra.length)]
 
 					if (account) {
+						if (isV2) {
+							account.used2 = true
+						}
 						account.used = true
 						account.save(() => { res.end(JSON.stringify(account)) })
 					}
