@@ -190,7 +190,7 @@ module.exports = {
 					? isV2
 						? { used2: { $ne: true }, v2: true }
 						: { account: params }
-					: { check: { $ne: true }, used: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+					: { v2: { $ne: true }, check: { $ne: true }, used: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
 
 				MAccount.find(filter, (err, Ra) => {
 					const filter = rand(10);
