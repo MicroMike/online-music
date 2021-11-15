@@ -185,9 +185,9 @@ module.exports = {
 				const isV2 = params === 'v2'
 				const filter = params && params !== ''
 					? isV2
-						? { v2: { $ne: true } }
+						? { used: { $ne: true }, v2: true }
 						: { account: params }
-					: { check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+					: { check: { $ne: true }, used: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
 
 				MAccount.find(filter, (err, Ra) => {
 					const filter = rand(10);
