@@ -233,6 +233,7 @@ module.exports = {
 				MAccount.findOne({ account: params }, (err, Ra) => {
 					if (Ra) {
 						Ra.used = false
+						Ra.used2 = false
 						Ra.save(() => { res.end(JSON.stringify(Ra)) })
 					}
 					else {
