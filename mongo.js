@@ -203,8 +203,8 @@ module.exports = {
 					}
 
 					const account = randAccounts.length > 0
-					? randAccounts[0]
-					: Ra[0]
+					? randAccounts[rand(2) ? rand(randAccounts.length) : 0]
+					: Ra[rand(2) ? rand(Ra.length) : 0]
 
 					if (account) {
 						if (isV2) {
