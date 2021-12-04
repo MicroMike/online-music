@@ -173,7 +173,7 @@ module.exports = {
 
 		switch (url) {
 			case '/clearUsed': {
-				MAccount.find({ used: true, used2: { $ne: false } }, (err, Ra) => {
+				MAccount.find({}, (err, Ra) => {
 					Ra && Ra.forEach(account => {
 						account.used = false
 						account.used2 = false
