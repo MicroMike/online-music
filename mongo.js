@@ -185,6 +185,41 @@ module.exports = {
 				break
 			}
 
+			case '/listAccount': {
+				const isV2 = params === 'v2'
+				const filter = params && params !== ''
+					? isV2
+						? { used2: { $ne: true }, v2: true }
+						: { account: params }
+					: { v2: { $ne: true }, check: { $ne: true }, used: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+
+				MAccount.find(filter, (err, Ra) => {
+					// const filter = rand(10);
+					// // const filter = 0;
+
+					// const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /apple|spotify|amazon|mbm|zetaf/.test(ra.account))
+
+					// if (!randAccounts) {
+					// 	res.end(JSON.stringify({ ok: true }))
+					// }
+
+					// const account = randAccounts.length > 0
+					// 	? randAccounts[rand(randAccounts.length)]
+					// 	: Ra[rand(Ra.length)]
+
+					// if (account) {
+					// 	if (isV2) {
+					// 		account.used2 = true
+					// 	}
+					// 	account.used = true
+					// 	account.save(() => { res.end(JSON.stringify(account)) })
+					// }
+
+					res.end(JSON.stringify(Ra))
+				})
+				break
+			}
+
 			case '/useAccount': {
 				const isV2 = params === 'v2'
 				const filter = params && params !== ''
