@@ -197,7 +197,7 @@ module.exports = {
 					const filter = rand(10);
 					// const filter = 0;
 
-					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /apple|spotify|amazon/.test(ra.account))
+					const randAccounts = Ra && Ra.filter(ra => filter !== 0 || /apple|spotify|amazon|mbm|zetaf/.test(ra.account))
 
 					if (!randAccounts) {
 						res.end(JSON.stringify({ ok: true }))
