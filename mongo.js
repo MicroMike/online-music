@@ -234,7 +234,7 @@ module.exports = {
 
 			case '/checkAccount': {
 				MAccount.find({ check: true, del: { $ne: true } }, (err, Ra) => {
-					if (Ra?.length > 0) {
+					if (Ra.length > 0) {
 						res.end(JSON.stringify(Ra[rand(Ra.length)]))
 					}
 					else {
