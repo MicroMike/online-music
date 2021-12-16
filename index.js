@@ -328,8 +328,10 @@ io.on('connect', client => {
 		streams[streamId] = client
 		parents[parentId] = { uniqId: parentId, max }
 
-		actions('useAccount?' + account)
-		if (!back) { client.emit('mRun') }
+		if (/checklive/.test(parentId)) {
+			actions('useAccount?' + account)
+			if (!back) { client.emit('mRun') }
+		}
 	})
 
 	client.on('used', ({ streamId, account }) => {
