@@ -240,7 +240,7 @@ const checkRun = () => {
 
 		const tooManyLoad = Object.values(streams).filter(s => s.parentId[0] === parentId[0] && s.infos && s.infos.other).length > 2
 
-		if (client.parentId === 'check' || (!tooManyLoad && getNumbers(parentId) < max)) {
+		if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
 			client.uniqId = streamId
 			client.parentId = parentId
 			client.max = max
@@ -266,6 +266,11 @@ io.on('connect', client => {
 
 	client.on('log', log => {
 		console.log(log)
+	})
+
+	client.on('tidalError', ({ account }) => {
+		const checklive = streams.find(({ parentId }) => parentId === 'checklive')
+		checklive && checklive.emit('mRun', { account })
 	})
 
 	client.on('run', ({ parentId, env, max, back }) => {
