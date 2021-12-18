@@ -269,7 +269,7 @@ io.on('connect', client => {
 	})
 
 	client.on('tidalError', ({ account }) => {
-		const checklive = streams.find(({ parentId }) => parentId === 'checklive')
+		const checklive = Object.values(streams).find(({ parentId }) => parentId === 'checklive')
 		checklive && checklive.emit('mRun', { account })
 	})
 
