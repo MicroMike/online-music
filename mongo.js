@@ -281,7 +281,7 @@ module.exports = {
 				const p = params && params.split('/')
 				let accounts = {}
 				p && p.forEach(a => {
-					a && MAccount.deleteMany({ account: `/${a}/` }, (err, Ra) => { })
+					a && MAccount.deleteMany({ account: new RegExp(a, 'i') }, (err, Ra) => { })
 				})
 				res.end(JSON.stringify({ accounts: accounts }));
 				break
