@@ -138,7 +138,7 @@ module.exports = {
 						if (err) return console.error(err);
 
 						if (!Rg) {
-							const r = new MGain({ plays: 0, nexts: 0, time: 0, month })
+							const r = new MGain({ plays: 0, nexts: 0, time: 0, month, year })
 							r.save((err, g) => callback && callback({ new: true, g }))
 						}
 						else {
