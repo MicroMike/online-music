@@ -22,6 +22,7 @@ const SGain = new mongoose.Schema({
 	nexts: Number,
 	time: Number,
 	month: Number,
+	year: Number,
 });
 const MGain = mongoose.model('Gain', SGain, 'gain');
 
@@ -128,11 +129,12 @@ module.exports = {
 			case 'gain':
 				const date = new Date()
 				const month = date.getMonth() + 1
+				const year = date.getFullYear()
 
 				if (params) {
 					const p = params.split('/')
 
-					p[0] && p[1] && MGain.findOne({ month }, (err, Rg) => {
+					p[0] && p[1] && MGain.findOne({ month, year }, (err, Rg) => {
 						if (err) return console.error(err);
 
 						if (!Rg) {
@@ -146,11 +148,11 @@ module.exports = {
 					})
 				}
 				else {
-					MGain.findOne({ month }, function (err, Rg) {
+					MGain.findOne({ month, year }, function (err, Rg) {
 						if (err) return console.error(err);
 
 						if (!Rg) {
-							const r = new MGain({ plays: 0, nexts: 0, time: 0, month })
+							const r = new MGain({ plays: 0, nexts: 0, time: 0, month, year })
 							r.save((err, g) => callback && callback({ new: true, g }))
 						}
 						else {
