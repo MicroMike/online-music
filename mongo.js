@@ -219,7 +219,7 @@ module.exports = {
 						res.end(JSON.stringify({ ok: true }))
 					}
 
-					const account = randAccounts.length > 0
+					const account = randAccounts?.length > 0
 						? randAccounts[rand(randAccounts.length)]
 						: Ra[rand(Ra.length)]
 
@@ -236,7 +236,7 @@ module.exports = {
 
 			case '/checkAccount': {
 				MAccount.find({ check: true, del: { $ne: true } }, (err, Ra) => {
-					if (Ra.length > 0) {
+					if (Ra?.length > 0) {
 						res.end(JSON.stringify(Ra[rand(Ra.length)]))
 					}
 					else {
