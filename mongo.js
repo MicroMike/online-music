@@ -314,8 +314,10 @@ module.exports = {
 
 			case '/checkOk':
 				params && MAccount.findOne({ account: params }, (err, Ra) => {
-					Ra.check = false
-					Ra.save((err, a) => { res.end(JSON.stringify(a)) })
+					if (Ra) {
+						Ra.check = false
+						Ra.save((err, a) => { res.end(JSON.stringify(a)) })
+					}
 				})
 				break
 
