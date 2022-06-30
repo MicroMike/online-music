@@ -219,7 +219,7 @@ module.exports = {
 						res.end(JSON.stringify({ ok: true }))
 					}
 
-					const account = randAccounts.length > 0
+					const account = randAccounts && randAccounts.length > 0
 						? randAccounts[rand(randAccounts.length)]
 						: Ra[rand(Ra.length)]
 
