@@ -302,13 +302,18 @@ module.exports = {
 			//   break
 
 			case '/error': {
-				const p = params && params.split('/')
-				p[0] && p[1] && MAccount.findOne({ account: p[1] }, (err, Ra) => {
-					if (err) return console.error(err);
-					Ra[p[0]] = true
-					Ra.save((err, a) => { res.end(JSON.stringify(a)) })
-				})
-				res.end(JSON.stringify({ index: true }));
+				try {
+					const p = params && params.split('/')
+					p[0] && p[1] && MAccount.findOne({ account: p[1] }, (err, Ra) => {
+						if (err) return console.error(err);
+						Ra[p[0]] = true
+						Ra.save((err, a) => { res.end(JSON.stringify(a)) })
+					})
+					res.end(JSON.stringify({ index: true }));
+				}
+				catch (e) {
+					res.end(JSON.stringify({ index: false }));
+				}
 				break
 			}
 
