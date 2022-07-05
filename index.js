@@ -239,7 +239,10 @@ const checkRun = () => {
 
 		const { client, parentId, max, streamId } = arr
 
-		if (client.disconnected) { return arr.shift() }
+		if (client.disconnected) {
+			checkRunArray[k].shift()
+			return
+		}
 
 		const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 0
 
