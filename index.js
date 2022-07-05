@@ -231,7 +231,7 @@ setInterval(() => {
 let checkRunArray = {}
 
 const checkRun = () => {
-	Object.keys(parents).forEach((k) => {
+	Object.keys(checkRunArray).forEach((k) => {
 		const oArr = checkRunArray[k]
 		const arr = oArr.length > 0 && oArr[0]
 
