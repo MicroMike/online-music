@@ -233,11 +233,11 @@ let checkRunArray = {}
 const checkRun = () => {
 	Object.keys(checkRunArray).forEach((k) => {
 		const oArr = checkRunArray[k]
-		const arr = oArr.length > 0 && oArr[0]
+		const arr = oArr && oArr.length > 0 && oArr[0]
 
-		if (!arr || arr.length === 0) { return }
+		if (!arr) { return }
 
-		const { client, parentId, max, streamId } = arr[0]
+		const { client, parentId, max, streamId } = arr
 
 		if (client.disconnected) { return arr.shift() }
 
