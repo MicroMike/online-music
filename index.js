@@ -252,7 +252,6 @@ const checkRun = () => {
 		client.emit('canRun')
 		arr.shift()
 	}
-
 }
 
 checkRun()
