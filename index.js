@@ -231,27 +231,28 @@ setInterval(() => {
 let checkRunArray = {}
 
 const checkRun = () => {
-	Object.values(checkRunArray).forEach(arr => {
-		if (arr.length === 0) { return }
+	const arr = Object.values(checkRunArray)[0]
 
-		const { client, parentId, max, streamId } = arr[0]
+	setTimeout(checkRun, 1000 * 10)
 
-		if (client.disconnected) { return arr.shift() }
+	if (arr.length === 0) { return }
 
-		const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 0
+	const { client, parentId, max, streamId } = arr[0]
 
-		if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
-			client.uniqId = streamId
-			client.parentId = parentId
-			client.max = max
-			client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
-			streams[streamId] = client
-			client.emit('canRun')
-			arr.shift()
-		}
-	})
+	if (client.disconnected) { return arr.shift() }
 
-	setTimeout(checkRun, 1000 * 5)
+	const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 0
+
+	if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
+		client.uniqId = streamId
+		client.parentId = parentId
+		client.max = max
+		client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
+		streams[streamId] = client
+		client.emit('canRun')
+		arr.shift()
+	}
+
 }
 
 checkRun()
