@@ -236,7 +236,7 @@ const checkRun = () => {
 
 	setTimeout(checkRun, 1000 * 10)
 
-	if (arr && arr.length === 0) { return }
+	if (!arr || arr.length === 0) { return }
 
 	const { client, parentId, max, streamId } = arr[0]
 
