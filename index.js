@@ -231,11 +231,12 @@ setInterval(() => {
 let checkRunArray = {}
 
 const checkRun = () => {
-	const arr = Object.values(checkRunArray)[0]
+	const oArr = Object.values(checkRunArray)
+	const arr = oArr.length > 0 && oArr[0]
 
 	setTimeout(checkRun, 1000 * 10)
 
-	if (arr.length === 0) { return }
+	if (arr?.length === 0) { return }
 
 	const { client, parentId, max, streamId } = arr[0]
 
