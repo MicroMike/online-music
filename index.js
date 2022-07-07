@@ -320,6 +320,7 @@ io.on('connect', client => {
 		const accountAlreadyUsed = Object.values(streams).find(c => c.account === account)
 		if (accountAlreadyUsed) {
 			delete streams[streamId]
+			console.log(account, 'accountAlreadyUsed')
 			client.emit('accountAlreadyUsed')
 			return
 		}
