@@ -244,7 +244,7 @@ const checkRun = () => {
 			return
 		}
 
-		const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 0
+		const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 1
 
 		if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
 			client.uniqId = streamId
