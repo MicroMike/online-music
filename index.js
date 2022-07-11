@@ -1,6 +1,7 @@
 const {
 	getCheckAccounts,
 	getAllAccounts,
+	getAccount,
 	actions,
 	handler
 } = require('./mongo')
@@ -260,7 +261,18 @@ const checkRun = () => {
 	setTimeout(checkRun, 1000 * 10)
 }
 
-checkRun()
+// checkRun()
+
+const getAccountNotUsed = async (c) => {
+	const account = await getAccount()
+	const accountAlreadyUsed = Object.values(streams).find(s => s.account === account)
+
+	if (accountAlreadyUsed) {
+		await getAccountNotUsed()
+	} else {
+		c.emit('canRun', { account })
+	}
+}
 
 io.on('connect', client => {
 	client.on('outLog', e => {
@@ -287,6 +299,22 @@ io.on('connect', client => {
 			const streamId = rand(10000) + '-' + rand(10000) + '-' + rand(10000) + '-' + rand(10000)
 
 			client.emit('run', { runnerAccount, streamId })
+		}
+	})
+
+	client.on('isWaiting', async ({ parentId, streamId, max }) => {
+		if (client.disconnected) { return }
+
+		const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 1
+
+		if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
+			client.uniqId = streamId
+			client.parentId = parentId
+			client.max = max
+			client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
+			streams[streamId] = client
+
+			getAccountNotUsed(client)
 		}
 	})
 
@@ -317,13 +345,13 @@ io.on('connect', client => {
 	})
 
 	client.on('client', async ({ parentId, streamId, account, max, back }) => {
-		const accountAlreadyUsed = Object.values(streams).find(c => c.account === account)
-		if (accountAlreadyUsed) {
-			delete streams[streamId]
-			console.log(account, 'accountAlreadyUsed')
-			client.emit('accountAlreadyUsed')
-			return
-		}
+		// const accountAlreadyUsed = Object.values(streams).find(c => c.account === account)
+		// if (accountAlreadyUsed) {
+		// 	delete streams[streamId]
+		// 	console.log(account, 'accountAlreadyUsed')
+		// 	client.emit('accountAlreadyUsed')
+		// 	return
+		// }
 
 		client.uniqId = streamId
 		client.parentId = parentId

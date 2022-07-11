@@ -64,6 +64,21 @@ module.exports = {
 			})
 		})
 	},
+	getAccount: async () => {
+		return new Promise(res => {
+
+			const findParams = { check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+
+			MAccount.find(findParams, (err, Ra) => {
+				if (!Ra || Ra.length === 0) {
+					res({})
+				}
+
+				const account = Ra[rand(Ra.length)]
+				res(account)
+			})
+		})
+	},
 	reset: async () => {
 		return new Promise(res => {
 			MAccount.find({}, function (err, Ra) {
