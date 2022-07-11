@@ -137,25 +137,25 @@ const rand = (max, min) => {
 
 (async () => await getAccounts())()
 
-const getAccount = env => {
-	let Taccounts = accounts && [...accounts]
+// const getAccount = env => {
+// 	let Taccounts = accounts && [...accounts]
 
-	Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
-	Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
+// 	Object.values(streams).forEach(s => Taccounts = Taccounts.filter(a => a !== s.account))
+// 	Object.values(used).forEach(usedaccount => Taccounts = Taccounts.filter(a => a !== usedaccount))
 
-	if (env.TYPE) {
-		const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
-		return typeAccounts[0]
-	}
+// 	if (env.TYPE) {
+// 		const typeAccounts = accounts.filter(m => m.split(':')[0] === env.TYPE)
+// 		return typeAccounts[0]
+// 	}
 
-	const index = !env.TYPE ? rand(Taccounts.length) : 0
-	const account = Taccounts[index]
-	accounts = Taccounts.filter(a => a !== account)
+// 	const index = !env.TYPE ? rand(Taccounts.length) : 0
+// 	const account = Taccounts[index]
+// 	accounts = Taccounts.filter(a => a !== account)
 
-	accounts = [...Taccounts]
+// 	accounts = [...Taccounts]
 
-	return account
-}
+// 	return account
+// }
 
 const getNumbers = (id) => {
 	let array = {}
