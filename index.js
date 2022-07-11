@@ -283,6 +283,26 @@ const getAccountNotUsed = async (c) => {
 	}
 }
 
+const isWaiting = async (props) => {
+	const { parentId, streamId, max } = props
+
+	const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 1
+
+	if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
+		client.uniqId = streamId
+		client.parentId = parentId
+		client.max = max
+		client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
+		streams[streamId] = client
+
+		getAccountNotUsed(client)
+	} else {
+		setTimeout(async () => {
+			await isWaiting(props)
+		}, 3000);
+	}
+}
+
 io.on('connect', client => {
 	client.on('outLog', e => {
 		if (!errs[client.uniqId]) { errs[client.uniqId] = [] }
@@ -311,20 +331,10 @@ io.on('connect', client => {
 		}
 	})
 
-	client.on('isWaiting', async ({ parentId, streamId, max }) => {
+	client.on('isWaiting', async (props) => {
 		if (client.disconnected) { return }
 
-		const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 1
-
-		if (/check/.test(client.parentId) || (!tooManyLoad && getNumbers(parentId) < max)) {
-			client.uniqId = streamId
-			client.parentId = parentId
-			client.max = max
-			client.infos = { streamId, parentId, account: 'loading', time: 'WAIT', other: true }
-			streams[streamId] = client
-
-			getAccountNotUsed(client)
-		}
+		await isWaiting(props)
 	})
 
 	client.on('parent', async ({ parentId, connected, env, max }) => {
