@@ -299,7 +299,7 @@ const isWaiting = async (props) => {
 	} else {
 		setTimeout(async () => {
 			await isWaiting(props)
-		}, 3000);
+		}, 10 * 1000);
 	}
 }
 
