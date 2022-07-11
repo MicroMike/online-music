@@ -283,7 +283,7 @@ const getAccountNotUsed = async (c) => {
 	}
 }
 
-const isWaiting = async (props) => {
+const isWaiting = async (props, client) => {
 	const { parentId, streamId, max } = props
 
 	const tooManyLoad = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length > 1
@@ -298,7 +298,7 @@ const isWaiting = async (props) => {
 		getAccountNotUsed(client)
 	} else {
 		setTimeout(async () => {
-			await isWaiting(props)
+			await isWaiting(props, client)
 		}, 10 * 1000);
 	}
 }
@@ -334,7 +334,7 @@ io.on('connect', client => {
 	client.on('isWaiting', async (props) => {
 		if (client.disconnected) { return }
 
-		await isWaiting(props)
+		await isWaiting(props, client)
 	})
 
 	client.on('parent', async ({ parentId, connected, env, max }) => {
