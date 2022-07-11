@@ -266,7 +266,9 @@ let getting = false
 
 const getAccountNotUsed = async (c) => {
 	if (getting) {
-		await getAccountNotUsed()
+		setTimeout(async () => {
+			await getAccountNotUsed()
+		}, 3000);
 	} else {
 		getting = true
 		const account = await getAccount()
