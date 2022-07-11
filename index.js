@@ -267,7 +267,7 @@ let getting = false
 const getAccountNotUsed = async (c) => {
 	if (getting) {
 		setTimeout(async () => {
-			await getAccountNotUsed()
+			await getAccountNotUsed(c)
 		}, 3000);
 	} else {
 		getting = true
@@ -275,7 +275,7 @@ const getAccountNotUsed = async (c) => {
 		const accountAlreadyUsed = Object.values(streams).find(s => s.account === account)
 
 		if (accountAlreadyUsed) {
-			await getAccountNotUsed()
+			await getAccountNotUsed(c)
 		} else {
 			getting = false
 			c.emit('canRun', { account })
