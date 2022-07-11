@@ -74,8 +74,8 @@ module.exports = {
 					res({})
 				}
 
-				const account = Ra[rand(Ra.length)]
-				res(account)
+				const a = Ra[rand(Ra.length)]
+				res(a.account)
 			})
 		})
 	},
