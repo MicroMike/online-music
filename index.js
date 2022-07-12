@@ -263,26 +263,19 @@ const checkRun = () => {
 }
 
 // checkRun()
-let getting = false
 
 const getAccountNotUsed = async (c) => {
-	if (getting) {
+	const account = await getAccount()
+	const accountAlreadyUsed = usedAccounts.includes(account) // Object.values(streams).find(s => s.account === account)
+
+	if (accountAlreadyUsed) {
+		console.log(account, 'already used')
 		setTimeout(async () => {
 			await getAccountNotUsed(c)
 		}, 3000);
 	} else {
-		getting = true
-		const account = await getAccount()
-		const accountAlreadyUsed = usedAccounts.includes(account) // Object.values(streams).find(s => s.account === account)
-
-		if (accountAlreadyUsed) {
-			console.log(account, 'already used')
-			await getAccountNotUsed(c)
-		} else {
-			getting = false
-			usedAccounts.push(account)
-			c.emit('canRun', { account })
-		}
+		usedAccounts.push(account)
+		c.emit('canRun', { account })
 	}
 }
 
