@@ -275,6 +275,7 @@ const getAccountNotUsed = async (c) => {
 		}, 3000);
 	} else {
 		usedAccounts.push(account)
+		c.infos.account = account
 		c.emit('canRun', { account })
 	}
 }
