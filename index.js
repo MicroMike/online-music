@@ -26,6 +26,7 @@ setTimeout(() => {
 
 let waitForRestart
 
+let usedAccounts = []
 let accounts
 let checkAccounts = null
 let plays = 0
@@ -272,12 +273,13 @@ const getAccountNotUsed = async (c) => {
 	} else {
 		getting = true
 		const account = await getAccount()
-		const accountAlreadyUsed = Object.values(streams).find(s => s.account === account)
+		const accountAlreadyUsed = usedAccounts.includes(account) // Object.values(streams).find(s => s.account === account)
 
 		if (accountAlreadyUsed) {
 			await getAccountNotUsed(c)
 		} else {
 			getting = false
+			usedAccounts.push(account)
 			c.emit('canRun', { account })
 		}
 	}
@@ -446,6 +448,7 @@ io.on('connect', client => {
 		client.account && actions('noUseAccount?' + client.account)
 
 		if (streams[client.uniqId]) {
+			usedAccounts = usedAccounts.filter(a => a !== client.account)
 			delete streams[client.uniqId]
 			const noMore = Object.values(streams).filter(s => s.parentId === client.parentId).length === 0
 			if (noMore) { delete parents[client.parentId] }
