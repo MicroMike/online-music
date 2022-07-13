@@ -265,7 +265,8 @@ const checkRun = () => {
 // checkRun()
 
 const getAccountNotUsed = async (c) => {
-	const account = await getAccount()
+	const isCheck = /check/.test(c.parentId)
+	const account = await getAccount(isCheck)
 	const accountAlreadyUsed = usedAccounts.includes(account) // Object.values(streams).find(s => s.account === account)
 
 	if (accountAlreadyUsed) {

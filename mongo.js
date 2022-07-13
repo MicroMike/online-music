@@ -64,10 +64,10 @@ module.exports = {
 			})
 		})
 	},
-	getAccount: async () => {
+	getAccount: async (isCheck = false) => {
 		return new Promise(res => {
 
-			const findParams = { check: { $ne: true }, del: { $ne: true }, pause: { $ne: true } }
+			const findParams = { check: { $ne: isCheck ? false : true }, del: { $ne: true }, pause: { $ne: true } }
 
 			MAccount.find(findParams, (err, Ra) => {
 				if (!Ra || Ra.length === 0) {
