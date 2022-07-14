@@ -323,6 +323,10 @@ io.on('connect', client => {
 		check(account, true)
 	})
 
+	client.on('checkok', ({ account }) => {
+		check(account, false)
+	})
+
 	client.on('run', ({ parentId, env, max, back }) => {
 		const RUN_WAIT_PAGE = Object.values(streams).filter(s => s.parentId === parentId && s.infos && s.infos.other).length
 		// if (!atLeastOne || ((!resultRatio[parentId] || resultRatio[parentId] >= 0.5) && !RUN_WAIT_PAGE && getNumbers(parentId) < max)) {
