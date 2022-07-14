@@ -79,6 +79,21 @@ module.exports = {
 			})
 		})
 	},
+	check: async (account, bool) => {
+		return new Promise(res => {
+			try {
+				MAccount.findOne({ account }, (err, Ra) => {
+					if (err) return console.error(err);
+					Ra.check = bool
+					Ra.save((err, a) => { res(account) })
+				})
+				res(account)
+			}
+			catch (e) {
+				res(account)
+			}
+		})
+	},
 	reset: async () => {
 		return new Promise(res => {
 			MAccount.find({}, function (err, Ra) {

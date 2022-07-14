@@ -2,6 +2,7 @@ const {
 	getCheckAccounts,
 	getAllAccounts,
 	getAccount,
+	check,
 	actions,
 	handler
 } = require('./mongo')
@@ -316,6 +317,10 @@ io.on('connect', client => {
 	client.on('tidalError', ({ account }) => {
 		const checklive = Object.values(streams).find(({ parentId }) => parentId === 'checklive')
 		checklive && checklive.emit('mRun', { account })
+	})
+
+	client.on('errorcheck', ({ account }) => {
+		check(account, true)
 	})
 
 	client.on('run', ({ parentId, env, max, back }) => {
