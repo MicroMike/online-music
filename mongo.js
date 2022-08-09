@@ -50,6 +50,22 @@ const getCheckAccounts = async (callback) => {
 	})
 }
 
+const getAccount = async (isCheck = false) => {
+	return new Promise(res => {
+
+		const findParams = { check: { $ne: isCheck ? false : true }, del: { $ne: true }, pause: { $ne: true } }
+
+		MAccount.find(findParams, (err, Ra) => {
+			if (!Ra || Ra.length === 0) {
+				res({})
+			}
+
+			const a = Ra[rand(Ra.length)]
+			res(a.account)
+		})
+	})
+}
+
 module.exports = {
 	getAllAccounts: async (type) => {
 		return new Promise(res => {
@@ -64,21 +80,7 @@ module.exports = {
 			})
 		})
 	},
-	getAccount: async (isCheck = false) => {
-		return new Promise(res => {
-
-			const findParams = { check: { $ne: isCheck ? false : true }, del: { $ne: true }, pause: { $ne: true } }
-
-			MAccount.find(findParams, (err, Ra) => {
-				if (!Ra || Ra.length === 0) {
-					res({})
-				}
-
-				const a = Ra[rand(Ra.length)]
-				res(a.account)
-			})
-		})
-	},
+	getAccount,
 	check: async (account, bool) => {
 		return new Promise(res => {
 			try {
@@ -196,7 +198,7 @@ module.exports = {
 				break
 		}
 	},
-	handler: (req, res) => {
+	handler: async (req, res) => {
 		const url = req.url.split('?')[0]
 		const params = req.url.split('?')[1]
 
@@ -214,6 +216,12 @@ module.exports = {
 					})
 				})
 				res.end(JSON.stringify({ ok: true }))
+				break
+			}
+
+			case 'account': {
+				const account = await getAccount()
+				res.end(JSON.stringify(account))
 				break
 			}
 
