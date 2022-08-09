@@ -219,7 +219,7 @@ module.exports = {
 				break
 			}
 
-			case 'account': {
+			case '/account': {
 				const account = await getAccount()
 				res.end(JSON.stringify(account))
 				break
