@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/micromike/online-music#readme",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "mongoose": "^5.12.0",
     "socket.io": "^2.4.1"
   }
