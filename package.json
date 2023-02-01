@@ -21,7 +21,7 @@
   "homepage": "https://github.com/micromike/online-music#readme",
   "dependencies": {
     "express": "^4.16.4",
-    "mongoose": "^5.12.0",
+    "mongoose": "^5.13.15",
     "socket.io": "^2.4.1"
   }
 }
